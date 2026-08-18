@@ -263,6 +263,8 @@ Only one ESP32 has been ordered.
 
 Do **not** purchase additional units until one controller has successfully driven the actual LED modules.
 
+Reference design: PatternFlow (physical layout and pinout reference)
+
 ---
 
 # 5. ESP32 → HUB75 Prototype Components
@@ -287,6 +289,8 @@ Purpose:
 Translate/buffer the ESP32's 3.3 V HUB75 GPIO signals using 5 V HCT logic.
 
 Two 8-channel devices provide enough outputs for the approximately 14 HUB75E signals.
+
+Reference design: Seengreat RGB Matrix Adapter V3.9 (electrical buffering reference)
 
 ---
 
