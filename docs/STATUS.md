@@ -37,7 +37,7 @@ The initial prototype architecture has been defined and all required test hardwa
 6. Electrical bring-up
 7. Controller experiments
 8. Architecture selection → [ADR-016](DECISIONS.md)
-9. Custom PCB (if ESP32 path) → [ADR-018](DECISIONS.md)
+9. Custom PCB (if ESP32 path) → [ADR-013](DECISIONS.md)
 10. Software integration
 11. Full six-panel prototype
 12. Frame / enclosure → [ADR-024](DECISIONS.md)
