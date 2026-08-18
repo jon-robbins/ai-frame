@@ -95,6 +95,20 @@ Fabrication services researched (PCB prototyping):
 | Jiepei | 捷配 | PCB prototyping |
 | JDBPCB / related services | 捷多邦 / 聚多邦 | PCB prototyping |
 
+## Board Photos
+
+Clear, flat reference photos for identifying each board's physical features and limitations (connectors, chips, output counts). Sourced from official documentation where available, otherwise the purchase listing. Pre-delivery reference images — replace with our own photos during the receipt inspection.
+
+| Board | Front | Rear | Source |
+|-------|-------|------|--------|
+| **P2 LED panel** — P2-32S | ![P2 panel front](../hardware/photos/p2-panel_front.jpg) | ![P2 panel rear — HUB75E + drivers](../hardware/photos/p2-panel_rear.jpg) | Taobao listing |
+| **LicheeRV Nano-W** — SG2002 | ![LicheeRV Nano front](../hardware/photos/licheerv-nano_front.jpg) | ![LicheeRV Nano rear](../hardware/photos/licheerv-nano_rear.jpg) | Sipeed docs |
+| **Huidu HD-WF** controller card | ![HD-WF front](../hardware/photos/hd-wf_front.jpg) | ![HD-WF rear](../hardware/photos/hd-wf_rear.jpg) | Taobao listing |
+| **ESP32-S3 N16R8** dev board | ![ESP32-S3 front](../hardware/photos/esp32-s3-n16r8_front.jpg) | ![ESP32-S3 rear](../hardware/photos/esp32-s3-n16r8_rear.jpg) | Tmall listing |
+| **CH340 USB-TTL** module | ![CH340 front](../hardware/photos/ch340_front.jpg) | ![CH340 rear](../hardware/photos/ch340_rear.jpg) | Taobao listing |
+
+> HD-WF4 and HD-WF2 share one listing photo set; they differ by HUB75 output count (WF4 = 4 outputs, WF2 = 2 outputs).
+
 ## Safety Notes
 
 - Do not measure full display current in series — the 27.6 A maximum exceeds the typical multimeter 10 A shunt.
