@@ -1,91 +1,50 @@
 # AI Frame — Project Specification
 
+**Last updated:** 18 August 2026
+
 ## 1. Product Definition
 
-### 1.1 What is AI Frame?
+### 1.1 Purpose
 
 AI Frame is a thin, wall-mounted, Wi-Fi-connected ambient information display built from high-density RGB LED matrix panels.
 
-It is intended to behave like an appliance or information surface rather than a conventional computer monitor. Information should remain persistently visible without requiring the user to unlock a phone, open an application, or actively interact with the display.
+It behaves like an appliance or information surface, not a computer monitor: information stays persistently visible without unlocking a phone, opening an app, or actively interacting with the display.
 
-The first prototype uses six P2 HUB75E RGB LED modules arranged as a 2 × 3 matrix.
+The first prototype uses six P2 HUB75E RGB LED modules arranged as a 2 × 3 matrix — logical resolution 256 × 192, physical active area 512 × 384 mm.
 
-```text
-┌───────────────┬───────────────┐
-│    128×64     │    128×64     │
-├───────────────┼───────────────┤
-│    128×64     │    128×64     │
-├───────────────┼───────────────┤
-│    128×64     │    128×64     │
-└───────────────┴───────────────┘
+### 1.2 Functionality (V1)
 
-Logical resolution: 256 × 192
-Physical active area: 512 × 384 mm
-```
+V1 displays dynamically generated information:
 
----
+- Time and date
+- Weather
+- Google Calendar events
+- Spotify now-playing and album artwork
+- Artwork and decorative graphics
+- Icons and status indicators
+- Other API-driven information
+- Locally generated dashboards
 
-### 1.2 Primary Functionality
+Content updates programmatically, without manual vendor-software intervention for every update.
 
-V1 should be capable of displaying dynamically generated information including:
+### 1.3 Product Principles
 
-* Time and date
-* Weather
-* Google Calendar events
-* Spotify now-playing information
-* Album artwork
-* Artwork and decorative graphics
-* Icons and status indicators
-* Other API-driven information
-* Locally generated dashboards
+- Passive, ambient use rather than interaction-first
+- Thin wall-mounted construction
+- Quiet operation, passive cooling where practical
+- Wi-Fi connectivity
+- Linux and Python for application development
+- Cheap commodity hardware where practical
+- Chinese-market components where they give good unit economics
+- Open protocols, hardware, and software where practical
+- Local rendering
+- Minimal unnecessary cloud dependence
+- Replaceable and repairable components
+- Reliable unattended operation with automatic recovery after power loss
+- No exposed mains wiring
+- Clear separation between application logic and real-time LED refresh
 
-The display should be able to update content programmatically without requiring manual intervention through vendor software for every update.
-
----
-
-### 1.3 Problem Being Solved
-
-Useful personal information is generally hidden behind interactive devices.
-
-Checking weather, upcoming appointments, music state, household status, or other information normally requires intentionally opening an application.
-
-AI Frame makes selected information:
-
-* continuously available,
-* glanceable,
-* spatially persistent,
-* and integrated into the physical environment.
-
-The intended experience is closer to a clock, picture frame, or household appliance than to a mounted computer monitor.
-
----
-
-### 1.4 Product Principles
-
-AI Frame should prioritize:
-
-* Passive rather than interaction-first use
-* Thin wall-mounted construction
-* Quiet operation
-* Passive cooling where practical
-* Wi-Fi connectivity
-* Linux and Python for high-level application development
-* Cheap commodity hardware where practical
-* Chinese-market components where they provide good unit economics
-* Open protocols, hardware, and software where practical
-* Local rendering
-* Minimal unnecessary cloud dependence
-* Replaceable and repairable components
-* Reliable unattended operation
-* Automatic recovery after power loss
-* No exposed mains wiring
-* Clear separation between application logic and real-time LED refresh
-
----
-
-### 1.5 V1 Scope
-
-V1 is primarily an information display.
+### 1.4 V1 Scope
 
 V1 must prove:
 
@@ -100,1012 +59,159 @@ V1 must prove:
 9. Automatic startup after power loss
 10. Practical packaging into a wall-mounted enclosure
 
----
+### 1.5 V1 Non-Goals
 
-### 1.6 V1 Non-Goals
+V1 does not require custom ESP-IDF firmware from scratch, a custom DMA implementation, direct HUB75 refresh from Linux userspace, a private firmware fork, FPGA development, reverse-engineered hardware as a production dependency, a complex custom mainboard, a conventional HDMI monitor, or a Raspberry Pi chosen only for familiarity. Simple flashing, configuration, Python development, soldering, wiring, and a small adapter PCB are acceptable.
 
-V1 should not require:
-
-* Custom ESP-IDF firmware written from scratch
-* Custom DMA implementation
-* Direct HUB75 refresh from Linux userspace
-* Maintaining a private firmware fork
-* Complex FPGA development
-* Reverse-engineering undocumented hardware as a production dependency
-* A complex custom mainboard
-* A conventional HDMI monitor
-* A Raspberry Pi solely because it is familiar
-
-Simple firmware flashing, configuration, Python development, soldering, wiring, and a small adapter PCB are acceptable.
+Rejected approaches and their rationale live in [DECISIONS.md](DECISIONS.md).
 
 ---
 
-# 2. System Overview
+## 2. System Architecture
 
-The system is divided into several functional subsystems.
+### 2.1 Block Diagram
 
 ```text
-                  ┌───────────────────┐
-                  │     Internet      │
-                  └─────────┬─────────┘
-                            │ Wi-Fi
-                            ▼
-                  ┌───────────────────┐
-                  │ Application       │
-                  │ Computer          │
-                  │                   │
-                  │ Linux / Python    │
-                  │ API clients       │
-                  │ Rendering         │
-                  └─────────┬─────────┘
-                            │
-                       display data
-                            │
-                            ▼
-                  ┌───────────────────┐
-                  │ Display           │
-                  │ Controller        │
-                  │                   │
-                  │ HUB75 refresh     │
-                  └─────────┬─────────┘
-                            │ HUB75E
-                            ▼
-                  ┌───────────────────┐
-                  │ 6 × RGB Panels    │
-                  │ 256 × 192 total   │
-                  └───────────────────┘
+            Internet
+               │ Wi-Fi
+               ▼
+     Application Computer          Linux / Python
+     (LicheeRV Nano-W)             API clients · state · rendering
+               │
+          display data
+               │
+               ▼
+     Display Controller             real-time HUB75 refresh
+               │
+             HUB75E
+               │
+     ┌─────────┼─────────┐
+     ▼         ▼         ▼
+ 6 × RGB panels (256 × 192 logical)
 ```
 
-Power is provided independently:
+Power is delivered independently and in parallel to panels, controller, and application computer (see [3.4 Power Subsystem](#34-power-subsystem)).
 
-```text
-230 V AC wall
-      │
-      ▼
-Fused / switched inlet
-      │
-      ▼
-5 V / 40 A PSU
-      │
-      ├──► LED panels
-      ├──► display controller
-      └──► application computer
-           where appropriate
-```
+### 2.2 Core Decoupling Contract
 
----
+The application computer renders the desired image; a dedicated controller generates real-time HUB75 timing. These responsibilities are separate:
 
-# 3. Primary System Components
-
-## 3.1 Display
-
-Current implementation:
-
-* 6 × P2 indoor RGB LED modules
-* HUB75E interface
-* 128 × 64 pixels per module
-* 1/32 scan
-* 5 V
-* 256 × 128 mm per module
-
-Combined logical resolution:
-
-```text
-256 × 192
-```
-
-Combined RGB pixel count:
-
-```text
-49,152 pixels
-```
-
-The modules are physically arranged:
-
-```text
-2 wide × 3 high
-```
-
----
-
-## 3.2 Application Computer
-
-Current implementation:
-
-**Sipeed LicheeRV Nano-W**
-
-Role:
-
-* Run Linux
-* Run Python
-* Connect to Wi-Fi
-* Call external APIs
-* Maintain application state
-* Render graphics
-* Compose the complete logical framebuffer
-* Send display content to the display controller
-
-The application computer is deliberately separated from the real-time HUB75 refresh engine.
-
----
-
-## 3.3 Display Controller
-
-The final display controller has not yet been selected.
-
-Three approaches are being evaluated:
-
-### Candidate A — Huidu HD-WF4
-
-Purpose-built LED controller with four HUB75 outputs.
-
-Currently the most attractive stock-controller candidate because three outputs can map cleanly to the three physical panel rows.
-
-### Candidate B — Huidu HD-WF2
-
-Smaller Huidu controller with two HUB75 outputs.
-
-Primarily useful as:
-
-* an experimental controller,
-* a reverse-engineering platform,
-* and a test platform for community firmware.
-
-It does not map as naturally to the final three-row display.
-
-### Candidate C — ESP32-S3 N16R8
-
-Generic ESP32-S3 development board with:
-
-* 16 MB flash
-* 8 MB octal PSRAM
-
-Used with a buffered HUB75 adapter.
-
-This is the most open and flexible controller path, but requires more integration work than using stock Huidu hardware.
-
-The final controller decision is intentionally deferred until experiments are complete.
-
----
-
-## 3.4 Power Supply
-
-Current implementation:
-
-**A-200-5 switching power supply**
-
-Nominal output:
-
-```text
-5 V
-40 A
-200 W
-```
-
-Maximum nominal LED-panel load:
-
-```text
-6 × 23 W = 138 W
-```
-
-Approximate maximum panel current:
-
-```text
-138 W / 5 V = 27.6 A
-```
-
-This leaves useful nominal headroom for:
-
-* controller electronics,
-* application computer,
-* wiring losses,
-* and avoiding operation at the absolute PSU limit.
-
-Actual thermal and voltage performance must still be tested.
-
----
-
-## 3.5 AC Power Interface
-
-The finished prototype will use:
-
-* IEC C14 panel inlet
-* integrated rocker switch
-* integrated fuse holder
-* protective earth
-* internal L/N/PE wiring
-* enclosed AC terminals
-
-The design must not expose mains wiring during normal operation.
-
----
-
-## 3.6 Network Interface
-
-Wi-Fi is provided by the LicheeRV Nano-W.
-
-The application computer is the primary networked device.
-
-The LED controller does not inherently need Internet access if it can receive display data from the Nano through a local wired connection.
-
----
-
-## 3.7 Frame and Enclosure
-
-The final enclosure has not yet been designed.
-
-Requirements include:
-
-* Wall mountable
-* Thin relative to the display area
-* No obvious appearance of a conventional monitor
-* Ventilation sufficient for PSU and electronics
-* Safe separation of mains and low-voltage wiring
-* Accessible service points
-* Mechanical support for six modules
-* Cable strain relief
-* Space for PSU and control electronics
-* No exposed live terminals
-
-The existing PSU is approximately 50 mm thick and is likely to be one of the major constraints on final frame depth.
-
----
-
-# 4. Component Requirements
-
-## 4.1 Display Requirements
-
-The display subsystem must:
-
-* Support six 128 × 64 RGB modules
-* Support HUB75E
-* Support the panel's 1/32 scan mode
-* Produce a logical 256 × 192 canvas
-* Display correct RGB colors
-* Avoid visible row-addressing errors
-* Avoid objectionable flicker
-* Maintain stable operation continuously
-* Support adjustable brightness
-* Permit each panel to receive power directly rather than through another panel
-
-Signal chaining is allowed.
-
-Power chaining through panel connectors is not.
-
----
-
-## 4.2 Application Computer Requirements
-
-The application computer must:
-
-* Run Linux
-* Run Python
-* Support Wi-Fi
-* Support HTTPS
-* Make REST/API calls
-* Store credentials/configuration locally
-* Render at least a 256 × 192 RGB framebuffer
-* Load and manipulate images
-* Render text and fonts
-* Communicate with the display controller
-* Boot without keyboard or monitor
-* Start the application automatically
-* Recover after power interruption
-
-Current hardware provides:
-
-```text
-SoC: Sophgo SG2002
-RAM: 256 MB DDR3
-Storage: microSD
-Network: Wi-Fi
-OS class: Linux / Buildroot / Debian-family options
-```
-
-The 256 MB RAM constraint favors a lightweight application stack.
-
-Preferred application technologies include:
-
-* Python
-* asyncio
-* aiohttp
-* Pillow
-
-Heavy desktop or data-science stacks should not be treated as dependencies.
-
----
-
-## 4.3 Display Controller Requirements
-
-The final display controller must:
-
-* Drive HUB75E
-* Support 1/32 scan
-* Maintain sufficiently high refresh rates
-* Receive dynamically generated content
-* Operate unattended
-* Recover after power interruption
-* Accept content from the application computer
-* Fit within the enclosure
-* Be inexpensive enough for reasonable product unit economics
-
-Strong preferences:
-
-* Wired computer-to-controller communication
-* Documented or reverse-engineered protocol
-* Existing stable firmware
-* Open-source support
-* No custom real-time firmware development
-* Commodity hardware
-
-The controller does not need to perform:
-
-* API calls
-* business logic
-* dashboard composition
-* authentication
-* complex layout rendering
-
-unless a future architecture intentionally combines those roles.
-
----
-
-## 4.4 Power Requirements
-
-The system must:
-
-* Accept local mains AC
-* Convert mains to regulated 5 V DC
-* Supply at least the expected display load
-* Maintain voltage stability under changing LED brightness
-* Provide protective earth where required
-* Include a fuse
-* Include a master power switch
-* Use appropriate wire gauge
-* Avoid carrying total display current through a single small-gauge conductor
-* Avoid routing panel power through controller PCBs unless explicitly designed for it
-
-The six panels should receive power through multiple parallel branches.
-
----
-
-## 4.5 Network Requirements
-
-The product must:
-
-* Join a normal Wi-Fi network
-* Reach HTTPS APIs
-* Reconnect after temporary Wi-Fi failure
-* Continue displaying useful cached/local content where practical during Internet failure
-* Avoid requiring a cloud relay merely to update the local display
-
----
-
-## 4.6 Mechanical Requirements
-
-The finished product should:
-
-* Hold all six modules securely
-* Maintain panel alignment
-* Be wall mountable
-* Minimize visible bezels or gaps
-* Hide controller electronics
-* Hide PSU wiring
-* Provide airflow around heat-producing components
-* Allow disassembly for repair
-* Provide strain relief for AC input
-* Keep low-voltage and mains wiring organized and separated
-
----
-
-## 4.7 Software Requirements
-
-The application software should:
-
-* Be written primarily in Python
-* Render into a canonical 256 × 192 canvas
-* Separate data acquisition from rendering
-* Separate rendering from transport
-* Support independent widgets/components
-* Allow display-controller transport to be swapped without rewriting the application
-* Cache API data where appropriate
-* Handle API/network errors gracefully
-* Start automatically at boot
-* Log failures sufficiently for debugging
-
-The software architecture should make this abstraction possible:
-
-```text
-Data sources
-    │
-    ▼
-Application state
-    │
-    ▼
-Renderer
-    │
-    ▼
-256×192 framebuffer
-    │
-    ▼
-Transport adapter
-    │
-    ▼
-Selected display controller
-```
-
-The renderer should not need to know whether the transport is:
-
-* Huidu protocol,
-* serial,
-* USB,
-* TCP,
-* or another local interface.
-
----
-
-# 5. Technical Architecture
-
-## 5.1 High-Level Architecture
-
-```text
-┌─────────────────────────────────────────────┐
-│                 INTERNET                    │
-│                                             │
-│ Weather   Calendar   Spotify   Other APIs  │
-└─────────────────────┬───────────────────────┘
-                      │
-                    Wi-Fi
-                      │
-                      ▼
-             ┌──────────────────┐
-             │ LicheeRV Nano-W  │
-             │                  │
-             │ Linux            │
-             │ Python           │
-             │ API clients      │
-             │ State            │
-             │ Renderer         │
-             └────────┬─────────┘
-                      │
-                 rendered data
-                      │
-                      ▼
-             ┌──────────────────┐
-             │ Display          │
-             │ Controller       │
-             └────────┬─────────┘
-                      │
-                    HUB75E
-                      │
-         ┌────────────┼────────────┐
-         ▼            ▼            ▼
-      Top row      Middle row    Bottom row
-      256×64         256×64        256×64
-```
-
----
-
-## 5.2 Power Architecture
-
-### AC side
-
-```text
-230 V AC wall
-      │
-      ▼
-IEC C13 power cable
-      │
-      ▼
-┌──────────────────────────┐
-│ Fused + switched C14     │
-│ panel inlet              │
-└────────────┬─────────────┘
-             │
-        L / N / PE
-             │
-             ▼
-┌──────────────────────────┐
-│ A-200-5 PSU              │
-│ 230 V AC → 5 V DC        │
-│ 40 A / 200 W             │
-└──────────────────────────┘
-```
-
-Protective earth must be connected to:
-
-* PSU FG/earth terminal
-* exposed conductive enclosure parts where applicable
-
----
-
-### DC side
-
-```text
-                     5 V / 40 A PSU
-                           │
-              ┌────────────┼────────────┐
-              │            │            │
-              ▼            ▼            ▼
-        Power branch   Power branch   Electronics
-              │            │
-       ┌──────┼──────┐     │
-       ▼      ▼      ▼     ▼
-     panels  panels  ... controller /
-                         application computer
-```
-
-Each LED module receives its own suitable power branch from the distribution harness.
-
-Do not use:
-
-```text
-PSU → Panel 1 → Panel 2 → Panel 3 power
-```
-
-Prefer:
-
-```text
-               PSU
-                │
-       ┌────────┼────────┐
-       ▼        ▼        ▼
-    Panel 1  Panel 2  Panel 3 ...
-```
-
----
-
-## 5.3 Network Architecture
-
-```text
-Internet
-   │
-   ▼
-Wi-Fi router/AP
-   │
-   ▼
-LicheeRV Nano-W
-   │
-   ├── Weather API
-   ├── Google Calendar
-   ├── Spotify
-   └── Other APIs
-```
-
-The Nano is responsible for Internet-facing application logic.
-
-The controller should ideally operate as a local peripheral.
-
----
-
-## 5.4 Display Data Path
-
-Conceptually:
-
-```text
-API responses
-     │
-     ▼
-Application state
-     │
-     ▼
-Python renderer
-     │
-     ▼
-256×192 RGB framebuffer
-     │
-     ▼
-Controller-specific transport
-     │
-     ▼
-Display controller
-     │
-     ▼
-HUB75 refresh
-     │
-     ▼
-LED panels
-```
-
-The unresolved section is currently:
-
-```text
-Nano ───── ? ─────► Display controller
-```
-
-Determining the best implementation of this transport is the primary architecture experiment.
-
----
-
-# 6. HUB75 Refresh Architecture
-
-HUB75 is not equivalent to HDMI, SPI display memory, or a conventional framebuffer peripheral.
-
-The panels require continuous refresh.
-
-The controller repeatedly generates signals such as:
-
-```text
-R1 G1 B1
-R2 G2 B2
-A B C D E
-CLK
-LAT
-OE
-```
-
-A simplified refresh process is:
-
-```text
-Select row
-   │
-   ▼
-Shift RGB data using CLK
-   │
-   ▼
-Latch data using LAT
-   │
-   ▼
-Control illumination using OE
-   │
-   ▼
-Repeat with PWM bitplanes
-   │
-   ▼
-Advance to next row
-   │
-   ▼
-Repeat continuously
-```
-
-Timing must remain sufficiently deterministic to avoid:
-
-* flicker,
-* ghosting,
-* incorrect rows,
-* brightness artifacts,
-* and unstable colors.
-
-Therefore:
-
-```text
-Linux / Python
-      │
-      │ generates desired image
-      ▼
-Display controller
-      │
-      │ generates real-time HUB75 signals
-      ▼
-LED matrix
-```
+- Linux/Python composes the logical 256 × 192 framebuffer.
+- The display controller owns the real-time signal generation.
+- The renderer does not know which physical transport is used.
 
 Direct HUB75 bit-banging from normal Linux/Python is outside the V1 architecture.
 
 ---
 
-# 7. Confirmed and Candidate Controller Topologies
+## 3. Subsystem Specifications
 
-## 7.1 WF4 Physical Panel Topology
+### 3.1 Display Subsystem
 
-The preferred WF4 mapping is:
+- 6 × P2 indoor RGB LED modules, HUB75E interface
+- 128 × 64 pixels per module, 2 mm pitch, 256 × 128 mm per module
+- 1/32 scan, 5 V
+- Combined: 256 × 192 logical, 49,152 RGB pixels, arranged 2 wide × 3 high
 
-```text
-             HD-WF4
+HUB75 is not HDMI or framebuffer memory — panels require continuous refresh. The controller generates the signals `R1 G1 B1 R2 G2 B2`, row-select lines `A B C D E`, plus `CLK`, `LAT`, and `OE` (~14 signals total for the buffered path). Timing must remain deterministic enough to avoid flicker, ghosting, row errors, and color instability.
 
-X1 ──► TOP-L ──OUT──► TOP-R
+Requirements: correct RGB color, no visible row-addressing errors, no objectionable flicker, adjustable brightness, stable continuous operation, and each panel receives power directly rather than through another panel.
 
-X2 ──► MID-L ──OUT──► MID-R
+Signal chaining (panel OUT → next panel IN) is allowed. Power chaining through panel connectors is not.
 
-X3 ──► BOT-L ──OUT──► BOT-R
+### 3.2 Compute Subsystem (Application Computer)
 
-X4 ──► unused
-```
+Hardware: Sipeed LicheeRV Nano-W — Sophgo SG2002 SoC, 256 MB DDR3, microSD storage, Wi-Fi, USB 2 OTG Type-C, Linux.
 
-This creates three independent 256 × 64 signal chains.
+OS classes: Linux / Buildroot / Debian-family options. The 256 MB RAM budget favors a lightweight stack — Python with `asyncio`, `aiohttp`, and `Pillow`; heavy desktop or data-science stacks are not dependencies.
 
-This physical arrangement is preferred because it directly mirrors the actual display geometry.
+Role: run Linux and Python, connect to Wi-Fi, call external APIs, maintain application state, render a 256 × 192 framebuffer, load and manipulate images, render text/fonts, and send display content to the controller. It boots headless, starts the application automatically, and recovers after power interruption.
 
-Exact software mapping in Huidu configuration tools must still be experimentally verified.
+### 3.3 Display Controller Subsystem
 
----
+The final controller is unselected; three candidates are under evaluation:
 
-## 7.2 WF2 Topology
+- **HD-WF4** — purpose-built controller, four HUB75 outputs; three outputs map cleanly to the three 256 × 64 panel rows. Primary stock-controller candidate.
+- **HD-WF2** — two HUB75 outputs; experimental, reverse-engineering, and community-firmware test platform. Does not map cleanly to three rows.
+- **ESP32-S3 N16R8** — generic dev board, 16 MB flash, 8 MB octal PSRAM, used with a buffered (2 × SN74HCT245N) HUB75 adapter. Most open and flexible path, but more integration work than stock Huidu hardware.
 
-WF2 provides only two outputs.
+Requirements: drive HUB75E at 1/32 scan, maintain sufficient refresh rate, receive dynamically generated content, operate unattended and recover after power loss, fit the enclosure, and keep sensible unit economics. Preferences: wired computer-to-controller link, documented or reverse-engineered protocol, existing stable firmware, open-source support, no custom real-time firmware development, commodity hardware. It must not perform API calls, business logic, dashboard composition, authentication, or complex layout rendering.
 
-There is no equally clean physical mapping from two outputs to three 256 × 64 rows.
-
-Therefore WF2 is currently treated primarily as an experimental controller rather than the default final topology.
-
----
-
-## 7.3 ESP32-S3 Buffered HUB75 Topology
-
-The ESP32 uses 3.3 V GPIO while the chosen robust HUB75 interface uses 5 V HCT buffering.
+**Multi-ESP32 (candidate, not final):** if the ESP32 path is selected, the Nano renders the full 256 × 192 image and splits it into three row images:
 
 ```text
-                  ESP32-S3 N16R8
-                        │
-                 3.3 V GPIO signals
-                        │
-             ┌──────────┴──────────┐
-             ▼                     ▼
-       SN74HCT245N #1       SN74HCT245N #2
-             │                     │
-             └──────────┬──────────┘
-                        │
-                  buffered signals
-                        │
-                        ▼
-               16-pin HUB75E
-                        │
-                        ▼
-                    LED panel
+crop y=0..63    → controller 1 (top row,    256×64)
+crop y=64..127  → controller 2 (middle row, 256×64)
+crop y=128..191 → controller 3 (bottom row, 256×64)
 ```
 
-Approximately fourteen signals are required, so two 8-channel buffers are sufficient.
+Controller selection and its rationale are recorded as ADRs in [DECISIONS.md](DECISIONS.md) (ADR-010 through ADR-016).
 
-Panel high-current 5 V power remains separate from the signal adapter.
+### 3.4 Power Subsystem
 
----
-
-## 7.4 Potential Multi-ESP32 Final Architecture
-
-If the ESP32 route is ultimately selected:
+AC path:
 
 ```text
-                       LicheeRV Nano-W
-                             │
-                      frame transport
-                             │
-             ┌───────────────┼───────────────┐
-             │               │               │
-             ▼               ▼               ▼
-       ESP32-S3 #1      ESP32-S3 #2      ESP32-S3 #3
-             │               │               │
-             ▼               ▼               ▼
-          Top row         Middle row       Bottom row
-          256×64           256×64           256×64
+230 V AC → IEC C13 cable → C14 fused/switched inlet (L/N/PE) → A-200-5 PSU (5 V / 40 A / 200 W nominal)
 ```
 
-The Nano would render the complete 256 × 192 image and divide it into three row images:
+DC path: parallel distribution. Each LED module receives its own power branch from the distribution harness. Do not daisy-chain panel power (`PSU → Panel 1 → Panel 2 → Panel 3`); use separate parallel branches.
+
+Nominal panel load is 6 × 23 W = 138 W (~27.6 A at 5 V), leaving headroom for controller electronics, the application computer, and wiring losses. Thermal and voltage performance must still be tested. Protective earth connects to the PSU FG/earth terminal and exposed conductive enclosure parts.
+
+Exact parts, brands, models, and purchase status are in [BOM.md](BOM.md).
+
+### 3.5 Enclosure & Mechanical
+
+Requirements: wall-mountable, thin relative to display area, not monitor-like in appearance, ventilation for PSU and electronics, safe separation of mains and low-voltage wiring, accessible service points, mechanical support for six modules, cable strain relief, space for PSU and control electronics, and no exposed live terminals. The ~50 mm-thick PSU is likely a major constraint on final frame depth. Enclosure decisions are tracked in [DECISIONS.md](DECISIONS.md) (ADR-024).
+
+---
+
+## 4. Software Architecture
+
+### 4.1 Application Pipeline
 
 ```text
-Full framebuffer
-256×192
-   │
-   ├── crop y=0..63     → controller 1
-   ├── crop y=64..127   → controller 2
-   └── crop y=128..191  → controller 3
+Data sources → Application state → Renderer → 256×192 framebuffer → Transport adapter → Display controller
 ```
 
-This architecture remains a candidate, not a final decision.
+Written primarily in Python against a canonical 256 × 192 canvas. Data acquisition, rendering, and transport are separate concerns; widgets/components are independent; API data is cached where appropriate. API and network errors are handled gracefully.
+
+### 4.2 Transport Abstraction
+
+The renderer is agnostic to the transport: Huidu protocol, serial, USB, TCP, or another local interface. The controller transport can be swapped without rewriting the application.
+
+The open question — how the Nano transfers rendered content to the controller — is the primary architecture experiment, tracked in [EXPERIMENTS.md](EXPERIMENTS.md).
+
+### 4.3 Fault Tolerance & Recovery
+
+The system recovers automatically from temporary Wi-Fi failure, API timeouts, API authentication failure, display-controller restart, Nano restart, and complete power outage. A transient API failure must not crash the application; the renderer and transport layers are independently restartable where practical.
+
+Supporting mechanisms (target): structured logs, service supervision (`systemd`), automatic application restart, and a simple health indicator.
+
+### 4.4 Boot Sequence
+
+Power applied → PSU stabilizes → display controller boots and Nano boots Linux → Wi-Fi connection → AI Frame application starts → load cached/default UI → fetch remote data → render framebuffer → send to controller(s) → periodic updates.
+
+### 4.5 Offline Behavior
+
+The display must not go blank during an Internet outage. It retains cached/local state to show the clock, last-known data, an offline status indicator, or a fallback screen, and reconnects after Wi-Fi failure.
 
 ---
 
-# 8. Boot and Runtime Behavior
+## 5. Safety Requirements
 
-The eventual appliance should behave approximately as follows:
-
-```text
-Power applied
-     │
-     ▼
-PSU stabilizes
-     │
-     ├──► display controller boots
-     │
-     └──► Nano boots Linux
-                 │
-                 ▼
-          Wi-Fi connection
-                 │
-                 ▼
-        AI Frame application
-                 │
-                 ▼
-        load cached/default UI
-                 │
-                 ▼
-          fetch remote data
-                 │
-                 ▼
-         render framebuffer
-                 │
-                 ▼
-       send to controller(s)
-                 │
-                 ▼
-          periodic updates
-```
-
-The display should not remain blank solely because the Internet is temporarily unavailable.
-
-A future implementation should retain enough cached/local state to display:
-
-* clock,
-* last-known data,
-* offline status,
-* or a fallback screen.
+- **Mains:** enclosed wiring, appropriately rated conductors, insulated terminals, protective earth, fuse protection, strain relief, and physical separation from low-voltage wiring. No breadboard or Dupont connections on the mains side.
+- **DC:** suitable conductor gauge, parallel distribution, no loose temporary connections, no routing total panel current through development boards, and heating checks during load testing.
+- **HUB75:** do not hot-plug ribbon cables while the panel or controller is powered.
 
 ---
 
-# 9. Failure and Recovery Requirements
+## 6. Document Map
 
-The system should recover automatically from:
+- [BOM.md](BOM.md) — exact parts, brands, models, Chinese names, quantities, prices, and purchase status
+- [DECISIONS.md](DECISIONS.md) — architecture decisions, rationale, and rejected approaches
+- [EXPERIMENTS.md](EXPERIMENTS.md) — validation procedures, results, and open architectural unknowns
+- [STATUS.md](STATUS.md) — current phase, blockers, milestones, and next actions
 
-* Temporary Wi-Fi failure
-* API timeouts
-* API authentication failure
-* Display-controller restart
-* Nano restart
-* Complete power outage
-
-A transient API failure should not crash the entire application.
-
-The renderer and transport layers should be restartable independently where practical.
-
-The system should eventually support:
-
-* structured logs,
-* service supervision,
-* automatic application restart,
-* and a simple health indicator.
-
----
-
-# 10. Safety Requirements
-
-## Mains
-
-AC mains wiring must:
-
-* remain enclosed,
-* use appropriately rated conductors,
-* use insulated terminals,
-* include protective earth,
-* include fuse protection,
-* include strain relief,
-* and remain physically separated from low-voltage signal wiring where practical.
-
-No breadboard or Dupont connections are permitted on the mains side.
-
----
-
-## DC Power
-
-High-current 5 V wiring must:
-
-* use suitable conductor gauge,
-* use parallel distribution,
-* avoid loose temporary connections,
-* avoid routing total panel current through development boards,
-* and be checked for heating during load testing.
-
----
-
-## HUB75
-
-Do not hot-plug HUB75 ribbon cables while the panel/controller is powered.
-
----
-
-# 11. Design Constraints
-
-The current prototype is constrained by:
-
-### Cost
-
-The architecture should maintain sensible unit economics.
-
-A controller costing ¥130–160 is unattractive if a comparable result can be achieved using:
-
-* ¥30-class ESP32 hardware,
-* inexpensive Huidu controllers,
-* or a very cheap custom PCB.
-
-### Software complexity
-
-V1 should remain accessible through normal:
-
-* Linux administration,
-* Python,
-* configuration,
-* and existing firmware.
-
-### Memory
-
-The Nano has 256 MB RAM, so software must remain lightweight.
-
-### Panel size
-
-The complete display contains 49,152 RGB pixels.
-
-A single microcontroller may not necessarily provide satisfactory HUB75 refresh for the complete 256 × 192 matrix.
-
-### Mechanical depth
-
-The PSU and electrical safety clearances may determine minimum enclosure thickness.
-
----
-
-# 12. Current Architectural Unknowns
-
-The largest unresolved issue is:
-
-> How should the LicheeRV Nano transfer dynamically rendered display content to the HUB75 refresh controller?
-
-Questions still requiring experimental answers include:
-
-1. Can the HD-WF4 accept sufficiently frequent programmatic updates?
-2. Is there a practical wired interface between Nano and WF4?
-3. Can the known Huidu network protocol satisfy the product requirements if a wired interface is unsuitable?
-4. Can the WF4 correctly map the three 256 × 64 physical chains into one 256 × 192 canvas?
-5. How useful is the WF2 with stock firmware?
-6. How useful is existing open/community WF2 firmware?
-7. Does the purchased ESP32-S3 N16R8 reliably drive the actual P2 128 × 64 panels through HCT245 buffers?
-8. Can one ESP32 reliably drive two chained panels at 256 × 64?
-9. What wired transport should be used between the Nano and an ESP32?
-10. Is serial bandwidth sufficient for the desired update rate?
-11. Is native USB practical?
-12. What final enclosure depth is required?
-13. What brightness limit should be used for acceptable thermals and power consumption?
-
-These questions are tracked and tested in `EXPERIMENTS.md`.
-
----
-
-# 13. Architectural Decisions Already Established
-
-The following principles are currently considered accepted unless testing gives a strong reason to revisit them:
-
-### Application logic runs on Linux
-
-The LicheeRV Nano-W is the prototype application computer.
-
-### Application logic and HUB75 refresh are separate responsibilities
-
-Linux/Python generates the desired image.
-
-A dedicated controller generates the actual HUB75 timing.
-
-### Panels receive parallel power distribution
-
-Signal cables may be chained.
-
-Panel power should not be daisy-chained through the modules.
-
-### Final controller remains undecided
-
-WF4, WF2, and ESP32 approaches are intentionally being tested before committing.
-
-### ESP32 bulk purchase is deferred
-
-Only one generic N16R8 board is being tested initially.
-
-Additional controllers will only be purchased after successful validation.
-
-### Custom ESP32 adapter PCB fabrication is deferred until physical measurement
-
-The purchased generic ESP32 development board will be measured before designing the mating PCB to avoid mechanical footprint errors.
-
----
-
-# 14. Related Documentation
-
-See:
-
-* [`STATUS.md`](STATUS.md) for current progress and next actions
-* [`EXPERIMENTS.md`](EXPERIMENTS.md) for validation procedures and results
-* [`BOM.md`](BOM.md) for exact parts, brands, models, Chinese names, quantities, and purchase status
-* [`DECISIONS.md`](DECISIONS.md) for formal architecture decisions and rationale
-
-Hardware-specific files will eventually live under:
-
-```text
-hardware/
-├── pcb/
-├── schematics/
-└── photos/
-```
+Hardware-specific files eventually live under `hardware/pcb/`, `hardware/schematics/`, and `hardware/photos/`.
