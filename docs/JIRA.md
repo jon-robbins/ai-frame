@@ -1,0 +1,606 @@
+# TRAE Prompt — Build a Foolproof AI Frame Project Plan and Jira Backlog
+
+You are working inside the `ai-frame` repository.
+
+Your task is **project planning and repository analysis first, not implementation**.
+
+The end goal is to create an exhaustive, atomic, dependency-aware backlog that can later be imported into Jira and followed step by step by someone who is new to electronics and PCB development.
+
+Do not assume that existing architecture uncertainties have already been resolved.
+
+## Primary Product Goal
+
+AI Frame is a Wi-Fi-connected ambient RGB LED-matrix display using six P2 HUB75E 128×64 panels.
+
+The intended final display is:
+
+* 2 panels wide
+* 3 panels high
+* 256×192 logical resolution
+
+The application computer is currently the LicheeRV Nano-W running Linux/Python.
+
+A dedicated display controller performs HUB75 refresh.
+
+The final controller architecture and Nano→controller transport are intentionally unresolved.
+
+## Required Hardware Milestone Sequence
+
+The project MUST advance through these gates in order:
+
+### Milestone 1 — One physical panel
+
+One 128×64 panel must display arbitrary text end-to-end.
+
+For this milestone to count:
+
+1. A user supplies an arbitrary text string.
+2. The **LicheeRV Nano-W** renders that text into a framebuffer.
+3. The Nano sends the rendered content programmatically to a candidate controller.
+4. The candidate controller drives the physical panel.
+5. The requested text appears correctly.
+6. No manual vendor-software operation is required for each text update.
+7. The system remains stable for an appropriate sustained test.
+
+Displaying text manually through Huidu software is useful as a hardware test, but DOES NOT satisfy this milestone.
+
+### Milestone 2 — Two physical panels
+
+Two panels operate as one 256×64 logical canvas.
+
+Requirements include:
+
+* independent parallel power to both panels;
+* HUB75 signal chaining where appropriate;
+* correct left/right ordering;
+* arbitrary text crossing the physical seam;
+* Nano-controlled end-to-end updates;
+* sustained stability.
+
+### Architecture Decision Gate
+
+After viable candidate paths have been tested through the two-panel stage, compare them and explicitly resolve:
+
+* ADR-016 — final display-controller architecture;
+* ADR-017 — final Nano→controller transport.
+
+Do not simply pick the most technically interesting solution.
+
+Follow the project's stated principle: prefer the simplest architecture that reliably solves V1.
+
+If one candidate has clearly failed before this point, document why and remove it from the critical path.
+
+### Milestone 3 — Four physical panels
+
+Introduce a NEW intermediate 2×2 / 256×128 milestone.
+
+The current repo does not explicitly include this milestone, so propose an appropriate new experiment ID rather than pretending it already exists.
+
+Requirements include:
+
+* four independent panel power branches;
+* two 256×64 signal rows;
+* Nano rendering a 256×128 logical framebuffer;
+* arbitrary content crossing both horizontal and vertical physical seams;
+* synchronized-enough row updates;
+* sustained stability.
+
+Possible selected-controller topology:
+
+WF4:
+
+`X1 → top-left → top-right`
+`X2 → bottom-left → bottom-right`
+
+Multi-ESP32:
+
+`ESP32 #1 → top-left → top-right`
+`ESP32 #2 → bottom-left → bottom-right`
+
+Only use the topology that remains valid after the architecture decision.
+
+### Milestone 4 — Six physical panels
+
+Final prototype:
+
+`row 1: left → right`
+`row 2: left → right`
+`row 3: left → right`
+
+Logical framebuffer: 256×192.
+
+Requirements include:
+
+* six independent parallel 5 V panel power branches;
+* arbitrary text anywhere on the complete display;
+* correct crossing of every physical seam;
+* acceptable refresh quality;
+* stable controller transport;
+* PSU load/thermal validation;
+* repeated boot/recovery testing;
+* Wi-Fi recovery;
+* unattended operation.
+
+Only after this stage should the project shift primarily into packaging, reliability, thermal, and mounted-frame optimization.
+
+---
+
+# Repository Audit Requirements
+
+Before creating the final backlog, inspect the ENTIRE repository.
+
+At minimum inspect:
+
+* `README.md`
+* `docs/PROJECT.md`
+* `docs/BOM.md`
+* `docs/STATUS.md`
+* `docs/EXPERIMENTS.md`
+* `docs/DECISIONS.md`
+* everything under `hardware/`
+* everything under `software/`
+* everything under `firmware/`
+* hardware reference photos
+* existing schematics/diagrams
+* git status/history where useful
+
+Also inspect all relevant branches, not only `main`.
+
+At the time this prompt was written, important branches include:
+
+* `main`
+* `agent/connection-diagrams`
+* `agent/prototype-wiring-diagrams`
+
+The wiring branches contain proposed detailed connection documentation that may not yet be merged into `main`.
+
+Treat branch-only work as useful evidence/proposed design, not automatically as an accepted architecture decision.
+
+If additional branches exist, inspect them too.
+
+---
+
+# Source-of-Truth Rules
+
+Never silently resolve contradictions.
+
+When sources disagree:
+
+1. Identify the contradiction.
+2. Cite both locations.
+3. Determine whether one is clearly stale.
+4. If the repo does not contain enough evidence, create an explicit verification/decision task.
+
+Accepted ADRs constrain the plan.
+
+PENDING ADRs are NOT decisions.
+
+DEFERRED decisions must remain deferred until their prerequisites exist.
+
+Experiments produce evidence; they do not automatically alter architecture decisions.
+
+Actual delivered hardware ultimately overrides assumptions derived from seller photographs.
+
+Never invent:
+
+* connector polarity;
+* pin numbering;
+* PCB revisions;
+* GPIO availability;
+* USB functionality;
+* communication protocols;
+* scan configuration;
+* current capacity;
+* firmware support.
+
+If any of these are unknown, create a verification or spike task.
+
+---
+
+# Known Areas of Uncertainty That Must Be Represented Explicitly
+
+At minimum investigate and represent tasks around:
+
+## WF4
+
+* Can the Nano push arbitrary dynamic framebuffer content programmatically?
+* Is there a useful wired interface?
+* Is the apparent USB functionality suitable for programmatic control, or primarily offline/update use?
+* Is a local network/Wi-Fi protocol simpler and reliable enough?
+
+Do not assume WF4 wins because it maps cleanly to three rows.
+
+## ESP32-S3
+
+* Exact delivered generic-board revision.
+* Physical dimensions/header arrangement.
+* Exposed/usable GPIOs.
+* Compatibility of the proposed HUB75 GPIO mapping.
+* PSRAM/DMA behavior.
+* Refresh quality at 128×64 and 256×64.
+* UART vs native USB transport.
+* Required bandwidth and achievable update rate.
+* Recovery after transport/controller restart.
+
+Do not purchase multiple ESP32s or design the final adapter PCB before the first ESP32 reliably drives the required row and the architecture decision supports that path.
+
+## WF2
+
+Treat WF2 primarily as an experimental/reference/fallback path unless actual evidence gives it a clear advantage.
+
+## Power
+
+* Actual panel connector polarity.
+* PSU behavior under real load.
+* Voltage drop across wiring.
+* thermal behavior;
+* controller power-input details;
+* final safe mains termination.
+
+## Mechanical enclosure
+
+Do not finalize the enclosure until these are known:
+
+* controller architecture;
+* controller count;
+* final PCB dimensions if applicable;
+* PSU thermal behavior;
+* wiring topology;
+* brightness/power ceiling;
+* cable clearances.
+
+---
+
+# Task Granularity Rules
+
+Tasks must be atomic enough that someone can execute them without discovering hidden subtasks halfway through.
+
+BAD task:
+
+`Test the ESP32 setup`
+
+GOOD tasks:
+
+* Identify ESP32 board revision.
+* Verify GPIO mapping.
+* Wire HCT245 #1 power pins.
+* Wire HCT245 #2 power pins.
+* Install decoupling capacitors.
+* Wire one specific signal group.
+* Continuity-test the adapter.
+* Flash known firmware.
+* Run solid-red test.
+* Run checkerboard test.
+* Measure reported refresh rate.
+* Run one-hour stability test.
+* Record results.
+
+If a task has multiple independently testable outcomes, split it.
+
+Prefer tasks that result in one concrete artifact, measurement, verified condition, or decision.
+
+---
+
+# Required Fields for Every Jira Task
+
+Every task must contain:
+
+* **Task ID**
+* **Epic**
+* **Summary**
+* **Description**
+* **Why this task exists**
+* **Prerequisites**
+* **Blocked by**
+* **Required hardware**
+* **Required tools**
+* **Required software**
+* **Exact execution steps**
+* **Expected result**
+* **Acceptance criteria / Definition of Done**
+* **Evidence to save**
+* **Safety considerations**
+* **Known uncertainties**
+* **Failure response / what to do if it fails**
+* **Source references** to repo files/ADR/EXP where applicable
+* **Labels**
+* **Critical path:** yes/no
+* **Conditional:** yes/no
+* **Skip condition**, if conditional
+
+Do NOT require calendar-duration estimates.
+
+If estimating complexity helps, use relative complexity such as XS/S/M/L rather than invented hours.
+
+---
+
+# Issue Types
+
+To maximize Jira portability, use:
+
+* `Epic`
+* `Task`
+
+Represent special task types through labels rather than assuming Jira has custom issue types.
+
+Useful labels include:
+
+* `spike`
+* `decision`
+* `hardware`
+* `software`
+* `firmware`
+* `power`
+* `safety`
+* `controller-wf4`
+* `controller-esp32`
+* `controller-wf2`
+* `mechanical`
+* `critical-path`
+* `blocked`
+* `conditional`
+
+---
+
+# Safety Rules
+
+Mains work is high risk.
+
+Tasks involving 230 V AC must clearly identify the hazard and require:
+
+* power disconnected before wiring;
+* verification of L/N/PE;
+* protective earth;
+* fuse protection;
+* insulated connections;
+* strain relief;
+* continuity/inspection before energizing.
+
+Never suggest:
+
+* mains on breadboards;
+* Dupont leads for mains;
+* Dupont leads for high panel current;
+* power-daisy-chaining the panels;
+* measuring the complete display current through a normal multimeter's 10 A input;
+* hot-plugging HUB75 cables.
+
+---
+
+# Architecture Rules from the Existing Project
+
+Preserve these unless an explicit future ADR changes them:
+
+* Application logic runs on Linux/Python.
+* HUB75 real-time refresh is handled by a dedicated controller.
+* The application renders a canonical framebuffer.
+* Renderer code must remain independent of controller transport.
+* Panels receive power in parallel.
+* Signal chaining is allowed.
+* Prefer wired Nano→controller transport where practical.
+* Avoid unnecessary custom low-level firmware for V1.
+* Do not build `Nano → ESP32 → WF4 → panel`; WF4 and ESP32 are alternative controller paths.
+
+---
+
+# Software Planning
+
+The software and firmware areas are currently immature/mostly empty, so explicitly create bootstrap tasks.
+
+The first software objective is NOT weather/calendar/Spotify.
+
+It is:
+
+`arbitrary input text → Pillow framebuffer on Nano → transport adapter → physical panel`
+
+Build outward from that.
+
+Plan software roughly in this order:
+
+1. Nano OS.
+2. Wi-Fi/SSH.
+3. Minimal Python environment.
+4. Pillow text renderer.
+5. standard test-pattern renderer.
+6. canonical framebuffer abstraction.
+7. transport interface.
+8. candidate transport implementation.
+9. physical end-to-end text.
+10. scaling framebuffer dimensions.
+11. reliability/recovery.
+12. only then higher-level widgets/APIs.
+
+Later V1 features include:
+
+* time/date;
+* weather;
+* Google Calendar;
+* Spotify now playing;
+* album artwork;
+* arbitrary artwork;
+* caching;
+* offline fallback;
+* structured logs;
+* service supervision;
+* boot-time startup.
+
+Do not put these ahead of basic display validation.
+
+---
+
+# Conditional PCB Work
+
+If and only if the ESP32 architecture is selected:
+
+Create tasks for:
+
+1. freeze exact ESP32 footprint;
+2. freeze validated GPIO mapping;
+3. KiCad schematic;
+4. two SN74HCT245 stages;
+5. decoupling;
+6. HUB75 keyed connector;
+7. power/GND;
+8. ERC;
+9. PCB layout;
+10. DRC;
+11. physical/connector-orientation review;
+12. Gerbers;
+13. drill files;
+14. BOM;
+15. CPL if assembled;
+16. prototype manufacture;
+17. continuity test;
+18. one-row hardware validation;
+19. replacement of perfboard only after validation.
+
+Do not create the PCB as an unconditional prerequisite for the first working panel.
+
+The perfboard adapter exists specifically to validate the architecture first.
+
+---
+
+# Mounted Frame Phase
+
+After the six-panel prototype works, create detailed optimization tasks for:
+
+* exact component dimensions;
+* internal layout;
+* minimum frame depth;
+* PSU location;
+* controller location;
+* mains/low-voltage separation;
+* cable routing;
+* strain relief;
+* protective-earth bonding;
+* serviceability;
+* ventilation;
+* passive-cooling feasibility;
+* thermal testing;
+* brightness ceiling;
+* nighttime brightness;
+* Wi-Fi performance inside enclosure;
+* panel mechanical mounting;
+* prototype backplate;
+* final frame;
+* repeated power recovery;
+* extended unattended testing.
+
+Do not prematurely resolve ADR-024.
+
+---
+
+# Required Output
+
+Do not start implementation yet.
+
+First produce:
+
+## 1. Repository Audit
+
+Summarize what exists, what is empty, what is branch-only, and what appears stale.
+
+## 2. Requirements Matrix
+
+Map major product requirements to the repo source that defines them.
+
+## 3. Uncertainty / Decision Register
+
+For each unknown include:
+
+* question;
+* evidence currently available;
+* experiment/task that resolves it;
+* downstream tasks it blocks.
+
+## 4. Milestone Dependency Graph
+
+Explicitly show:
+
+`hardware receipt`
+→ `safe power`
+→ `Nano renderer`
+→ `one panel`
+→ `two panels`
+→ `architecture decision`
+→ `four panels`
+→ `six panels`
+→ `application completion`
+→ `mounted-frame optimization`
+
+Show parallel WF4/ESP32/WF2 branches where appropriate.
+
+## 5. Ordered Atomic Backlog
+
+Generate every task necessary to complete the project.
+
+Order it so someone can execute it from top to bottom.
+
+Clearly identify tasks that can happen in parallel.
+
+## 6. Critical Path
+
+Produce a separate shortest safe path to:
+
+**arbitrary text rendered by the Nano appearing on one physical panel.**
+
+Then show the critical path from there to:
+
+* two panels;
+* four panels;
+* six panels.
+
+## 7. Existing Experiment Coverage
+
+Map every existing `EXP-xxx` to the new backlog.
+
+Do not lose existing experiments simply because you split them into smaller Jira tasks.
+
+## 8. ADR Coverage
+
+For every ADR, indicate:
+
+* accepted constraint;
+* pending decision;
+* tasks providing evidence;
+* milestone at which it should be resolved.
+
+## 9. Jira Import Table
+
+Produce a normalized table with at least:
+
+`Issue Type`
+`Epic`
+`Task ID`
+`Summary`
+`Description`
+`Blocked By`
+`Labels`
+`Critical Path`
+`Conditional`
+`Acceptance Criteria`
+`Source References`
+
+## 10. Jira CSV Draft
+
+Generate a Jira-importable CSV draft if possible.
+
+Do not push anything to Jira yet.
+
+## 11. Coverage Audit
+
+At the end, ask yourself:
+
+* Is every purchased component used, tested, explicitly optional, or explicitly rejected?
+* Does every experiment map to backlog work?
+* Does every pending ADR have evidence-producing tasks?
+* Does every milestone have objective acceptance criteria?
+* Are hidden assumptions represented as tasks?
+* Is any task too large to execute without discovering multiple hidden subtasks?
+* Is there any point where a novice could accidentally connect power before verifying polarity?
+* Is there any point where work is scheduled before the decision that makes it relevant?
+* Does the shortest path genuinely reach Nano-generated arbitrary text on a physical panel?
+
+Fix any problems you find before presenting the final plan.
+
+After completing the analysis, present the plan for review. Do not execute hardware changes, rewrite architecture decisions, purchase hardware, or push Jira issues until explicitly instructed.
