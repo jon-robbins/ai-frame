@@ -36,6 +36,7 @@ PLANNED | READY | IN PROGRESS | PASSED | FAILED | BLOCKED | SUPERSEDED
 | EXP-014  | Controller architecture comparison      | PLANNED  | —          |
 | EXP-015  | PSU loaded thermal test                 | PLANNED  | EXP-006    |
 | EXP-016  | Full-system unattended reboot           | PLANNED  | —          |
+| EXP-017  | Four-panel 256×128 2×2 validation      | PLANNED  | EXP-014    |
 
 ---
 
@@ -464,9 +465,60 @@ Use representative content: mostly black, normal dashboard, full white (stress),
 
 - No manual intervention; recovers after power loss; Wi-Fi reconnects automatically; application restarts automatically; transient API errors do not blank or crash the display.
 
+## EXP-017 — Four-Panel 256×128 2×2 Validation
+
+**Definition status:** Newly defined for M3; this is not a historical experiment record.
+
+**Goal:** Validate the winning ADR-016 controller architecture on four P2 128×64 panels arranged as a 2×2, with a Nano-originated 256×128 framebuffer, both vertical x=128 seams, the horizontal y=64 seam, row-update behavior, coordinate mapping, and sustained stability.
+
+**Status:** PLANNED · **Depends-On:** EXP-014 (architecture comparison)
+
+**Hardware:** Four received P2 128×64 HUB75E panels; the controller topology selected by ADR-016 (WF4 or multi-ESP32); four separate parallel panel power branches; required verified HUB75 cables; A-200-5 PSU; LicheeRV Nano-W. A second ESP32 controller is conditional on availability and must not be assumed or silently purchased.
+
+**Software / Firmware:** Nano 256×128 framebuffer and row-crop/transport dispatch from AF-101; selected controller’s documented configuration and proven transport path.
+
+**Preconditions:** AF-096 records the ADR-016 architecture selection and reclassifies the M3 branch registry. AF-097 verifies panels #3/#4 unpowered. AF-098 or AF-099/AF-100 prepares the selected topology. AF-101 prepares the Nano framebuffer and two 256×64 row dispatches. Follow the applicable safety and evidence runbooks.
+
+### Procedure
+
+1. Verify panels #3 and #4 unpowered and record their polarity, HUB75 orientation, and physical orientation.
+2. Assemble the selected 2×2 topology: WF4 X1/X2 rows if WF4 wins, or one ESP32 per row if multi-ESP32 wins.
+3. Connect four separate parallel panel power branches; do not daisy-chain panel power.
+4. Configure the selected controller path for two 256×64 rows and render a Nano-originated 256×128 source frame.
+5. Crop and dispatch the top and bottom 256×64 rows; record source frame, crops, configuration, and transport logs.
+6. Display content crossing each vertical seam at x=128, the horizontal seam at y=64, and all three seam locations simultaneously in one Nano-originated frame.
+7. Observe repeated row updates, record observed top/bottom update deltas and conditions, and assess whether the behavior is dashboard-tolerable without inventing a numeric cutoff.
+8. Display a Nano-rendered coordinate grid with four corner labels, both x=128 labels, the y=64 label, and panel-region identifiers; photograph and checklist the physical result.
+9. Run a documented pattern sequence for at least 30 minutes; record pattern, timestamps, runtime, logs, visual observations, and measured temperatures/CPU where available.
+10. Review all evidence against the M3 gate and record a PASS or FAIL without beginning M4.
+
+### Measurements
+
+| Measurement | Result |
+| ----------- | ------ |
+| Winning architecture / controller configuration | TBD |
+| Nano source frame and row dispatch records | TBD |
+| Vertical seam x=128, top row | TBD |
+| Vertical seam x=128, bottom row | TBD |
+| Horizontal seam y=64 | TBD |
+| All seam types crossed simultaneously | TBD |
+| Observed row-update deltas and dashboard assessment | TBD |
+| Coordinate/corner/boundary mapping | TBD |
+| Stability pattern, timestamps, and runtime | TBD |
+| Temperatures / Nano CPU where available | TBD |
+
+### Success Criteria
+
+- The selected winning architecture drives a 2×2 topology as two 256×64 rows forming 256×128.
+- Nano-originated content crosses both vertical x=128 seams and the horizontal y=64 seam, including one frame crossing all three simultaneously.
+- Row-update observations include recorded deltas and a dashboard-tolerable assessment; no numeric cutoff is invented.
+- Nano coordinate, corner, and boundary labels map to the expected physical regions.
+- A documented run lasts at least 30 minutes with pattern, timestamps, logs, and available measured temperature/CPU evidence; no unexplained blanking, freezing, garbling, or reset is observed.
+- The complete EXP-017 evidence set supports the M3 gate decision, and a gate PASS does not itself start M4.
+
 ---
 
-## Future Experiments (EXP-017+)
+## Future Experiments (EXP-018+)
 
 - Enclosure thermal testing
 - Maximum acceptable frame depth

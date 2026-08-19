@@ -1,7 +1,7 @@
-# Milestone 0 (M0), Milestone 1 (M1) & Milestone 2 (M2) Refactor Map & Assertion Audit
+# Milestone 0 (M0), Milestone 1 (M1), Milestone 2 (M2) & Milestone 3 (M3) Refactor Map & Assertion Audit
 
 **Document:** `docs/pm/refactor-map.md`  
-**Purpose:** Authoritative migration matrix and formal factual assertion audit for Milestone 0 (M0) tasks (`AF-011` through `AF-024`, plus `AF-171`), Milestone 1 (M1) tasks (`AF-025` through `AF-080`, plus `AF-172`, `AF-173`), and Milestone 2 (M2) tasks (`AF-081` through `AF-092`), establishing the exact decompositions, assembly merges, target file destinations, and ground-truth corrections required for backlog restructuring.
+**Purpose:** Authoritative migration matrix and formal factual assertion audit for Milestone 0 (M0) tasks (`AF-011` through `AF-024`, plus `AF-171`), Milestone 1 (M1) tasks (`AF-025` through `AF-080`, plus `AF-172`, `AF-173`), Milestone 2 (M2) tasks (`AF-081` through `AF-092`), the Architecture Decision Gate (MG) tasks (`AF-093` through `AF-096`), and the historical Milestone 3 (M3) tasks (`AF-097` through `AF-108`), establishing the exact decompositions, assembly merges, target file destinations, and ground-truth corrections required for backlog restructuring.
 
 ---
 
@@ -472,6 +472,81 @@ The audit below uses current authoritative sources only. `docs/pm/02-requirement
 
 The stale `docs/pm/02-requirements-matrix.md` is not used as a source, replacement map, or acceptance authority for this M2 pass.
 
+# PART IV — Architecture Decision Gate (MG) Migration Matrix & Factual Audit
+
+## 14. MG Migration Matrix
+
+MG restores the historical AF-093–AF-096 prerequisite in [`08-architecture-decision.md`](backlog/08-architecture-decision.md). The tasks use the compact schema and current sources: [`docs/EXPERIMENTS.md`](../EXPERIMENTS.md) EXP-014, [`docs/DECISIONS.md`](../DECISIONS.md) ADR-016/ADR-017, [`docs/JIRA.md`](../JIRA.md), [`README.md`](../../README.md), and the PM runbooks. The stale [`02-requirements-matrix.md`](02-requirements-matrix.md) is excluded. AF-093 completes the measured matrix for WF4 versus the three-controller ESP32 architecture (Nano + three ESP32 controllers); AF-094 and AF-095 prepare reviewable decision drafts while both ADRs remain PENDING until evidence/review acceptance; AF-096 then performs the post-decision registry sweep only after both decisions are reviewed/accepted, without choosing a winner in this pre-decision source file, and M3 remains blocked until that sweep completes.
+
+| **ID** | **Destination / lineage** | **Disposition** | **Migration / factual correction** |
+|---|---|---|---|
+| **AF-093** | `08-architecture-decision.md` / AF-093 | **RESTORE / CORRECT** | Complete all 13 EXP-014 criteria for WF4 versus the three-controller ESP32 architecture (Nano + three ESP32 controllers) from measured, linked evidence; preserve explicit unknowns and do not select a controller. |
+| **AF-094** | `08-architecture-decision.md` / AF-094 | **RESTORE / CORRECT** | Draft the evidence-linked ADR-016 comparison and review package; keep ADR-016 `PENDING` until evidence/review acceptance and do not claim a winner. |
+| **AF-095** | `08-architecture-decision.md` / AF-095 | **RESTORE / CORRECT** | Draft the evidence-linked ADR-017 transport comparison and review package; keep ADR-017 `PENDING` until evidence/review acceptance and do not claim a winner. |
+| **AF-096** | `08-architecture-decision.md` / AF-096 | **RESTORE / CORRECT / GATE** | After both ADR-016 and ADR-017 are reviewed/accepted, execute the ADR-016 post-decision reclassification; AF-096 does not execute while either ADR is `PENDING`, and M3 cannot proceed until the sweep completes. The winner loses `conditional blocked blocked:adr-016` and `Applies if`, gains `critical-path`; the loser gets the exact resolved skip `Skip — ADR-016 selected WF4` or `Skip — ADR-016 selected multi-ESP32`, retains `conditional blocked blocked:adr-016`, and has no `critical-path`. |
+
+## 15. MG Factual Assertion Audit
+
+| Assertion | Current source(s) | Required treatment |
+|---|---|---|
+| EXP-014 compares WF4 and the three-controller ESP32 architecture (Nano + three ESP32 controllers) across 13 criteria. | [`docs/EXPERIMENTS.md`](../EXPERIMENTS.md) EXP-014; [`docs/JIRA.md`](../JIRA.md) architecture gate | AF-093 fills the matrix from measured evidence and marks unsupported cells unknown rather than inventing scores. |
+| ADR-016 and ADR-017 are unresolved decisions. | [`docs/DECISIONS.md`](../DECISIONS.md) index and ADR-016/017 entries | AF-094/095 prepare reviewable drafts; both remain `PENDING` until evidence/review acceptance. No winner is asserted here. |
+| MG must reclassify downstream conditional branches after both ADR reviews/acceptances. | [`docs/pm/backlog/README.md`](backlog/README.md) MG gate; [`docs/JIRA.md`](../JIRA.md) required fields and label taxonomy; [`docs/pm/runbooks/task-format.md`](runbooks/task-format.md) | AF-096 performs exact machine-readable label and `Applies if` mutations only after both ADRs are accepted, records the before/after result, and gates M3. |
+| The stale requirements matrix is not an authority for MG. | [`docs/pm/02-requirements-matrix.md`](02-requirements-matrix.md) is stale; current sources above | Exclude it from MG lineage, acceptance, scoring, and decision rationale. |
+
 ---
 
-*This refactor map serves as the authoritative specification for populating `docs/pm/backlog/00-hardware-receipt.md` and `docs/pm/backlog/01-power-bringup.md` during Pass 4A, `docs/pm/backlog/02-nano-bootstrap.md` through `docs/pm/backlog/06-single-panel-gate.md` during Pass 4B, and the included M2 section for `docs/pm/backlog/07-dual-panel.md`.*
+# PART V — Milestone 3 (M3) Migration Matrix, Factual Audit & Traceability
+
+## 16. M3 Migration Matrix
+
+M3 restores only the historical AF-097–AF-108 lineage in [`09-quad-panel.md`](backlog/09-quad-panel.md). The decomposition is retained as twelve atomic outcomes; descriptions are normalized to the compact schema and corrected against current sources. Because these files are prepared before ADR-016 is known, AF-098, AF-099, AF-100, AF-102, and AF-103 retain both branch definitions as a pre-decision registry representation. Before ADR-016, each entry has labels `conditional blocked blocked:adr-016` plus its applicable controller label and uses `Applies if` for the branch condition. AF-096 then normalizes that registry operationally only after both ADR-016 and ADR-017 are reviewed/accepted: the executor reads ADR-016 and substitutes the actual winner. For the winner, remove the labels `conditional blocked blocked:adr-016` and `Applies if`; add `critical-path` and retain the winning controller label. For the loser, retain or add `conditional blocked blocked:adr-016`, remove `critical-path` if present, and replace `Applies if` with the exact resolved line `Skip — ADR-016 selected WF4` when the three-controller ESP32 architecture loses, or `Skip — ADR-016 selected multi-ESP32` when WF4 loses. No `[other controller]` placeholder may remain. Only the selected branch executes after AF-096; M3 uses the applicable winning row topology, and this pre-decision map does not claim a winner. WF4 and the three-controller ESP32 architecture therefore remain represented before the decision without implying that both paths run after it.
+
+| Historical ID | Destination / disposition | Classification | Factual migration and lineage disposition |
+|---|---|---|---|
+| **AF-097** | `09-quad-panel.md` / AF-097 | `KEEP / CORRECT` | Common unpowered verification of panels #3/#4; depends on AF-096 and records polarity, HUB75 orientation, and physical orientation without assuming markings. |
+| **AF-098** | `09-quad-panel.md` / AF-098 | `KEEP / CORRECT` | Pre-decision registry entry for WF4 X1/X2 two-row topology and four separate parallel panel power branches; labels include `conditional blocked blocked:adr-016` and `controller-wf4`, with `Applies if` for the branch condition; after AF-096, apply the exact winner/loser label and line mutations in the shared rule. |
+| **AF-099** | `09-quad-panel.md` / AF-099 | `KEEP / CORRECT` | Pre-decision registry entry for multi-ESP32 second-controller/HCT preparation; labels include `conditional blocked blocked:adr-016` and `controller-esp32`, with `Applies if` for the branch condition; after AF-096, apply the exact winner/loser label and line mutations in the shared rule. It remains explicitly blocked when second hardware is unavailable, with no silent purchase or hardware assumption. |
+| **AF-100** | `09-quad-panel.md` / AF-100 | `KEEP / CORRECT` | Pre-decision registry entry for the multi-ESP32 two-row topology; labels include `conditional blocked blocked:adr-016` and `controller-esp32`, with `Applies if` for the branch condition; after AF-096, apply the exact winner/loser label and line mutations in the shared rule. |
+| **AF-101** | `09-quad-panel.md` / AF-101 | `KEEP / CORRECT` | Nano 256×128 framebuffer extension with two 256×64 row crops and dispatch; preserves the canonical framebuffer/transport boundary. |
+| **AF-102** | `09-quad-panel.md` / AF-102 | `KEEP / CORRECT` | Pre-decision registry entry for WF4 256×128 configuration and first light; labels include `conditional blocked blocked:adr-016` and `controller-wf4`, with `Applies if` for the branch condition; after AF-096, apply the exact winner/loser label and line mutations in the shared rule; depends on AF-098 plus AF-101 and requires Nano-originated content. |
+| **AF-103** | `09-quad-panel.md` / AF-103 | `KEEP / CORRECT` | Pre-decision registry entry for multi-ESP32 dual-controller first light; labels include `conditional blocked blocked:adr-016` and `controller-esp32`, with `Applies if` for the branch condition; after AF-096, apply the exact winner/loser label and line mutations in the shared rule; depends on AF-100 plus AF-101 and requires identified controller evidence. |
+| **AF-104** | `09-quad-panel.md` / AF-104 | `KEEP / CORRECT` | EXP-017 seam validation has machine-readable common prerequisites `AF-096, AF-101`; after reading accepted ADR-016 it runs only after the selected first-light task passes, AF-102 for WF4 or AF-103 for the applicable ESP32 row topology, and skips the unselected task rather than making it an AND dependency. It validates both x=128 vertical seams, the y=64 horizontal seam, and content crossing all three simultaneously. |
+| **AF-105** | `09-quad-panel.md` / AF-105 | `KEEP / CORRECT` | Row synchronization observation has machine-readable common prerequisites `AF-096, AF-101`; after reading accepted ADR-016 it runs only after the selected first-light task passes, AF-102 for WF4 or AF-103 for the applicable ESP32 row topology, and skips the unselected task rather than making it an AND dependency. It records observed deltas and a dashboard-tolerable assessment with no invented numeric cutoff. |
+| **AF-106** | `09-quad-panel.md` / AF-106 | `KEEP / CORRECT` | Nano coordinate grid, corner labels, and both seam-boundary labels; depends on seam validation. |
+| **AF-107** | `09-quad-panel.md` / AF-107 | `KEEP / CORRECT` | EXP-017 stability observation for at least 30 minutes with pattern, runtime, logs, and measured temperatures/CPU where available; no invented thresholds. |
+| **AF-108** | `09-quad-panel.md` / AF-108 | `KEEP / CORRECT / AGGREGATE` | M3 gate aggregator requiring the winning architecture, 2×2/256×128, both seam types, Nano-controlled content, row-sync assessment, coordinate evidence, at least 30-minute stability, and complete EXP-017 evidence; it explicitly does not begin M4. |
+
+## 17. M3 Factual Assertion Audit
+
+The audit uses current sources in `docs/pm/backlog/README.md`, `docs/JIRA.md`, `docs/PROJECT.md`, `docs/BOM.md`, `docs/DECISIONS.md`, received-hardware evidence, and the shared PM runbooks. `docs/pm/02-requirements-matrix.md` is stale and is expressly excluded from M3 authority, lineage, and acceptance criteria.
+
+| Assertion / claim | Current authority | Audit disposition |
+|---|---|---|
+| M3 is a gated four-panel 2×2 / 256×128 milestone after architecture selection. | [`docs/pm/backlog/README.md`](backlog/README.md) M3 gate; [`docs/JIRA.md`](../JIRA.md) Milestone 3 | AF-096 precedes M3; AF-108 checks the winner and blocks M4 unless the complete gate passes. |
+| The M3 physical topology is two 256×64 rows, with four independent panel power branches. | [`docs/JIRA.md`](../JIRA.md) Milestone 3; [`docs/PROJECT.md`](../PROJECT.md) §§3.1, 3.4; [`docs/BOM.md`](../BOM.md) | AF-098 and AF-100 retain separate WF4/multi-ESP32 topologies and parallel power; no panel-power daisy-chain is introduced. |
+| M3 uses the applicable winning row topology: WF4 maps X1 to the top row and X2 to the bottom row; the three-controller ESP32 architecture uses the applicable ESP32 row controller(s). | [`docs/JIRA.md`](../JIRA.md) Milestone 3; [`docs/PROJECT.md`](../PROJECT.md) §3.3; [`docs/DECISIONS.md`](../DECISIONS.md) ADR-016 | Before ADR-016, AF-098/102 and AF-099/100/103 carry `conditional blocked blocked:adr-016` plus their controller labels and explicit `Applies if` conditions. After AF-096, the winner loses those three labels and `Applies if`, gains `critical-path`; the loser retains/adds those labels, loses `critical-path`, and receives the resolved skip line `Skip — ADR-016 selected WF4` when the three-controller ESP32 architecture loses or `Skip — ADR-016 selected multi-ESP32` when WF4 loses. |
+| The Nano owns the logical framebuffer and row split, while the controller owns HUB75 refresh. | [`docs/PROJECT.md`](../PROJECT.md) §§3.1–3.3; [`docs/DECISIONS.md`](../DECISIONS.md) ADR-002 and ADR-016 | AF-101, AF-102/103, and AF-104 require Nano-originated 256×128 content and preserve the transport boundary. |
+| EXP-017 is a new M3 experiment, not historical evidence. | [`docs/JIRA.md`](../JIRA.md) Milestone 3 explicitly requests a new experiment ID; current `docs/EXPERIMENTS.md` now defines EXP-017 | The experiment record is marked “Newly defined for M3”; historical AF-097–108 is used only for lineage. |
+| Row synchronization is judged from observed deltas against dashboard use, not an invented universal number. | [`docs/pm/backlog/README.md`](backlog/README.md) M3 gate; [`docs/JIRA.md`](../JIRA.md) “synchronized-enough row updates” | AF-105 records method, deltas, conditions, and an explicit dashboard-tolerable assessment without a numeric cutoff. |
+| Stability requires at least 30 minutes, with available measurements recorded but no unsupported thermal/CPU thresholds. | [`docs/pm/backlog/README.md`](backlog/README.md) M3 gate; [`docs/JIRA.md`](../JIRA.md) Milestone 3; evidence runbook | AF-107 requires runtime, pattern, logs, and measured temperatures/CPU where available; it does not convert unknown limits into pass/fail numbers. |
+
+The stale requirements matrix is not used to justify its obsolete P1.53, RD-65A, memory, mains, or threshold claims. Where received-hardware evidence is unavailable, M3 tasks require verification or record a blocked/unknown state rather than inventing a specification.
+
+## 18. M3 Verification & Traceability Coverage
+
+| Source / evidence domain | Covering task IDs |
+|---|---|
+| MG prerequisite and M3 pre-decision branch registry / AF-096 post-ADR-016 single-winning-path normalization | `AF-093`, `AF-094`, `AF-095`, `AF-096`, `AF-098`, `AF-099`, `AF-100`, `AF-102`, `AF-103`, `AF-108` |
+| Panels #3/#4 unpowered verification and received-hardware evidence | `AF-097` |
+| WF4 2×2 topology and four parallel branches | `AF-098`, `AF-102` |
+| Multi-ESP32 second-controller preparation and conditional topology | `AF-099`, `AF-100`, `AF-103` |
+| Nano 256×128 framebuffer, two row crops, and transport dispatch | `AF-101`, `AF-102`, `AF-103`, `AF-104` |
+| EXP-017 vertical, horizontal, and simultaneous seam crossing | `AF-104`, `AF-108` |
+| Row synchronization observation and dashboard assessment | `AF-105`, `AF-107`, `AF-108` |
+| Coordinate grid, corner labels, and panel-boundary labels | `AF-106`, `AF-108` |
+| EXP-017 ≥30-minute stability and complete evidence review | `AF-107`, `AF-108` |
+
+`docs/EXPERIMENTS.md` EXP-017 is the planned experiment definition; `docs/pm/evidence/AF-097-...` through `AF-108-...` and the standard hardware-photo/log paths are the evidence destinations named by the restored tasks. The MG prerequisite is restored in `08-architecture-decision.md`; no derived Jira file, M0/M1 file, M2 file, or M4+ file is part of this migration.
+
+*This refactor map serves as the authoritative specification for populating the M0, M1, M2, MG, and M3 phase files during the refactor passes; PART IV covers the restored MG prerequisite and PART V covers the included M3 section for `docs/pm/backlog/09-quad-panel.md`.*
