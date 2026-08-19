@@ -283,34 +283,54 @@ Prefer tasks that result in one concrete artifact, measurement, verified conditi
 
 # Required Fields for Every Jira Task
 
-Every task must contain:
+Every task in the backlog uses this compact schema. The full reference with
+examples is in `docs/pm/runbooks/task-format.md`.
 
-* **Task ID**
-* **Epic**
-* **Summary**
-* **Description**
-* **Why this task exists**
-* **Prerequisites**
-* **Blocked by**
-* **Required hardware**
-* **Required tools**
-* **Required software**
-* **Exact execution steps**
-* **Expected result**
-* **Acceptance criteria / Definition of Done**
-* **Evidence to save**
-* **Safety considerations**
-* **Known uncertainties**
-* **Failure response / what to do if it fails**
-* **Source references** to repo files/ADR/EXP where applicable
-* **Labels**
-* **Critical path:** yes/no
-* **Conditional:** yes/no
-* **Skip condition**, if conditional
+## Required fields (present in every task)
 
-Do NOT require calendar-duration estimates.
+* **ID + Title** — in the `### AF-XXX — Title` heading
+* **Milestone** — `M0`, `M1`, `M2`, `MG`, `M3`, `M4`, `MR`, `MA`, `Cond-X`, `MF`
+* **Depends on** — what must complete first (replaces Prerequisites + Blocked by)
+* **Labels** — from the label taxonomy
+* **Do** — numbered action steps (what to physically do)
+* **Done when** — verifiable acceptance criteria (replaces Expected result + Acceptance criteria)
+* **If it fails** — blocker/failure response
 
-If estimating complexity helps, use relative complexity such as XS/S/M/L rather than invented hours.
+## Optional fields (use only when relevant)
+
+* **Applies if:** condition (e.g., `ADR-016 selects ESP32`) — for conditional tasks; must state WHY the task is conditional
+* **Safety:** profile name (e.g., `MAINS`, `HUB75`) — references `docs/pm/runbooks/safety.md`
+* **Stop condition:** one sentence — required alongside Safety for dangerous tasks
+* **Resolves:** `U-XXX` — when task resolves specific uncertainties
+* **Procedure:** `EXP-XXX` — when a formal experiment defines the method
+* **Wiring:** `path §section` — when specific wiring docs apply
+* **Parts:** (list) — only for unusual/non-obvious items not already in BOM
+* **Context:** (1 sentence) — only when the title + Depends on doesn't make purpose obvious
+
+## Fields that do NOT appear in task bodies
+
+These are either redundant with the heading/file structure, or belong in shared
+runbooks rather than repeated per task:
+
+* Task ID (in heading), Epic (in file/Jira metadata), Summary (in heading)
+* Description / Why this task exists (use Context: only if needed)
+* Required hardware / tools / software (BOM + procedure covers this)
+* Long evidence-to-save sections (convention in `docs/pm/runbooks/evidence.md`)
+* Full safety checklists (canonical rules in `docs/pm/runbooks/safety.md`)
+* Verbose source references (keep only direct refs: `Procedure: EXP-011`)
+
+## Factual validation rule
+
+For any quantitative or electrical assertion in a task:
+
+1. PROJECT.md / BOM.md accepted project specification
+2. Actual received-hardware evidence
+3. Manufacturer documentation already cited/recorded in repo
+4. Accepted ADR
+5. Otherwise → UNKNOWN
+
+An agent must not convert UNKNOWN into a plausible value. Write a verification
+task instead.
 
 ---
 
@@ -343,6 +363,12 @@ Useful labels include:
 ---
 
 # Safety Rules
+
+The canonical safety checklists are maintained in `docs/pm/runbooks/safety.md`.
+Tasks reference safety profiles by name (e.g., `**Safety:** MAINS`) plus a
+one-line local stop condition for dangerous tasks.
+
+The following rules remain authoritative and are consolidated in the runbook:
 
 Mains work is high risk.
 
@@ -573,13 +599,13 @@ Produce a normalized table with at least:
 `Epic`
 `Task ID`
 `Summary`
-`Description`
-`Blocked By`
+`Milestone`
+`Depends On`
 `Labels`
-`Critical Path`
-`Conditional`
+`Applies If`
+`Context`
 `Acceptance Criteria`
-`Source References`
+`Procedure / References`
 
 ## 10. Jira CSV Draft
 
