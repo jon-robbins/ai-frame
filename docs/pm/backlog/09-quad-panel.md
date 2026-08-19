@@ -48,53 +48,53 @@ Keep everything disconnected, quarantine the ambiguous panel or connector, and r
 #### If it fails
 De-energize fully before inspection. Isolate the affected ribbon, branch, connector, or orientation issue and repeat AF-097 or the relevant wiring check before continuing.
 
-### AF-099 — Prepare the second ESP32 controller path
+### AF-099 — Audit second ESP32 controller-path readiness
 
 **Milestone:** M3
 **Depends on:** AF-097
 **Labels:** hardware firmware controller-esp32 validation conditional blocked blocked:adr-016
-**Applies if:** ADR-016 selects multi-ESP32; this task prepares the second row controller without assuming that a second controller has been purchased.
+**Applies if:** ADR-016 selects multi-ESP32; this task audits second-controller hardware readiness without assuming that a second controller has been purchased.
 
 #### Do
 1. Audit the delivered ESP32-S3 and HCT adapter inventory and identify whether a second controller path is physically available.
-2. If available, document its board identity, adapter status, firmware/configuration baseline, and intended bottom-row role; prepare the Nano transport endpoint without changing the proven first-controller path.
-3. If unavailable, record `BLOCKED: second controller hardware not received/purchased` in `docs/pm/evidence/AF-099-second-controller-prep.md` and activate AF-187 to acquire the missing hardware explicitly; do not substitute or silently assume hardware. Complete AF-099 only after AF-187 delivers verified hardware and step 2 is performed with it.
+2. If suitable hardware is available, record `READY` in `docs/pm/evidence/AF-099-second-controller-readiness.md` with the identified board identity and adapter status.
+3. If unavailable, record `MISSING` in the same evidence file with the exact items required — the ESP32-S3 board matching the proven first controller, plus any missing HCT adapter components per BOM; do not substitute or silently assume hardware.
 
 #### Done when
-- A second-controller path is prepared from verified available hardware — directly, or from hardware acquired through AF-187 — with any interim blocked record preserved.
-- No unpurchased hardware, GPIO assignment, or working capability is asserted as fact.
+- The evidence record states exactly one outcome — `READY` with identified hardware or `MISSING` with the exact required items.
+- No unpurchased hardware, GPIO assignment, or working capability is asserted as fact, and this audit does not wait for procurement.
 
 #### If it fails
-Do not wire or flash an unidentified board. Preserve the inventory and logs, and resolve the missing hardware via AF-187 or the identity issue before AF-100.
+Do not record an ambiguous outcome. Resolve the inventory discrepancy from received-hardware or manufacturer evidence before recording `READY` or `MISSING`; AF-187 and AF-100 rely on this audit.
 
-### AF-187 — Acquire second ESP32 controller-path hardware
+### AF-187 — Resolve second ESP32 controller-path hardware readiness
 
 **Milestone:** M3
 **Depends on:** AF-099
-**Labels:** hardware controller-esp32 procurement conditional blocked blocked:adr-016
-**Applies if:** ADR-016 selects multi-ESP32 and AF-099 records that the second-controller hardware is unavailable.
-**Context:** ADR-013 permits additional ESP32 purchases only after the first controller proves itself, which the accepted ADR-016 multi-ESP32 selection satisfies; this task makes the second-controller purchase an explicit registry outcome instead of dead-ending the ESP32 path on missing hardware.
+**Labels:** hardware controller-esp32 purchasing conditional blocked blocked:adr-016
+**Applies if:** ADR-016 selects multi-ESP32; this task ensures verified second-controller hardware exists before AF-100 assembly.
+**Context:** AF-099's audit outcome drives this task: `READY` hardware is verified in place, while `MISSING` hardware is purchased per ADR-013 — which permits additional ESP32s only after the first controller proves itself, a condition satisfied by the accepted ADR-016 multi-ESP32 selection.
 
 #### Do
-1. From AF-099's blocked record, list the exact missing items — the ESP32-S3 board matching the proven first controller, plus any missing HCT adapter components per BOM.
-2. Order the listed items from the BOM-linked sources and record order references, items, and costs in `docs/pm/evidence/AF-187-second-controller-procurement.md`.
-3. On receipt and while de-energized, verify each item against the BOM and received-hardware evidence (board identity, adapter component identity, no damage), photograph it, and update the inventory record.
-4. Hand the verified hardware back to AF-099 to complete second-controller preparation; do not wire, flash, or energize anything in this task.
+1. Read AF-099's recorded outcome.
+2. If `READY`: while de-energized, verify the identified second controller and adapter against the BOM and received-hardware evidence; document board identity, adapter status, firmware/configuration baseline, and intended bottom-row role in `docs/pm/evidence/AF-187-second-controller-hardware.md`; prepare the Nano transport endpoint without changing the proven first-controller path.
+3. If `MISSING`: order the exact recorded items from BOM-linked sources and record order references, items, and costs in the evidence file; on receipt and while de-energized, verify each item against the BOM and received-hardware evidence (board identity, adapter component identity, no damage), photograph it, update the inventory record, then perform the step-2 documentation and transport-endpoint preparation.
+4. Do not wire, flash, or energize anything in this task; AF-100 performs assembly.
 
 #### Done when
-- The missing second-controller items are ordered and received, with order references and receipt evidence recorded.
-- Each received item is verified de-energized against the BOM, photographed, and reflected in the inventory record.
-- AF-099's blocked record is resolvable from this verified hardware, and no unpurchased or unidentified hardware is asserted.
+- AF-099's outcome is resolved into verified, documented second-controller hardware — verified in place for `READY`, or ordered/received/verified for `MISSING` — with order references and receipt evidence where a purchase occurred.
+- The second controller path is documented (board identity, adapter status, firmware/configuration baseline, intended bottom-row role) and the Nano transport endpoint is prepared without changing the proven first-controller path.
+- No unpurchased or unidentified hardware is asserted as fact; ADR-013's staged-purchase rule is respected.
 
 #### If it fails
-Keep the ESP32 path blocked and record the procurement status; do not substitute an unidentified board or component, and resume AF-099 only after correct hardware is received and verified.
+Keep the ESP32 path blocked and record the readiness status; do not substitute an unidentified board or component, and retry only after correct hardware is received and verified.
 
 ### AF-100 — Assemble ESP32 2×2 topology
 
 **Milestone:** M3
-**Depends on:** AF-099
+**Depends on:** AF-187
 **Labels:** hardware controller-esp32 power validation safety-review conditional blocked blocked:adr-016
-**Applies if:** ADR-016 selects multi-ESP32 and AF-099 confirms the second controller path is available; this task maps one controller to each 256×64 row.
+**Applies if:** ADR-016 selects multi-ESP32 and AF-187 confirms the second controller path is ready; this task maps one controller to each 256×64 row.
 **Safety:** 5V-HIGH-CURRENT
 **Stop condition:** De-energize controller, panels, and PSU before every HUB75 or panel-power connection change; never hot-plug.
 **Procedure:** EXP-017
@@ -110,7 +110,7 @@ Keep the ESP32 path blocked and record the procurement status; do not substitute
 - The second controller identity and wiring are evidenced; no hot-plug occurred.
 
 #### If it fails
-De-energize before touching the rig. Return to AF-099 for an unavailable or unidentified controller, or isolate the failed row, ribbon, branch, or adapter and correct it before repeating AF-100.
+De-energize before touching the rig. Return to AF-187 for an unavailable or unidentified controller, or isolate the failed row, ribbon, branch, or adapter and correct it before repeating AF-100.
 
 ### AF-101 — Extend the Nano framebuffer to 256×128 dual-row dispatch
 
@@ -173,7 +173,7 @@ Stop output and de-energize. Check configuration, row assignment, panel order, a
 - Both controller configurations and the dual dispatch evidence are saved.
 
 #### If it fails
-Stop output and de-energize. Route a missing/identity issue to AF-099, topology faults to AF-100, and framebuffer/dispatch faults to AF-101; preserve logs before retrying.
+Stop output and de-energize. Route a missing/identity issue to AF-187, topology faults to AF-100, and framebuffer/dispatch faults to AF-101; preserve logs before retrying.
 
 ### AF-104 — Validate EXP-017 seam crossing
 
