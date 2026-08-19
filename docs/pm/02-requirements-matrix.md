@@ -1,3 +1,6 @@
+> [!WARNING]
+> STALE — DO NOT USE FOR FACTUAL VALIDATION. Requirements matrix contains obsolete specifications (P1.53, 2GB RAM, RD-65A 12V, fused branches) from pre-refactor schema. Ground truth is defined by PROJECT.md, BOM.md, EXPERIMENTS.md, and accepted ADRs.
+
 # 02 — Requirements Matrix
 
 **Last updated:** 2026-08-19
