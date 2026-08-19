@@ -10,8 +10,8 @@
 
 To maintain conciseness and zero drift across the project backlog, tasks involving physical hardware, electrical connections, or bench debugging specify safety requirements using two standardized fields:
 
-1. **`**Safety:** <PROFILE-NAME>`** — References one of the 4 named profiles defined below (`MAINS`, `HUB75`, `CH340`, or `5V-HIGH-CURRENT`).
-2. **`**Stop condition:** <local stop condition>`** — A mandatory, concrete one-sentence rule describing the immediate physical action or threshold required before proceeding or when unexpected behavior occurs (e.g., *"Disconnect wall power immediately if any component heats abnormally or fails continuity."*).
+1. **`Safety:`** `<PROFILE-NAME>` — References one of the 4 named profiles defined below (`MAINS`, `HUB75`, `CH340`, or `5V-HIGH-CURRENT`).
+2. **`Stop condition:`** `<local stop condition>` — A mandatory, concrete one-sentence rule describing the immediate physical action or threshold required before proceeding or when unexpected behavior occurs (e.g., *"Disconnect wall power immediately if any component heats abnormally or fails continuity."*).
 
 Tasks that do not touch physical hardware or dangerous voltages (such as software-only or pure documentation tasks) omit the `Safety:` and `Stop condition:` fields or state `N/A`.
 
@@ -21,7 +21,7 @@ Tasks that do not touch physical hardware or dangerous voltages (such as softwar
 |---|---|---|---|
 | `MAINS` | 230 V AC wiring, C14 inlet, PSU AC terminals, PSU energization | Lethal AC electric shock, mains short circuit, fire | Wall plug accessible for instant emergency disconnect; power OFF before any wire changes. |
 | `HUB75` | HUB75 ribbon cable connection, chaining, swapping | Controller / buffer / panel driver damage from transient currents | Disconnect panel and controller power before connecting or moving ribbon cables. |
-| `CH340` | USB-UART serial debugging on LicheeRV Nano, ESP32, etc. | Back-feeding 5 V/3.3 V to powered boards, ground-loop damage | Connect only 3 pins (TX/RX/GND); never connect VCC; disconnect CH340 before PSU harness power. |
+| `CH340` | USB-UART serial debugging on LicheeRV Nano, ESP32, etc. | Back-feeding 5 V/3.3 V to powered boards, ground-loop damage | When the target is independently powered, connect TX/RX/GND only. Leave CH340 VCC/5V/3.3V disconnected. |
 | `5V-HIGH-CURRENT` | 5 V panel power distribution, harness wiring, PSU load tests | Overcurrent, excessive voltage drop, burnt wiring/multimeter shunt | Dedicated parallel power branches; never daisy-chain; never measure full current through 10 A DMM shunt. |
 
 ---
@@ -36,7 +36,7 @@ Before energizing or making any physical changes to mains-voltage circuits, comp
 
 1. **Disconnect wall power before any wiring change:** Unplug the IEC C13 mains cable from the wall outlet or bench supply before touching any AC terminal or wire.
 2. **Verify L/N/PE terminal identification at C14 inlet:** Inspect physical markings and use continuity testing to confirm the Live (L), Neutral (N), and Protective Earth (PE) pin/tab layout on the rear of the C14 inlet assembly. Do not rely on unverified pinouts.
-3. **Confirm protective earth (PE) continuity to PSU FG:** Verify direct electrical continuity (0.00 Ω nominal) between the C14 ground pin/tab and the switching power supply frame ground (`FG` / earth screw terminal). **PE must NOT be switched or fused.**
+3. **Confirm protective earth (PE) continuity to PSU FG:** Verify direct electrical continuity between the C14 ground pin/tab and the switching power supply frame ground (`FG` / earth screw terminal). Verify PE continuity and record the measured resistance. Do not impose a numeric pass threshold until a validated requirement exists. **PE must NOT be switched or fused.**
 4. **Confirm the installed fuse matches prototype requirements:** Confirm the installed fuse matches the validated C14/PSU prototype requirement. Current candidate: **T2A 5×20 mm slow-blow glass fuse**; verify fit and rating before first energization.
 5. **All AC connections use insulated spade or ferrule terminals:** Use 6.3 mm insulated female spade terminals on C14 tabs and correctly sized bootlace ferrules on PSU screw terminals. Ensure no bare conductor strands are exposed outside the insulation.
 6. **Strain relief on AC cable before terminals:** Secure the 3-core AC mains cable with mechanical strain relief / clamping so tension on the cable cannot pull terminals loose.
@@ -60,14 +60,14 @@ This profile applies to all tasks involving connecting, routing, chaining, or de
 ### Core Signal Rules & Handling
 
 - **Zero Hot-Plugging:** Disconnect panel and controller power before connecting, disconnecting, or moving HUB75 ribbon cables (Never hot-plug HUB75 cables).
-- **Keyed Ribbon Header Alignment:** Verify pin 1 (red stripe on ribbon cable) aligns with the keyed notch on the 2×8 box header on both controller and panel `HUB75 IN` / `HUB75 OUT` ports.
+- **Connector & Orientation Verification:** Verify pin 1, key orientation, and IN/OUT markings on the delivered panel/controller before connection. Do not infer orientation solely from cable stripe or a generic HUB75 pinout.
 - **Signal-Ground Integrity:** Ensure common logic ground exists across the display controller, buffer circuits, and panel logic grounds.
 - **Factual Grounding on Power Sequencing:** Do **NOT** invent arbitrary power-up sequencing rules (e.g., requiring signal before power or power before signal) unless explicitly cited from official manufacturer documentation or validated test data.
 
 ### Prohibitions (Never)
 
 - **NEVER** insert or remove HUB75 ribbon cables on energized boards.
-- **NEVER** force an unkeyed connector backwards into a HUB75 header without verifying the silkscreen pinout (`R1, G1, B1, GND, R2, G2, B2, E, A, B, C, D, CLK, LAT, OE, GND`).
+- **NEVER** force an unkeyed connector into a HUB75 header without verifying pin 1, key orientation, and silkscreen labels on the delivered hardware.
 
 ---
 
@@ -77,17 +77,15 @@ This profile applies to serial console connection and debugging tasks for the Li
 
 ### 3-Pin Connection & Isolation Rules
 
-- **Strict 3-Pin Connection (TX, RX, GND):** Connect only three signal lines between the CH340 adapter and target board:
+- **Strict 3-Pin Connection (TX, RX, GND):** When the target is independently powered, connect TX/RX/GND only. Leave CH340 VCC/5V/3.3V disconnected.
   - CH340 `TX` → Target `RX` (e.g., Nano `A17`)
   - CH340 `RX` ← Target `TX` (e.g., Nano `A16`)
   - CH340 `GND` ↔ Target `GND`
-- **NEVER Connect Power (VCC / 5V / 3.3V):** Connect only TX/RX/GND (3 pins) — **NEVER connect VCC/3.3V from CH340 to target.** Leave the CH340 `5V` and `3.3V` power output pins completely disconnected (floating). Do not feed power from the CH340 module to a target board that is already powered by USB-C, bench PSU, or harness.
 - **Disconnect Before High-Current Powering:** Disconnect CH340 before powering target from PSU harness to avoid ground-loop or back-feed transients during system energization.
-- **Separate Isolated Adapters for Multi-Board Debugging:** If debugging multiple boards (e.g., LicheeRV Nano and ESP32-S3), use a separate isolated USB-UART adapter per board. Never cross-connect UART power rails.
 
 ### Prohibitions (Never)
 
-- **NEVER** connect CH340 `5V` or `3.3V` output pins to a powered target microcontroller.
+- **NEVER** connect CH340 `5V` or `3.3V` output pins to an independently powered target microcontroller.
 - **NEVER** connect a 5 V TTL UART line directly to 3.3 V logic pins without verified level tolerance.
 
 ---

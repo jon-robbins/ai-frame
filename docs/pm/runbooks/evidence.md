@@ -8,7 +8,7 @@
 
 ## 1. Overview & Core Principles
 
-Every task in the AI Frame project requires verifiable, reproducible evidence before it can be marked as complete. Evidence serves three core goals:
+Every task must have enough evidence to establish its `Done when` criteria. Evidence serves three core goals:
 1. **Safety Assurance:** Verification that hazardous wiring and critical isolations were inspected before energization.
 2. **Architectural Grounding:** Quantitative bench data to feed ADRs and validate candidate hardware.
 3. **No-Guessing Audit Trail:** Factual documentation of delivered components, physical markings, and measured parameters.
@@ -56,23 +56,23 @@ All evidence files must follow strict kebab-case naming prefixed with the stable
 - **Evidence Log Files:**
   `docs/pm/evidence/AF-XXX-<short-description>.md`  
   *Examples:*
-  - `docs/pm/evidence/AF-014-psu-no-load-voltage.md`
-  - `docs/pm/evidence/AF-033-pillow-rendering-smoke.md`
-  - `docs/pm/evidence/AF-088-esp32-refresh-rate.md`
+  - `docs/pm/evidence/AF-XXX-psu-no-load-voltage.md`
+  - `docs/pm/evidence/AF-XXX-pillow-rendering-smoke.md`
+  - `docs/pm/evidence/AF-XXX-esp32-refresh-rate.md`
 
 - **Photos:**
   `hardware/photos/AF-XXX-<subject-or-angle>.jpg` (or `.png`)  
   *Examples:*
-  - `hardware/photos/AF-013-c14-rear-wiring-insulated.jpg`
-  - `hardware/photos/AF-025-ch340-3pin-vcc-floating.jpg`
-  - `hardware/photos/AF-044-psu-5v-multimeter-reading.jpg`
-  - `hardware/photos/AF-055-panel1-solid-red-test.jpg`
+  - `hardware/photos/AF-XXX-c14-rear-wiring-insulated.jpg`
+  - `hardware/photos/AF-XXX-ch340-three-wire-connection.jpg`
+  - `hardware/photos/AF-XXX-psu-5v-multimeter-reading.jpg`
+  - `hardware/photos/AF-XXX-panel1-solid-red-test.jpg`
 
 - **Terminal Logs:**
   `docs/pm/evidence/logs/AF-XXX-<command-or-test>.log`  
   *Examples:*
-  - `docs/pm/evidence/logs/AF-026-nano-boot-dmesg.log`
-  - `docs/pm/evidence/logs/AF-035-pytest-framebuffer.log`
+  - `docs/pm/evidence/logs/AF-XXX-nano-boot-dmesg.log`
+  - `docs/pm/evidence/logs/AF-XXX-pytest-framebuffer.log`
 
 ---
 
@@ -85,10 +85,10 @@ Never record subjective or vague impressions such as "looks fine", "room tempera
 2. **Timestamps:**
    - Include date and time in ISO 8601 format (e.g., `2026-08-19T14:30:00Z` or `2026-08-19 14:30:00`) on all test sessions and log entries.
 3. **Instrumentation & Setup Configuration:**
-   - Note the measurement tool model, range setting, and measurement points (e.g., *"CHINT ZTW0138A DMM set to 20V DC range, measured across PSU +V and -V screw terminals"*).
-4. **Explicit Pass/Fail Evaluation Against Tolerances:**
-   - State the required nominal tolerance range and compare the measured value against it:
-     - *Expected:* `5.00 V ± 0.25 V (4.75 V to 5.25 V)`
+   - Note the measurement tool model, range setting, and measurement points (e.g., *"CHINT ZTW0138A DMM set to DC voltage mode, measured across PSU +V and -V screw terminals"*).
+4. **Explicit Pass/Fail Evaluation Against Acceptance Criteria:**
+   - State the requirement source / expected criteria and compare the measured value against it:
+     - *Expected:* `~5 V, stable` (per EXP-002)
      - *Measured:* `5.04 V`
      - *Result:* `PASS`
 5. **Hold & Stability Duration Logging:**
@@ -113,14 +113,14 @@ When creating a measurement log in `docs/pm/evidence/AF-XXX-<desc>.md`, use this
 ## 1. Test Setup & Equipment
 - **Instruments used:** [e.g., CHINT ZTW0138A DMM, HS-202D crimper]
 - **Hardware tested:** [e.g., A-200-5 PSU, P2-32S Panel #1]
-- **Tool settings / Range:** [e.g., DMM 20V DC mode]
+- **Tool settings / Range:** [e.g., DMM DC voltage mode]
 
 ## 2. Quantitative Measurements
 
-| Test Point | Parameter | Expected Range / Limit | Measured Value | Result |
-|---|---|---|---|---|
-| PSU output terminal | DC Voltage (no-load) | 4.75 V – 5.25 V | 5.06 V | PASS |
-| PE to PSU Frame | Continuity / Resistance | < 0.10 Ω | 0.01 Ω | PASS |
+| Test Point | Parameter | Requirement Source | Expected | Measured | Result |
+|---|---|---|---|---|---|
+| PSU +V / COM | DC voltage | EXP-002 | ~5 V, stable | [record] | [PASS/FAIL] |
+| C14 PE → PSU FG | Continuity | Safety runbook | continuity required | [record] | [PASS/FAIL] |
 
 ## 3. Visual & Safety Checks
 - [x] Pre-power visual inspection complete: no exposed strands.

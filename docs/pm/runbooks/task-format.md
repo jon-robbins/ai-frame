@@ -52,7 +52,7 @@ Every task in the backlog must adhere strictly to the following compact schema:
 | Field | Requirement | Definition / Constraint |
 |---|---|---|
 | **`Milestone:`** | Mandatory | Target milestone: `M0`, `M1`, `M2`, `MG`, `M3`, `M4`, `MR`, `MA`, `Cond-X`, `MF`. |
-| **`Depends on:`** | Mandatory | Comma-separated list of prerequisite stable IDs (e.g., `AF-012, AF-013`) or `—` if none. |
+| **`Depends on:`** | Mandatory | Comma-separated list of prerequisite stable IDs (e.g., `AF-EXAMPLE-1, AF-EXAMPLE-2`) or `—` if none. |
 | **`Labels:`** | Mandatory | Space-separated lowercase tags from the project taxonomy (e.g., `hardware`, `controller-esp32`, `safety-review`, `critical-path`). |
 | **`Applies if:`** | Optional | Required for conditional tasks. Must explicitly state the architectural trigger (e.g., `ADR-016 selects ESP32`). |
 | **`Safety:`** | Optional | Profile name referencing `docs/pm/runbooks/safety.md`: `MAINS`, `HUB75`, `CH340`, or `5V-HIGH-CURRENT`. |
@@ -131,10 +131,10 @@ Replaced by: AF-YYY, AF-ZZZ
 ### Example 1: Hardware & Safety Task
 
 ```markdown
-### AF-014 — Verify C14 Live and Neutral wiring insulation and continuity
+### AF-EXAMPLE-1 — Verify C14 Live and Neutral wiring insulation and continuity
 
 **Milestone:** M0
-**Depends on:** AF-013
+**Depends on:** —
 **Labels:** hardware, safety-review, power
 **Safety:** MAINS
 **Stop condition:** Disconnect wall plug immediately if any terminal is loose or uninsulated.
@@ -147,12 +147,14 @@ Replaced by: AF-YYY, AF-ZZZ
 2. Inspect rear tabs of C14 module to verify 6.3 mm insulated female spades are fully seated on L and N tabs.
 3. Verify heat-shrink insulation fully covers the crimp barrels with no exposed copper strands.
 4. Set digital multimeter to continuity / resistance mode.
-5. Measure resistance from C14 inlet L pin to PSU L terminal (verify < 0.1 Ω when switch is ON, open circuit when switch is OFF).
-6. Measure resistance from C14 inlet N pin to PSU N terminal (verify < 0.1 Ω when switch is ON, open circuit when switch is OFF).
+5. Measure continuity from C14 inlet L pin to PSU L terminal (verify continuity when switch is ON, open circuit when switch is OFF) and record measured resistance.
+6. Measure continuity from C14 inlet N pin to PSU N terminal (verify continuity when switch is ON, open circuit when switch is OFF) and record measured resistance.
+7. Verify open circuit (isolation) between L and N lines with switch in OFF position.
 
 #### Done when
-- Multimeter confirms < 0.1 Ω continuity on L and N lines with switch in ON position.
-- Multimeter confirms infinite resistance (open circuit) between L and N when switch is in OFF position.
+- Multimeter confirms direct continuity on L and N lines with switch in ON position, and measured resistance is recorded.
+- Multimeter confirms open circuit on L and N lines when switch is in OFF position.
+- Multimeter confirms open circuit (isolation) between L and N lines.
 - Visual inspection confirms zero bare conductor visible at all spade and ferrule terminations.
 
 #### If it fails
@@ -162,10 +164,10 @@ De-energize completely. Re-crimp spade terminals with fresh heat-shrink. Do not 
 ### Example 2: Software / Application Task
 
 ```markdown
-### AF-033 — Implement Pillow framebuffer text renderer on Nano
+### AF-EXAMPLE-2 — Implement Pillow framebuffer text renderer on Nano
 
 **Milestone:** M1
-**Depends on:** AF-030
+**Depends on:** AF-EXAMPLE-1
 **Labels:** software, nano, validation
 
 #### Do
@@ -184,29 +186,30 @@ Check Python Pillow version and font file availability. Verify RGB channel order
 ### Example 3: Conditional Architecture Task
 
 ```markdown
-### AF-102 — Assemble SN74HCT245 logic level buffer prototype on perfboard
+### AF-EXAMPLE-3 — Assemble SN74HCT245 logic level buffer prototype on perfboard
 
 **Milestone:** M1
-**Depends on:** AF-018
+**Depends on:** AF-EXAMPLE-2
 **Labels:** hardware, controller-esp32, conditional
 **Applies if:** ADR-016 selects ESP32
 **Safety:** HUB75
-**Stop condition:** Disconnect 5V bench power before inserting ICs into sockets.
+**Stop condition:** Disconnect 5V bench power before making any wiring changes.
 **Resolves:** U-012
-**Procedure:** EXP-010
-**Wiring:** hardware/schematics/PROTOTYPE_WIRING.md §7
+**Procedure:** EXP-011
+**Wiring:** hardware/schematics/PIN_LEVEL_APPENDIX.md §3, §4, §6
 
 #### Do
-1. Solder 2× DIP-20 IC sockets onto 5×7 cm prototype perfboard.
-2. Solder 100 nF ceramic decoupling capacitor across pin 20 (VCC) and pin 10 (GND) of each socket.
-3. Wire DIR (pin 1) to +5 V and /OE (pin 19) to GND.
-4. Wire 2×8 keyed box header to B-side output pins per reference pinout.
-5. Continuity-test all socket pins to header pins before inserting SN74HCT245N ICs.
+1. Place and solder 2× SN74HCT245N ICs and 2×8 keyed box header onto 5×7 cm prototype perfboard per `hardware/schematics/PIN_LEVEL_APPENDIX.md`.
+2. Solder 100 nF ceramic decoupling capacitor directly across pin 20 (VCC) and pin 10 (GND) of each SN74HCT245N.
+3. Wire DIR (pin 1) to +5 V and /OE (pin 19) to GND on both ICs.
+4. Wire ESP32 GPIO inputs to HCT245 A-side inputs and HCT245 B-side outputs to 2×8 keyed box header per PIN_LEVEL_APPENDIX §3, §4, §6.
+5. Continuity-test all signal paths and verify power-to-ground isolation before applying power.
 
 #### Done when
-- Multimeter confirms zero short circuits between 5 V rail and GND rail.
-- All 14 HUB75 signal lines show 0.00 Ω continuity from IC socket outputs to 2×8 IDC header pins.
+- Multimeter confirms zero short circuits between +5 V rail and GND rail.
+- Continuity verified and recorded on all 14 HUB75 signal lines from ESP32 pins through HCT245 outputs to 2×8 IDC header pins.
+- Decoupling capacitors and power/ground connections verified per schematic.
 
 #### If it fails
-Inspect solder joints for bridges using magnifying glass. Reflow suspicious joints before inserting chips.
+Inspect solder joints for bridges using magnifying glass. Reflow suspicious joints before applying power.
 ```
