@@ -8,7 +8,7 @@ Covers C14 mains inlet wiring, ferrule/spade crimping, unpowered AC isolation an
 
 **Milestone:** M0
 **Depends on:** AF-178
-**Labels:** hardware, safety-review, power, polarity-verify
+**Labels:** hardware safety-review power polarity-verify
 **Safety:** MAINS
 **Stop condition:** Disconnect wall plug before probing C14 inlet.
 **Resolves:** U-001, U-026
@@ -39,7 +39,7 @@ Do NOT attempt wire rework if internal C14 module routing is shorted or miswired
 
 **Milestone:** M0
 **Depends on:** AF-178, AF-179
-**Labels:** hardware, safety-review, power
+**Labels:** hardware safety-review power
 **Resolves:** U-003
 
 #### Do
@@ -65,7 +65,7 @@ If any sample fails visual check or pull test, adjust stripper depth and ratchet
 
 **Milestone:** M0
 **Depends on:** AF-012, AF-013
-**Labels:** hardware, safety-review, power
+**Labels:** hardware safety-review power
 **Safety:** MAINS
 **Stop condition:** Keep AC power cord unplugged from wall while wiring mains terminals.
 **Resolves:** U-001, U-003
@@ -94,7 +94,7 @@ If continuity drops or connection is loose, undo screw/spade, inspect crimp barr
 
 **Milestone:** M0
 **Depends on:** AF-014
-**Labels:** hardware, safety-review, power
+**Labels:** hardware safety-review power
 **Safety:** MAINS
 **Stop condition:** Keep AC power cord unplugged from wall while wiring mains terminals.
 **Resolves:** U-001, U-003
@@ -123,7 +123,7 @@ If continuity drops or connection is loose, undo screw/spade, inspect crimp barr
 
 **Milestone:** M0
 **Depends on:** AF-015
-**Labels:** hardware, safety-review, power, polarity-verify
+**Labels:** hardware safety-review power polarity-verify
 **Safety:** MAINS
 **Stop condition:** Keep AC power cord unplugged from wall while wiring mains terminals.
 **Resolves:** U-001, U-003, U-004
@@ -153,7 +153,7 @@ If PE continuity depends on switch state or is open, immediately remove all AC w
 
 **Milestone:** M0
 **Depends on:** AF-016
-**Labels:** hardware, safety-review, power, polarity-verify
+**Labels:** hardware safety-review power polarity-verify
 **Safety:** MAINS
 **Stop condition:** Do not energize until all visual, continuity, and isolation checks pass.
 **Resolves:** U-001, U-004
@@ -189,7 +189,7 @@ DO NOT energize. Identify any failed joint, disassemble, re-crimp, and re-run al
 
 **Milestone:** M0
 **Depends on:** AF-017
-**Labels:** hardware, safety-review, power, validation
+**Labels:** hardware safety-review power validation
 **Procedure:** EXP-002
 **Safety:** MAINS
 **Stop condition:** Immediately switch OFF and unplug if smoke, pop, buzzing, or burning odor occurs.
@@ -221,21 +221,21 @@ Switch OFF immediately and unplug from wall. If voltage cannot be adjusted to ~5
 
 **Milestone:** M0
 **Depends on:** AF-018, AF-179
-**Labels:** hardware, safety-review, power, polarity-verify
+**Labels:** hardware safety-review power polarity-verify
 **Resolves:** U-002, U-003
 
 #### Do
 1. Verify PSU is switched OFF and unplugged from wall power.
 2. Select delivered 1-to-4 DC power harness, verify delivered harness construction (check wire gauge, check if fused or unfused), and label branch #1 as `PANEL-1` on wire and 4-pin connector.
-3. Test continuity from red fork terminal (PSU +V) to 4-pin connector V+ pin with DMM (expected: beep).
-4. Test continuity from black fork terminal (PSU COM) to 4-pin connector GND pin with DMM (expected: beep).
-5. Cross-test red fork to GND pin and black fork to V+ pin (expected: open circuit, no beep).
+3. Identify and verify the delivered positive termination discovered by AF-179, then test continuity from it (PSU +V) to the 4-pin connector V+ pin with DMM (expected: beep).
+4. Identify and verify the delivered negative/COM termination discovered by AF-179, then test continuity from it (PSU COM) to the 4-pin connector GND pin with DMM (expected: beep).
+5. Cross-test the verified positive termination to GND and the verified negative/COM termination to V+ (expected: open circuit, no beep).
 6. Check 4-pin connector keying against panel header; if unkeyed, apply high-visibility orientation index mark with Sharpie.
 
 #### Done when
 - Delivered harness construction verified (wire gauge, fused/unfused status, and branch isolation).
-- Direct continuity confirmed from red fork terminal to panel V+ connector pin.
-- Direct continuity confirmed from black fork terminal to panel GND connector pin.
+- Direct continuity confirmed from the verified positive termination to panel V+ connector pin.
+- Direct continuity confirmed from the verified negative/COM termination to panel GND connector pin.
 - Zero cross-continuity (complete isolation) between +5V and GND lines.
 - Connector orientation is unambiguous (keyed shroud or Sharpie alignment index).
 
@@ -248,7 +248,7 @@ If cross-continuity detects a short circuit, quarantine harness branch #1 and te
 
 **Milestone:** M0
 **Depends on:** AF-174
-**Labels:** hardware, safety-review, power, polarity-verify
+**Labels:** hardware safety-review power polarity-verify
 **Resolves:** U-002
 
 #### Do
@@ -275,14 +275,14 @@ If a persistent low-resistance short exists between VCC and GND pins, stop and i
 
 **Milestone:** M0
 **Depends on:** AF-018, AF-019, AF-020
-**Labels:** hardware, safety-review, power, validation
+**Labels:** hardware safety-review power validation
 **Procedure:** EXP-003
 **Safety:** 5V-HIGH-CURRENT
 **Stop condition:** Power OFF PSU immediately for smoke, burning smell, rapidly increasing temperature, visible electrical damage, or abnormal power behavior.
 **Resolves:** U-002, U-003
 
 #### Do
-1. With PSU OFF and unplugged, connect harness branch #1 red fork to PSU +V and black fork to PSU COM.
+1. With PSU OFF and unplugged, connect the verified positive termination of harness branch #1 to PSU +V and the verified negative/COM termination to PSU COM.
 2. Plug 4-pin harness connector into Panel 1 power header, verifying alignment marks.
 3. Confirm NO HUB75 ribbon cable or controller is connected to Panel 1.
 4. Plug AC mains cable into wall, stand to the side, and toggle C14 switch ON.
@@ -295,7 +295,7 @@ If a persistent low-resistance short exists between VCC and GND pins, stop and i
 - Cold standby energization initiated with no smoke, burning smell, or abnormal power behavior.
 - Voltage at PSU terminals and at Panel 1 power connector measured and recorded, with delta computed per EXP-003.
 - 10–15 minute stability hold completed with no significant heating, smell, noise, or abnormal voltage drop.
-- Driver ICs and panel PCB remain at normal ambient temperature over 10–15 minute hold.
+- Driver ICs and panel PCB show no significant heating over the 10–15 minute hold.
 - EXP-003 data logged in `docs/pm/evidence/AF-021-exp-003-panel-power.md`.
 
 #### If it fails
@@ -307,7 +307,7 @@ Power OFF immediately. Check polarity alignment; inspect panel for shorted SMD L
 
 **Milestone:** M0
 **Depends on:** AF-174, AF-179
-**Labels:** hardware, safety-review, polarity-verify
+**Labels:** hardware safety-review polarity-verify
 **Resolves:** U-031
 
 #### Do
@@ -332,7 +332,7 @@ Discard defective or shorted ribbon cable and replace with a verified spare ~40c
 
 **Milestone:** M0
 **Depends on:** AF-019, AF-020, AF-022
-**Labels:** hardware, safety-review, power, polarity-verify
+**Labels:** hardware safety-review power polarity-verify
 **Resolves:** U-002
 
 #### Do
@@ -361,7 +361,7 @@ Quarantine any individual panel or harness branch that fails continuity, polarit
 
 **Milestone:** M0
 **Depends on:** AF-021, AF-023, AF-180
-**Labels:** docs, validation
+**Labels:** docs validation
 
 #### Do
 1. Review all completed M0 test logs, measurement tables, and inspection checklists:

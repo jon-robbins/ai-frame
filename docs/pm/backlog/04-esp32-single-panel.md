@@ -107,30 +107,30 @@ Stop on conflicts; correct the map before AF-053.
 **Milestone:** M1
 **Depends on:** AF-011, AF-052
 **Labels:** hardware controller-esp32 docs
-**Context:** Stage 2× SN74HCT245N DIP-20 ICs, perfboard, 2×8 keyed HUB75 header, 2× 100nF ceramic caps, optional 1000µF bulk cap, and 24 AWG wire; verify quantities and pin pitch.
+**Context:** Stage 2× SN74HCT245N ICs, perfboard, 2×8 keyed HUB75 header, 2× 100nF ceramic caps, optional 1000µF bulk cap, and inspect received stock for suitable low-current hookup wire. No wire type or gauge is a predeclared requirement.
 
 #### Do
-1. Stage the listed ICs, perfboard, header, capacitors, and wire.
+1. Stage the listed ICs, perfboard, header, capacitors, and received hookup wire; inspect the stock for suitable low-current wire.
 2. Record quantities, markings, pitch, and shortages.
 3. Photograph the staged parts.
 
 #### Done when
 - Required quantities and markings are recorded.
-- Substitutes and optional parts are explicit.
+- Substitutes and optional parts are explicit; if suitable low-current hookup wire is unavailable, a purchase requirement is recorded before assembly.
 
 #### If it fails
 Quarantine mismatches and obtain an authority-backed replacement.
 
-### AF-054 — Stage 1: Perfboard Layout & Socket/Header Mounting
+### AF-054 — Stage 1: Perfboard Layout & IC/Header Mounting
 
 **Milestone:** M1
 **Depends on:** AF-053
 **Labels:** hardware controller-esp32
-**Context:** Layout component positions on perfboard; mount and solder 2× DIP-20 sockets/ICs (notches aligned) and 2×8 keyed HUB75 header (notch facing outward); check pad isolation.
+**Context:** Layout component positions on perfboard; direct-soldering the 2× SN74HCT245N ICs is the default available path. DIP-20 sockets are optional only if separately obtained and recorded, never a required part; mount the 2×8 keyed HUB75 header (notch facing outward); check pad isolation.
 
 #### Do
 1. Mark the appendix layout on perfboard.
-2. Mount/solder sockets and keyed header with orientation recorded.
+2. Solder the ICs directly, or install sockets only when separately obtained and recorded; mount the keyed header with orientation recorded.
 3. Inspect alignment and pad isolation unpowered.
 
 #### Done when
@@ -250,13 +250,14 @@ Preserve logs and correct one build/configuration issue before reflashing.
 **Labels:** hardware controller-esp32 power validation
 **Safety:** 5V-HIGH-CURRENT
 **Stop condition:** Stop and disconnect power immediately if polarity, wiring, or an abnormal smell, heat, or sound is detected.
-**Procedure:** EXP-011
-**Context:** Connect panel #1 to adapter (HUB75 unpowered, strict power-up order); execute Standard Test Pattern Suite; evaluate 10-point defect checklist; record refresh rate and PSRAM metrics; run ≥1 hour.
+**Procedure:** EXP-011; [`docs/pm/runbooks/safety.md`](../runbooks/safety.md) §3 (`HUB75`)
+**Context:** Make all panel, HUB75, and controller connections while de-energized; prohibit hot-plugging; energize only using the applicable documented EXP-011 procedure and [`docs/pm/runbooks/safety.md`](../runbooks/safety.md) §3 (`HUB75`); execute Standard Test Pattern Suite; evaluate 10-point defect checklist; record refresh rate and PSRAM metrics; run ≥1 hour.
 
 #### Do
-1. Connect panel #1 unpowered and follow the documented power-up order.
-2. Run the six patterns and defect checklist.
-3. Hold at least one hour and save metrics/logs.
+1. With the panel, HUB75, and controller de-energized, make and verify all panel/HUB75/controller connections; do not hot-plug.
+2. Energize only using the applicable documented EXP-011 procedure and the HUB75 safety controls in [`docs/pm/runbooks/safety.md`](../runbooks/safety.md) §3.
+3. Run the six patterns and defect checklist.
+4. Hold at least one hour and save metrics/logs.
 
 #### Done when
 - Pattern, defect, refresh, and PSRAM observations are recorded.

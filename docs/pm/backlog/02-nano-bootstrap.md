@@ -91,31 +91,31 @@ Preserve the command output. If a command is absent or fails, check the running 
 **Milestone:** M1
 **Depends on:** AF-182
 **Labels:** software nano
-**Context:** Connect Nano to local Wi-Fi via NetworkManager (nmcli), configure DHCP reservation / static IP, establish mDNS (ai-frame.local), and configure passwordless SSH public key authentication.
+**Context:** After AF-182 identifies the delivered OS and available network services, configure the supported Wi-Fi/network tooling, establish name resolution if the environment provides mDNS, and configure passwordless SSH public key authentication.
 
 #### Do
-1. Configure Wi-Fi with `nmcli` using the project network credentials, then record the interface state and address actually assigned.
-2. Apply the agreed DHCP reservation or static configuration and verify that `ai-frame.local` resolves from the development host.
+1. Use the network manager and commands available in the AF-182 environment audit to configure Wi-Fi with the project network credentials, then record the interface state and address actually assigned.
+2. Apply the agreed DHCP reservation or static configuration using the discovered environment's supported mechanism; if mDNS is available, verify that `ai-frame.local` resolves from the development host, otherwise record the supported name/address-discovery result.
 3. Install the host public key, test a non-interactive SSH login, and record the exact hostname/address used.
 
 #### Done when
-- `nmcli` reports the intended Wi-Fi connection as active and the observed address is recorded.
-- `ai-frame.local` resolves to the Nano from the development host.
+- The discovered network tooling reports the intended Wi-Fi connection as active and the observed address is recorded.
+- Name resolution reaches the Nano using the environment-supported method, with mDNS verified when available or its absence recorded.
 - Key-based SSH succeeds without a password prompt and the key remains restricted to the intended account.
 
 #### If it fails
-Revert only the changed network profile if the Nano becomes unreachable, then use the serial console to inspect `nmcli` state. If name resolution alone fails, test the recorded IP before changing Wi-Fi settings; if key login fails, retain password access and repair authorized-key permissions.
+Revert only the changed network profile if the Nano becomes unreachable, then use the serial console to inspect the environment-specific network state. If name resolution alone fails, test the recorded IP before changing Wi-Fi settings; if key login fails, retain password access and repair authorized-key permissions.
 
 ### AF-028 — Create minimal Python 3 virtual environment
 
 **Milestone:** M1
 **Depends on:** AF-027
 **Labels:** software nano
-**Context:** Provision Python 3 venv (/home/sipeed/ai-frame-venv), upgrade pip/setuptools/wheel, install C build headers (libjpeg-dev, zlib1g-dev, libfreetype6-dev), and generate requirements-base.txt.
+**Context:** Provision a Python 3 environment using the venv/package/build tooling discovered by AF-182, install only dependencies supported by that OS, and generate requirements-base.txt.
 
 #### Do
 1. Create `/home/sipeed/ai-frame-venv` with the Nano's available `python3 -m venv` implementation.
-2. Upgrade pip/setuptools/wheel inside the venv and install the listed image-library build headers only if the OS package manager provides them.
+2. Upgrade the available packaging tools inside the venv and install image-library build headers only if the discovered OS/package manager provides them.
 3. Freeze the resulting baseline to `requirements-base.txt`, recording Python and package versions.
 
 #### Done when
@@ -131,10 +131,10 @@ Leave the system package state unchanged beyond the recorded command. Check Pyth
 **Milestone:** M1
 **Depends on:** AF-028
 **Labels:** software nano
-**Context:** Install Pillow 10+ inside venv and generate a 128×64 pure red (#FF0000) test image; verify dimensions and pixel values programmatically.
+**Context:** Install a Pillow version supported by the AF-182 OS/Python environment inside the venv and generate a 128×64 pure red (#FF0000) test image; verify dimensions and pixel values programmatically.
 
 #### Do
-1. Activate the Nano venv and install the selected Pillow version; record the installed version.
+1. Activate the Nano venv and install the selected environment-compatible Pillow version; record the installed version and selection basis.
 2. Generate a 128×64 RGB PNG filled with `#FF0000` and inspect it with a short Python assertion script.
 3. Save the image and assertion output with the software test record.
 

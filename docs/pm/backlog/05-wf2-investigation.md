@@ -65,27 +65,25 @@ Power down before cabling changes; preserve settings and isolate panel, cable, a
 #### If it fails
 Disconnect power before moving cables; label the failing port and return to AF-077.
 
-### AF-173 — Backup HD-WF2 stock firmware via SPI flash dump
+### AF-173 — Create reversible HD-WF2 stock-firmware backup
 
 **Milestone:** M1
 **Depends on:** AF-076, AF-077
 **Labels:** firmware controller-wf2 docs safety-review
-**Safety:** CH340
-**Stop condition:** Do not connect CH340 VCC or 3.3 V; disconnect the adapter before changing target power.
 **Procedure:** EXP-009
-**Context:** Execute concrete dual-read SPI flash backup using esptool.py read_flash following CH340 3-pin rule; verify SHA256 hash match between read1 and read2; commit backup README.
+**Context:** First identify the delivered WF2 revision, SoC, flash size, and accessible boot/interface. Select the appropriate documented backup method for that confirmed target. Do not flash alternative firmware until the selected method produces the required matching backup evidence or an explicitly documented recovery path.
 
 #### Do
-1. Apply the CH340 three-wire rule and identify the WF2 flash interface from evidence.
-2. Perform two `esptool.py read_flash` reads with recorded parameters.
-3. Hash both files and write the backup README.
+1. Record the delivered WF2 revision, SoC, flash size, and accessible boot/interface from evidence before connecting or selecting a backup tool.
+2. After identification, if the confirmed backup interface is USB-UART, apply the CH340 3-pin safety profile; otherwise follow the safety requirements for the confirmed documented interface. Select and execute the appropriate backup method for that target, recording its parameters and the resulting backup artifacts.
+3. If the selected method supports repeatable reads, perform two independent backups and compare the artifacts or checksums. If it does not, record the explicitly documented recovery path and its verification evidence; write the backup README.
 
 #### Done when
-- Both dumps exist and SHA256 hashes match or the mismatch is recorded.
-- No CH340 power output is connected.
+- Two matching backup artifacts/checksums exist when the selected method supports repeatable reads, or an explicitly documented recovery path and verification evidence exist when it does not, before any alternative firmware is considered.
+- The confirmed interface's safety requirements were followed and no prohibited power or backfeed connection was made.
 
 #### If it fails
-Disconnect CH340 and target power before rewiring; preserve both dumps and diagnose interface/parameters.
+Follow the confirmed interface's documented shutdown/isolation procedure before rewiring; preserve the backup artifacts and diagnose the selected method or parameters.
 
 ### AF-078 — Evaluate HD-WF2 alternative/open firmware (EXP-009)
 

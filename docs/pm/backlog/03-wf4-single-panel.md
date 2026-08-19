@@ -117,10 +117,10 @@ Power down before changing configuration or cabling. Preserve the failing patter
 **Depends on:** AF-042
 **Labels:** software controller-wf4 validation
 **Procedure:** EXP-007
-**Context:** Test Huidu PC software (HD2018/HD2020); document configuration, static file upload, and live update UI surfaces; record transfer times.
+**Context:** Identify the vendor tool and version appropriate for the delivered WF4, then document configuration, static file upload, and live update UI surfaces; record transfer times.
 
 #### Do
-1. Use HD2018/HD2020 with the WF4 and record which screen controls configure geometry, upload static content, or perform live updates.
+1. Identify and record the vendor tool/version appropriate for the delivered WF4, then record which screen controls configure geometry, upload static content, or perform live updates.
 2. Send one known image and one changed image through each available workflow, recording the interface, transfer completion, and observed update time.
 3. Mark every step that requires a manual click or cannot be reproduced from the Nano.
 

@@ -8,7 +8,7 @@ Covers delivery package intake, physical inspection of all received components a
 
 **Milestone:** M0
 **Depends on:** —
-**Labels:** hardware, delivery-review
+**Labels:** hardware delivery-review
 **Procedure:** EXP-001
 **Resolves:** U-006
 
@@ -32,7 +32,7 @@ Quarantine damaged packages, photograph packing slips, and escalate missing item
 
 **Milestone:** M0
 **Depends on:** AF-011
-**Labels:** hardware, delivery-review
+**Labels:** hardware delivery-review
 **Procedure:** EXP-001
 **Resolves:** U-006, U-031
 
@@ -58,7 +58,7 @@ Log mismatched panel models in the intake discrepancy log; quarantine any panel 
 
 **Milestone:** M0
 **Depends on:** AF-011
-**Labels:** hardware, delivery-review, controller-wf4, controller-wf2
+**Labels:** hardware delivery-review controller-wf4 controller-wf2
 **Procedure:** EXP-001
 **Resolves:** U-006
 
@@ -83,7 +83,7 @@ Note physical damage, bent pins, or PCB revision discrepancies in the intake log
 
 **Milestone:** M0
 **Depends on:** AF-011
-**Labels:** hardware, delivery-review, nano
+**Labels:** hardware delivery-review nano
 **Procedure:** EXP-001
 **Resolves:** U-006
 
@@ -109,7 +109,7 @@ Replace or quarantine damaged microSD card or LicheeRV Nano board.
 
 **Milestone:** M0
 **Depends on:** AF-011
-**Labels:** hardware, delivery-review, controller-esp32
+**Labels:** hardware delivery-review controller-esp32
 **Procedure:** EXP-001
 **Resolves:** U-006, U-014, U-015
 
@@ -135,7 +135,7 @@ Reject non-HCT logic ICs (HCT required for 3.3V→5V level shifting); replace da
 
 **Milestone:** M0
 **Depends on:** AF-011
-**Labels:** hardware, delivery-review, power, safety-review
+**Labels:** hardware delivery-review power safety-review
 **Procedure:** EXP-001
 **Resolves:** U-006, U-021, U-026
 
@@ -162,7 +162,7 @@ Do NOT energize if voltage rating is not 5V or if FG terminal is missing.
 
 **Milestone:** M0
 **Depends on:** AF-011
-**Labels:** hardware, delivery-review, power
+**Labels:** hardware delivery-review power
 **Procedure:** EXP-001
 **Resolves:** U-006, U-031
 
@@ -188,7 +188,7 @@ Replace or re-crimp any harness branch with loose connections, damaged insulatio
 
 **Milestone:** M0
 **Depends on:** AF-174, AF-175, AF-176, AF-177, AF-178, AF-179
-**Labels:** docs, delivery-review
+**Labels:** docs delivery-review
 **Resolves:** U-006
 
 #### Do
@@ -211,4 +211,3 @@ Flag unreceived or quarantined components in BOM notes and update delivery track
 Replaced by: AF-174, AF-175, AF-176, AF-177, AF-178, AF-179
 
 (Do not export to Jira)
-
