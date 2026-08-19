@@ -121,22 +121,23 @@ Stop the run and de-energize before inspecting cables. Record the failed pattern
 ### AF-086 — Verify WF4 seam crossing at x=128
 
 **Milestone:** M2
-**Depends on:** AF-085
+**Depends on:** AF-085, AF-046
 **Labels:** validation controller-wf4 critical-path
 **Safety:** HUB75
 **Stop condition:** Keep energized wiring untouched; de-energize panel and controller power before any seam-related cable or orientation inspection.
 
 #### Do
-1. Display a smooth horizontal gradient and photograph the transition across px127→128.
-2. Display content crossing x=128, including text straddling the two panels, and photograph the seam.
-3. Display a continuous one-pixel line at x=128 from y=0 through y=63 and photograph it.
-4. Save the three photos and a pass/fail log naming the logical coordinates.
+1. From the Nano, render a smooth horizontal gradient and send it through the proven WF4 programmatic path from AF-046; photograph the transition across px127→128.
+2. From the Nano, render content crossing x=128, including text straddling the two panels, and send it through the same proven WF4 programmatic path; photograph the seam.
+3. From the Nano, render the seam test content, including a continuous one-pixel line at x=128 from y=0 through y=63, send it through the proven path, and photograph it.
+4. Save the three photos and a pass/fail log naming the logical coordinates, together with Nano input/render artifacts and transport evidence that proves the 256×64 seam content originated from the Nano.
 
 #### Done when
 - The gradient is continuous across px127→128 with no unexplained discontinuity.
 - Content crosses x=128 and remains correctly mapped across the physical seam.
 - The one-pixel line at x=128 is continuous, not gapped or doubled.
 - Photos and the seam log are saved.
+- The evidence proves that the gradient, text, and seam-test content were rendered on the Nano and sent through the proven WF4 programmatic path, with the displayed 256×64 seam content originating from the Nano under EXP-005.
 
 #### If it fails
 De-energize before changing anything. Check panel order, 256×64 chain configuration, and HUB75 seating/orientation; correct the identified cause and repeat AF-084, AF-085, or AF-086 as applicable.
@@ -214,22 +215,23 @@ Stop the run and de-energize before inspecting cables. Preserve serial/runtime l
 ### AF-090 — Verify ESP32 seam crossing at x=128
 
 **Milestone:** M2
-**Depends on:** AF-089
+**Depends on:** AF-089, AF-069
 **Labels:** validation controller-esp32 critical-path
 **Safety:** HUB75
 **Stop condition:** Keep energized wiring untouched; de-energize panel and controller power before any seam-related cable or orientation inspection.
 
 #### Do
-1. Display a smooth horizontal gradient and photograph the transition across px127→128.
-2. Display content crossing x=128, including text straddling the two panels, and photograph the seam.
-3. Display a continuous one-pixel line at x=128 from y=0 through y=63 and photograph it.
-4. Save the three photos and a pass/fail log naming the logical coordinates.
+1. From the Nano, render a smooth horizontal gradient and send it through the proven Nano→ESP32 transport from AF-069; photograph the transition across px127→128.
+2. From the Nano, render content crossing x=128, including text straddling the two panels, and send it through the same proven Nano→ESP32 transport; photograph the seam.
+3. From the Nano, render the seam test content, including a continuous one-pixel line at x=128 from y=0 through y=63, send it through the proven transport, and photograph it.
+4. Save the three photos and a pass/fail log naming the logical coordinates, together with Nano input/render artifacts and transport evidence that proves the 256×64 seam content originated from the Nano.
 
 #### Done when
 - The gradient is continuous across px127→128 with no unexplained discontinuity.
 - Content crosses x=128 and remains correctly mapped across the physical seam.
 - The one-pixel line at x=128 is continuous, not gapped or doubled.
 - Photos and the seam log are saved.
+- The evidence proves that the gradient, text, and seam-test content were rendered on the Nano and sent through the proven Nano→ESP32 transport, with the displayed 256×64 seam content originating from the Nano under EXP-012.
 
 #### If it fails
 De-energize before changing anything. Check panel order, 256×64 chain configuration, and HUB75 seating/orientation; correct the identified cause and repeat AF-088, AF-089, or AF-090 as applicable.
@@ -243,12 +245,12 @@ De-energize before changing anything. Check panel order, 256×64 chain configura
 
 #### Do
 1. Review the WF4 evidence from AF-081 through AF-086 and the ESP32 evidence from AF-081, AF-082, and AF-087 through AF-090.
-2. For the WF4 path, record pass/fail against the M2 criteria using AF-085/AF-086 and EXP-005 evidence: two chained panels forming 256×64, independent parallel panel power, correct left-to-right order, content crossing the physical seam, Standard Test Pattern Suite and Standard Defect Checklist results for both panels, and at least 30 minutes of stable runtime.
-3. For the ESP32 path, record pass/fail against the M2 criteria using AF-089/AF-090 and the alternate EXP-012 evidence: two chained panels forming 256×64, independent parallel panel power, correct left-to-right order, content crossing the physical seam, Standard Test Pattern Suite and Standard Defect Checklist results for both panels, and at least 1 hour of stable runtime.
+2. For the WF4 path, record pass/fail against the M2 criteria using AF-085/AF-086 and EXP-005 evidence: two chained panels forming 256×64, independent parallel panel power, correct left-to-right order, content crossing the physical seam, Standard Test Pattern Suite and Standard Defect Checklist results for both panels, and at least 30 minutes of stable runtime. The passing WF4 candidate must also show Nano-rendered 256×64 content crossing x=128 sent through the proven WF4 programmatic path, with linked Nano-origin, render, transport, and display evidence.
+3. For the ESP32 path, record pass/fail against the M2 criteria using AF-089/AF-090 and EXP-012 evidence: two chained panels forming 256×64, independent parallel panel power, correct left-to-right order, content crossing the physical seam, Standard Test Pattern Suite and Standard Defect Checklist results for both panels, and at least 1 hour of stable runtime. The passing ESP32 candidate must also show Nano-rendered 256×64 content crossing x=128 sent through the proven Nano→ESP32 transport, with linked Nano-origin, render, transport, and display evidence.
 4. Record each path’s result and link it to its configuration, photos, pattern/checklist log, runtime record, and seam evidence. Set the M2 gate outcome to PASS when either WF4 AF-086 or ESP32 AF-090 has a complete passing evidence set; do not require both paths to pass. Otherwise record FAIL and identify the missing or failed criterion.
 
 #### Done when
-- At least one controller path, WF4 via AF-086 or ESP32 via AF-090, is explicitly recorded as passing the M2 256×64 dual-panel criteria, including its branch-specific stability duration (WF4 ≥30 minutes; ESP32 ≥1 hour).
+- At least one controller path, WF4 via AF-086 or ESP32 via AF-090, is explicitly recorded as passing the M2 256×64 dual-panel criteria, including Nano-controlled output with content crossing x=128 and its branch-specific stability duration (WF4 ≥30 minutes; ESP32 ≥1 hour).
 - The gate record names the passing path or paths and links the supporting AF-081–090 evidence and source criteria.
 - The M2 outcome is explicitly recorded as PASS or FAIL: PASS when either AF-086 or AF-090 passes, with no advancement claimed when neither path passes.
 
