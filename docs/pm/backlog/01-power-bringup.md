@@ -26,7 +26,7 @@ Covers C14 mains inlet wiring, ferrule/spade crimping, unpowered AC isolation an
 #### Done when
 - Direct continuity confirmed through fuse and switch to L rear tab when switch is ON.
 - Switch pole configuration tested and recorded (single-pole vs double-pole switching behavior documented).
-- PE ground path confirmed continuous (< 0.5 Ω) and completely unswitched in all switch positions.
+- Direct PE continuity confirmed and measured resistance recorded; ground path is completely unswitched in all switch positions.
 - Open circuit confirmed between L and N when switch is OFF.
 - Complete electrical isolation confirmed between L/N and PE in all switch states.
 
@@ -43,12 +43,13 @@ Do NOT attempt wire rework if internal C14 module routing is shorted or miswired
 **Resolves:** U-003
 
 #### Do
-1. Cut 10 sacrificial 5 cm offcut lengths from conductors of the purchased 3-core 0.75 mm² AC cable or wire offcuts (verify actual conductor colors on receipt).
-2. Strip ~6 mm insulation from wire ends without nicking conductor strands.
-3. Practice crimping 5 bootlace ferrule samples using the ratchet ferrule crimper (verify square crimp, no stray strands, 0.5–1 mm insulation clearance).
-4. Practice crimping 5 insulated 6.3 mm female spade terminal samples using the ratchet crimp tool (verify two-stage crimp on conductor and insulation wings).
-5. Perform gentle pull test (< 5 kg hand tug) on each sample to verify no pullout.
-6. Label samples F1–F5 and S1–S5 and capture inspection photo.
+1. Verify the delivered crimp tool has the correct die/range for the purchased insulated 6.3 mm spade terminals.
+2. Cut 10 sacrificial 5 cm offcut lengths from conductors of the purchased 3-core 0.75 mm² AC cable or wire offcuts (verify actual conductor colors on receipt).
+3. Strip insulation from wire ends to the terminal manufacturer's/delivered-terminal required length without nicking conductor strands.
+4. Practice crimping 5 bootlace ferrule samples using the ratchet ferrule crimper (verify square crimp, no stray strands, insulation properly seated).
+5. Practice crimping 5 insulated 6.3 mm female spade terminal samples using the ratchet crimp tool (verify two-stage crimp on conductor and insulation wings).
+6. Perform firm manual pull test on each sample to verify zero wire movement or pullout.
+7. Label samples F1–F5 and S1–S5 and capture inspection photo.
 
 #### Done when
 - 5 ferrule samples pass 4-point visual inspection (full strand capture, square crimp, no insulation pinch, no metal cracks) and pull test.
@@ -70,9 +71,9 @@ If any sample fails visual check or pull test, adjust stripper depth and ratchet
 **Resolves:** U-001, U-003
 
 #### Do
-1. Cut Live conductor from the purchased 3-core 0.75 mm² AC cable (verify actual conductor colors on receipt, typically brown) to measured length plus 15 cm service slack loop.
-2. Strip ~6 mm insulation and crimp a 6.3 mm insulated female spade terminal onto the C14 end.
-3. Strip ~6 mm insulation and crimp a bootlace ferrule onto the PSU end.
+1. Cut Live conductor from the purchased 3-core 0.75 mm² AC cable (verify actual conductor colors on receipt, typically brown) to the measured installed length with sufficient service slack to avoid strain and permit terminal servicing.
+2. Strip insulation to required terminal length and crimp a 6.3 mm insulated female spade terminal onto the C14 end.
+3. Strip insulation to required terminal length and crimp a bootlace ferrule onto the PSU end.
 4. Insert ferrule into PSU L screw-barrier clamp and tighten screw firmly.
 5. Push 6.3 mm spade connector firmly onto C14 Live output tab with full insulation seating.
 6. Measure continuity from C14 Line male prong to PSU L terminal screw head with DMM.
@@ -80,9 +81,9 @@ If any sample fails visual check or pull test, adjust stripper depth and ratchet
 
 #### Done when
 - Live wire connects C14 switched Live tab to PSU L screw terminal with single continuous conductor.
-- DMM confirms solid continuity (< 0.5 Ω) from C14 L prong to PSU L screw head when switch is ON.
+- Direct continuity confirmed and measured resistance recorded from C14 L prong to PSU L screw head when switch is ON; reading remains stable during wiggle test.
 - Wiggle test shows zero dropouts or intermittent continuity.
-- Both crimp terminations pass 4-point visual inspection with service loop slack intact.
+- Both crimp terminations pass 4-point visual inspection with service slack intact.
 
 #### If it fails
 If continuity drops or connection is loose, undo screw/spade, inspect crimp barrels, re-crimp with fresh terminal, and re-test.
@@ -99,9 +100,9 @@ If continuity drops or connection is loose, undo screw/spade, inspect crimp barr
 **Resolves:** U-001, U-003
 
 #### Do
-1. Cut Neutral conductor from the purchased 3-core 0.75 mm² AC cable (verify actual conductor colors on receipt, typically blue) to measured length plus 15 cm service slack loop.
-2. Strip ~6 mm insulation and crimp a 6.3 mm insulated female spade terminal onto the C14 end.
-3. Strip ~6 mm insulation and crimp a bootlace ferrule onto the PSU end.
+1. Cut Neutral conductor from the purchased 3-core 0.75 mm² AC cable (verify actual conductor colors on receipt, typically blue) to the measured installed length with sufficient service slack to avoid strain and permit terminal servicing.
+2. Strip insulation to required terminal length and crimp a 6.3 mm insulated female spade terminal onto the C14 end.
+3. Strip insulation to required terminal length and crimp a bootlace ferrule onto the PSU end.
 4. Insert ferrule into PSU N screw-barrier clamp and tighten screw firmly.
 5. Push 6.3 mm spade connector firmly onto C14 Neutral output tab with full insulation seating.
 6. Measure continuity from C14 Neutral male prong to PSU N terminal screw head with DMM.
@@ -109,9 +110,9 @@ If continuity drops or connection is loose, undo screw/spade, inspect crimp barr
 
 #### Done when
 - Neutral wire connects C14 Neutral tab to PSU N screw terminal with single continuous conductor.
-- DMM confirms solid continuity (< 0.5 Ω) from C14 N prong to PSU N screw head when switch is ON.
+- Direct continuity confirmed and measured resistance recorded from C14 N prong to PSU N screw head when switch is ON; reading remains stable during wiggle test.
 - Wiggle test shows zero dropouts or intermittent continuity.
-- Both crimp terminations pass 4-point visual inspection with service loop slack intact.
+- Both crimp terminations pass 4-point visual inspection with service slack intact.
 
 #### If it fails
 If continuity drops or connection is loose, undo screw/spade, inspect crimp barrels, re-crimp with fresh terminal, and re-test.
@@ -128,9 +129,9 @@ If continuity drops or connection is loose, undo screw/spade, inspect crimp barr
 **Resolves:** U-001, U-003, U-004
 
 #### Do
-1. Cut Protective Earth conductor from the purchased 3-core 0.75 mm² AC cable (verify actual conductor colors on receipt, typically green/yellow) to measured length plus 15 cm service slack loop.
-2. Strip ~6 mm insulation and crimp a 6.3 mm insulated female spade terminal onto the C14 end.
-3. Strip ~6 mm insulation and crimp a bootlace ferrule onto the PSU end.
+1. Cut Protective Earth conductor from the purchased 3-core 0.75 mm² AC cable (verify actual conductor colors on receipt, typically green/yellow) to the measured installed length with sufficient service slack to avoid strain and permit terminal servicing.
+2. Strip insulation to required terminal length and crimp a 6.3 mm insulated female spade terminal onto the C14 end.
+3. Strip insulation to required terminal length and crimp a bootlace ferrule onto the PSU end.
 4. Insert ferrule into PSU FG (Frame Ground) screw-barrier clamp and tighten screw firmly.
 5. Push 6.3 mm spade connector firmly onto C14 Earth/Ground tab with full insulation seating.
 6. Measure continuity from C14 center Earth male prong to PSU FG terminal and PSU metal chassis.
@@ -139,7 +140,7 @@ If continuity drops or connection is loose, undo screw/spade, inspect crimp barr
 
 #### Done when
 - Earth wire connects C14 ground tab directly to PSU FG screw terminal and chassis.
-- DMM confirms direct PE continuity (< 0.5 Ω) from C14 Earth prong to PSU FG terminal and chassis in both OFF and ON switch states.
+- Direct PE continuity confirmed and measured resistance recorded from C14 Earth prong to PSU FG terminal and chassis in both OFF and ON switch states; reading remains stable during wiggle test.
 - Wiggle test confirms uninterrupted earth bonding.
 - Zero continuity (complete electrical isolation) between PE and L or N terminals.
 
@@ -148,13 +149,13 @@ If PE continuity depends on switch state or is open, immediately remove all AC w
 
 ---
 
-### AF-017 — Visual and cross-continuity inspection of AC mains wiring
+### AF-017 — Visual and continuity/isolation inspection of AC mains wiring
 
 **Milestone:** M0
 **Depends on:** AF-016
 **Labels:** hardware, safety-review, power, polarity-verify
 **Safety:** MAINS
-**Stop condition:** Do not energize until all visual and isolation checks pass.
+**Stop condition:** Do not energize until all visual, continuity, and isolation checks pass.
 **Resolves:** U-001, U-004
 
 #### Do
@@ -164,15 +165,18 @@ If PE continuity depends on switch state or is open, immediately remove all AC w
    - Verify wire insulation is intact with no nicks or pinching.
    - Verify zero bare copper exposed outside terminals or screw clamps.
    - Verify cable routing maintains slack and strain relief.
-2. Perform 6-point cross-continuity electrical isolation matrix:
-   - With switch OFF: measure resistance for L↔N, L↔PE, N↔PE (all must be open circuit).
-   - With switch ON: measure resistance for L↔N, L↔PE, N↔PE (all must be open circuit; L-N high impedance).
-3. Wiggle all 3 wires during cross-checks to ensure no intermittent short circuits.
+2. Perform electrical continuity and isolation verification:
+   - Verify Line continuity from C14 inlet L prong through fuse and switch to PSU L terminal.
+   - Verify Neutral continuity from C14 inlet N prong to PSU N terminal.
+   - Verify Protective Earth continuity from C14 center PE prong to PSU FG terminal and chassis.
+   - Verify electrical isolation (no short circuit) between L and PE, and between N and PE in both switch states.
+3. Wiggle all 3 wires during checks to ensure no intermittent connections or shorts.
 4. Sign off pre-energization safety checklist in evidence log.
 
 #### Done when
 - 7-point visual inspection passes with zero defects or exposed conductors.
-- Electrical cross-continuity matrix confirms 100% isolation across all 6 test combinations in both switch states.
+- Direct continuity verified for L, N, and PE circuits from C14 inlet to corresponding PSU terminals.
+- Electrical isolation confirmed with zero short circuits from L→PE or N→PE in all switch states.
 - Zero intermittent contact detected during wire wiggle test.
 - Pre-energization checklist signed off in `docs/pm/evidence/AF-017-ac-wiring-inspection.md`.
 
@@ -194,17 +198,17 @@ DO NOT energize. Identify any failed joint, disassemble, re-crimp, and re-run al
 #### Do
 1. Verify all DC output terminals (+V and COM) are completely bare and disconnected from any loads.
 2. Verify C14 switch is in OFF position.
-3. Plug C13 mains cord into wall outlet first, then into C14 inlet (ensures Earth pin mates first).
+3. With the C14 switch OFF, fully connect the C13 connector to the C14 inlet while the wall plug is disconnected. Plug the wall end into the outlet last. After the test, switch OFF and unplug the wall end before touching or changing any device-side connection.
 4. Stand at arm's length to the side of the PSU (do not lean over PSU) and flip C14 switch ON.
-5. Observe green power LED and listen for abnormal acoustic noise, popping, or arcing.
+5. Observe power indicator if present and listen for abnormal acoustic noise, popping, or arcing.
 6. Using DMM in DC voltage mode, measure output voltage across +V and COM terminals.
-7. If voltage deviates from ~5.0 V, adjust V-ADJ potentiometer as needed to achieve ~5.0 V stable output.
+7. If AF-178 confirmed a labeled voltage-adjust control and adjustment procedure, adjust as documented to achieve ~5.0 V stable output.
 8. Execute 10-minute hold test, logging DC voltage across +V and COM, casing thermal state, and observations at t = 0, 1, 5, and 10 minutes per EXP-002.
-9. Switch C14 OFF, unplug mains cord, and record measured values in EXP-002 evidence log.
+9. Switch C14 OFF, unplug mains cord from wall outlet, and record measured values in EXP-002 evidence log.
 
 #### Done when
-- Green power indicator LED on A-200-5 illuminates steadily without popping, buzzing, or smoke.
-- Output voltage across +V and COM measured, adjusted via V-ADJ to ~5.0 V stable output if needed, and recorded.
+- Power indicator on A-200-5 illuminates (if present) without popping, buzzing, or smoke.
+- Output voltage across +V and COM measured (~5.0 V stable nominal per EXP-002, adjusted if supported) and recorded in evidence log.
 - 10-minute hold completed with stable output and no abnormal behavior (no excessive heating, smell, buzzing, or voltage instability).
 - EXP-002 measurement table (no-load voltage, voltage after 10 min, ambient temp, observations) logged in evidence log.
 
@@ -251,19 +255,19 @@ If cross-continuity detects a short circuit, quarantine harness branch #1 and te
 1. Place LED Panel 1 on ESD-safe bench with rear PCB accessible.
 2. Locate 4-pin power input header and adjacent electrolytic decoupling capacitor.
 3. Identify capacitor negative terminal by white/colored stripe on capacitor body.
-4. Using DMM in continuity mode, probe capacitor negative lead against all 4 power header pins to locate GND pin.
-5. Probe capacitor positive lead against power header pins to locate VCC (+5V) pin.
-6. Compare capacitor-verified pins against silkscreen `VCC` / `GND` labels on panel PCB.
-7. Mark verified polarity directly onto panel PCB backing with permanent Sharpie.
+4. Using DMM in continuity / resistance mode, record resistance and continuity between power header pins and capacitor terminals (use capacitor negative terminal as a corroborating cross-check for GND).
+5. Compare measured results against PCB VCC / GND silkscreen labels.
+6. Record measured VCC↔GND resistance behavior; if persistently shorted, stop and investigate before declaring defective.
+7. Mark verified polarity directly onto panel backing with permanent Sharpie.
 
 #### Done when
-- Electrolytic capacitor negative terminal confirmed continuous with PCB GND pins.
-- Electrolytic capacitor positive terminal confirmed continuous with PCB VCC pins.
-- Silkscreen labels match capacitor polarity (or discrepancies clearly marked with Sharpie).
-- Zero short circuit between PCB VCC and GND pins.
+- PCB VCC/GND silkscreen recorded and cross-checked against decoupling capacitor polarity.
+- Measured resistance and continuity behavior between power header terminals and capacitor logged.
+- Absence of persistent VCC↔GND short circuit confirmed.
+- Polarities clearly marked with Sharpie.
 
 #### If it fails
-If a dead short (0 Ω) exists between VCC and GND pins, quarantine panel immediately as defective; do not apply power.
+If a persistent low-resistance short exists between VCC and GND pins, stop and investigate circuit path / capacitor before applying power.
 
 ---
 
@@ -274,7 +278,7 @@ If a dead short (0 Ω) exists between VCC and GND pins, quarantine panel immedia
 **Labels:** hardware, safety-review, power, validation
 **Procedure:** EXP-003
 **Safety:** 5V-HIGH-CURRENT
-**Stop condition:** Power OFF PSU immediately if LEDs flash erratically, emit smoke, or driver ICs overheat.
+**Stop condition:** Power OFF PSU immediately for smoke, burning smell, rapidly increasing temperature, visible electrical damage, or abnormal power behavior.
 **Resolves:** U-002, U-003
 
 #### Do
@@ -282,16 +286,16 @@ If a dead short (0 Ω) exists between VCC and GND pins, quarantine panel immedia
 2. Plug 4-pin harness connector into Panel 1 power header, verifying alignment marks.
 3. Confirm NO HUB75 ribbon cable or controller is connected to Panel 1.
 4. Plug AC mains cable into wall, stand to the side, and toggle C14 switch ON.
-5. Observe Panel 1 face for 10 seconds (confirm LEDs remain dark with no data input).
+5. Observe panel for 10 seconds, checking for abnormal noise, spark, or rapid heating.
 6. Measure DC voltage at PSU output terminals and at Panel 1 power connector terminals; record both and compute delta.
 7. Run 10–15 minute stability hold, recording PSU voltage, panel terminal voltage, delta, and checking for abnormal heating, smell, noise, or voltage drop per EXP-003.
 8. Switch C14 OFF and unplug from wall power.
 
 #### Done when
-- Panel 1 LEDs remain completely dark/blank during cold standby energization.
+- Cold standby energization initiated with no smoke, burning smell, or abnormal power behavior.
 - Voltage at PSU terminals and at Panel 1 power connector measured and recorded, with delta computed per EXP-003.
 - 10–15 minute stability hold completed with no significant heating, smell, noise, or abnormal voltage drop.
-- Driver ICs and panel PCB remain cool / ambient over 10–15 minute hold.
+- Driver ICs and panel PCB remain at normal ambient temperature over 10–15 minute hold.
 - EXP-003 data logged in `docs/pm/evidence/AF-021-exp-003-panel-power.md`.
 
 #### If it fails

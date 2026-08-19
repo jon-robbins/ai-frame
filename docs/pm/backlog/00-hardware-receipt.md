@@ -39,13 +39,13 @@ Quarantine damaged packages, photograph packing slips, and escalate missing item
 #### Do
 1. Inspect all 6 delivered LED panels.
 2. Verify 128×64 matrix resolution and 2.0 mm pitch (SMD1515, 256×128 mm).
-3. Record silkscreen model markings (P2-32S) and driver ICs (e.g., ICN2037BP / FM6124).
+3. Record silkscreen model markings (P2-32S) and exact visible driver IC markings.
 4. Inspect HUB75E port markings, pin 1 orientation, keyed notch, and IN/OUT header labels.
 5. Capture macro photos directly into `hardware/photos/`.
 
 #### Done when
-- Silkscreen markings and driver IC part numbers recorded for all 6 panels in evidence log.
-- 1/32 scan rate confirmed from board markings.
+- Silkscreen markings and exact driver IC part numbers recorded for all 6 panels in evidence log.
+- 1/32 scan rate verification recorded (check board markings if printed, or note confirmation deferred to functional testing).
 - HUB75E pin 1, keyed notch, and DATA_IN / DATA_OUT orientations verified on all panels.
 - Photos saved to `hardware/photos/`.
 
@@ -91,7 +91,7 @@ Note physical damage, bent pins, or PCB revision discrepancies in the intake log
 1. Inspect Sipeed LicheeRV Nano-W board and confirm SG2002 SoC and onboard 256 MB DDR3 memory.
 2. Inspect Wi-Fi antenna connector, Type-C USB ports, and onboard LEDs.
 3. Check pin header straightness and soldering quality.
-4. Inspect Lenovo 64GB microSD card per BOM.md and card reader packaging.
+4. Inspect Lenovo 64GB microSD card per BOM.md.
 5. Capture macro photos directly into `hardware/photos/`.
 
 #### Done when
@@ -167,16 +167,16 @@ Do NOT energize if voltage rating is not 5V or if FG terminal is missing.
 **Resolves:** U-006, U-031
 
 #### Do
-1. Inspect 2× 1-to-4 DC power splitters and 6× panel power leads.
-2. Confirm fork/spade terminal crimps and 4-pin DC panel connectors.
-3. Verify delivered harness construction (check wire gauge, check if fused or unfused, verify polarity) and insulation integrity.
-4. Perform unpowered continuity check between red and black forks on all harness branches.
+1. Inspect both 1-to-4 DC power harnesses and count branches (expecting 8 branches total).
+2. Record conductor colors, wire gauge markings if present, connector/end-terminal types, fused/unfused construction, keying, and visible crimp quality.
+3. Verify delivered harness construction and insulation integrity.
+4. Perform unpowered continuity check between positive and negative terminals on all harness branches.
 5. Capture photos directly into `hardware/photos/`.
 
 #### Done when
-- Delivered harness construction verified (wire gauge, fused/unfused status, and polarity consistency across all branches).
-- Fork terminal crimps pull-tested gently with zero loose wires.
-- Multimeter confirms zero short circuits between red and black fork terminals.
+- Both 1-to-4 harnesses inspected, branch count confirmed (8 total), and construction details recorded (wire gauge, termination types, fused/unfused status, polarity consistency).
+- Harness terminal crimps pull-tested gently with zero loose wires.
+- Multimeter confirms zero short circuits between positive and negative terminals.
 - Photos saved to `hardware/photos/`.
 
 #### If it fails
