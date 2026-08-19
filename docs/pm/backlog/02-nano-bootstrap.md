@@ -114,7 +114,7 @@ Revert only the changed network profile if the Nano becomes unreachable, then us
 **Context:** Provision a Python 3 environment using the venv/package/build tooling discovered by AF-182, install only dependencies supported by that OS, and generate requirements-base.txt.
 
 #### Do
-1. Create `/home/sipeed/ai-frame-venv` with the Nano's available `python3 -m venv` implementation.
+1. Create `~/ai-frame-venv` in the application user's home directory with the Nano's available `python3 -m venv` implementation.
 2. Upgrade the available packaging tools inside the venv and install image-library build headers only if the discovered OS/package manager provides them.
 3. Freeze the resulting baseline to `requirements-base.txt`, recording Python and package versions.
 

@@ -210,16 +210,17 @@ Keep unpowered; repair the first failed conductor and retest.
 **Labels:** hardware controller-esp32 validation safety-review
 **Safety:** HUB75
 **Stop condition:** Disconnect panel and controller power before changing HUB75 wiring or ribbon cables.
-**Context:** Perform complete unpowered electrical audit: verify 14 end-to-end signal continuity paths (ESP32 header pin → HUB75 pin), 4 IC power paths, and ≥20 cross-pin isolation tests (adjacent pins open, VCC↔GND open, signals↔GND open) before energizing.
+**Context:** Perform a complete unpowered electrical audit against the validated appendix/mapping: verify continuity for every intended signal and power path; inspect/test all unintended adjacent-pad/net connections for isolation; verify VCC↔GND isolation and relevant signal-to-ground isolation; complete the audit before energizing.
 
 #### Do
-1. Test 14 signal and four power paths end-to-end unpowered.
-2. Test documented adjacent-pin and rail isolation points.
-3. Sign the pre-power checklist.
+1. Verify continuity for every intended signal and power path defined by the validated appendix/mapping, unpowered.
+2. Inspect/test all unintended adjacent-pad/net connections for isolation, including VCC↔GND and relevant signal-to-ground isolation.
+3. Complete and sign the pre-power checklist before energizing.
 
 #### Done when
-- Every tested path has a result.
-- All isolation tests pass before power.
+- Every intended signal and power path defined by the validated appendix/mapping passes continuity.
+- All unintended adjacent-pad/net connections, VCC↔GND, and relevant signal-to-ground isolation checks pass before power.
+- The complete audit and signed pre-power checklist are recorded before energizing.
 
 #### If it fails
 Do not energize; label, repair, and repeat the complete audit.

@@ -202,18 +202,18 @@ DO NOT energize. Identify any failed joint, disassemble, re-crimp, and re-run al
 4. Stand at arm's length to the side of the PSU (do not lean over PSU) and flip C14 switch ON.
 5. Observe power indicator if present and listen for abnormal acoustic noise, popping, or arcing.
 6. Using DMM in DC voltage mode, measure output voltage across +V and COM terminals.
-7. If AF-178 confirmed a labeled voltage-adjust control and adjustment procedure, adjust as documented to achieve ~5.0 V stable output.
+7. If AF-178 confirmed a labeled voltage-adjust control and adjustment procedure, adjustment may be performed as documented. If AF-178 did not confirm a supported V-ADJ control and procedure, do not attempt adjustment; record the measured output and assess it against the EXP-002 approximate-5 V and stability outcome.
 8. Execute 10-minute hold test, logging DC voltage across +V and COM, casing thermal state, and observations at t = 0, 1, 5, and 10 minutes per EXP-002.
 9. Switch C14 OFF, unplug mains cord from wall outlet, and record measured values in EXP-002 evidence log.
 
 #### Done when
 - Power indicator on A-200-5 illuminates (if present) without popping, buzzing, or smoke.
-- Output voltage across +V and COM measured (~5.0 V stable nominal per EXP-002, adjusted if supported) and recorded in evidence log.
-- 10-minute hold completed with stable output and no abnormal behavior (no excessive heating, smell, buzzing, or voltage instability).
+- Output voltage across +V and COM is measured and recorded in the evidence log; if AF-178 confirmed a supported control/procedure, any adjustment is documented, and if AF-178 did not confirm one, no adjustment is attempted.
+- 10-minute hold completed with stable output and no abnormal behavior (no excessive heating, smell, buzzing, or voltage instability), with the EXP-002 approximate-5 V outcome met; if that outcome is not met without a supported adjustment, the measured result is recorded and the task is stopped/escalated.
 - EXP-002 measurement table (no-load voltage, voltage after 10 min, ambient temp, observations) logged in evidence log.
 
 #### If it fails
-Switch OFF immediately and unplug from wall. If voltage cannot be adjusted to ~5.0 V or case overheats, mark PSU defective and request supplier replacement.
+Switch OFF immediately and unplug from wall. If AF-178 did not confirm a supported V-ADJ control and procedure, do not attempt adjustment; record the measured output and stop/escalate if the EXP-002 approximate-5 V or stability outcome is not met. If AF-178 confirmed a supported control and procedure but the documented adjustment cannot achieve the EXP-002 outcome, mark PSU defective and request supplier replacement.
 
 ---
 

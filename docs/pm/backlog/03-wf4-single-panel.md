@@ -51,7 +51,7 @@ Do not force a mismatched connector. Isolate the sample, photograph the mating s
 **Labels:** hardware controller-wf4 power safety-review polarity-verify
 **Safety:** 5V-HIGH-CURRENT
 **Stop condition:** Stop and disconnect power immediately if polarity, wiring, or an abnormal smell, heat, or sound is detected.
-**Context:** Install 18 AWG power leads from PSU 5V rail to WF4 power inputs; verify delivered harness construction; verify continuity (<1 Ω) and polarity under power-OFF conditions.
+**Context:** Install 18 AWG power leads from PSU 5V rail to WF4 power inputs; verify delivered harness construction; verify continuity and polarity under power-OFF conditions, recording measured resistance.
 
 #### Do
 1. With PSU output disconnected, wire the observed WF4 input to the verified 5V rail using the termination from AF-039; record the actual harness wire/fuse construction.
