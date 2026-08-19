@@ -329,7 +329,7 @@ Discard defective or shorted ribbon cable and replace with a verified spare ~40c
 **Milestone:** M0
 **Depends on:** AF-019, AF-020, AF-022
 **Labels:** hardware, safety-review, panel, polarity-verify
-**Resolves:** U-002, U-003
+**Resolves:** U-002
 
 #### Do
 1. For each remaining LED panel (Panel 2 through Panel 6):
