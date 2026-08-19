@@ -44,7 +44,55 @@ The project executes as a **dependency-driven directed acyclic graph (DAG)**, ra
 
 ## 3. Task Schema Reference
 
-All tasks adhere to the compact schema specified in [`../runbooks/task-format.md`](../runbooks/task-format.md).
+All tasks adhere to the compact schema specified in [`../runbooks/task-format.md`](../runbooks/task-format.md). The canonical definition of task granularity and compression rules lives there; the summary below is mirrored here for backlog readability.
+
+### 3.1 Task Granularity Rules
+
+A task is **one meaningful project-level outcome**. A task may contain multiple independently checkable construction stages when those stages collectively produce one artifact or result. Detailed physical steps, soldering sequences, connector checks, test patterns, and safety checks live inside the task's `Do` section, an experiment, or a shared runbook unless they independently matter to project status.
+
+**Compression must never remove execution guidance.** A project-level task may absorb multiple construction or test stages, but the resulting task and its referenced procedures must remain executable by a novice without relying on unstated electrical, wiring, firmware, or tool knowledge. If merging makes the physical procedure ambiguous, preserve the necessary detail inside the task/runbook or do not merge those tasks.
+
+#### Backlog-Worthiness / PM-Utility Test
+
+Before a card is kept as a separate task, it must pass the PM-utility test. A task normally survives if several of the following are true:
+
+1. Does it materially change project status?
+2. Is it independently visible on a board?
+3. Does it independently block, wait externally, or need a separate decision?
+4. Does it produce a meaningful artifact, result, capability, procurement, or gate?
+5. Would combining it with another card make the combined card confusing or unsafe?
+
+#### Merge-Trigger List
+
+Merge a smaller card into its parent task when the card's only significance is one of the following:
+
+- One conductor.
+- One connector.
+- One solder group.
+- One subset of GPIO signals.
+- One intermediate continuity check.
+- One test-pattern variant.
+- Recording evidence from the immediately preceding card.
+- Committing evidence.
+- Configuration existing solely to perform the same card's test.
+
+Safety does not automatically require another card. When safety is part of a larger task, it requires ordered steps and a named safety profile inside that larger task.
+
+#### Novice-Executability / Goal-Path Standard
+
+For every surviving hardware or integration task, the following must be verifiable from the task and its referenced runbooks:
+
+- **Purpose** — Why is this task being done?
+- **Starting state** — What must already be true before beginning?
+- **Exact action** — What precise physical or logical action is performed?
+- **Interfaces** — What connectors, pins, protocols, or APIs are touched?
+- **Order** — What must happen before, during, and after this step?
+- **Power state** — Is power applied, removed, or monitored?
+- **Pre-power verification** — What must be checked before energizing?
+- **Success state** — What observable state confirms completion?
+- **Failure handling** — What is the safe recovery if the step fails?
+- **Hidden knowledge** — What unstated electrical, wiring, firmware, or tool knowledge is required?
+- **Next capability unlocked** — What downstream task becomes possible after this one?
 
 ### Metadata Fields Summary
 

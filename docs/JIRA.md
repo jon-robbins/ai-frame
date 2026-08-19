@@ -253,31 +253,53 @@ Do not finalize the enclosure until these are known:
 
 # Task Granularity Rules
 
-Tasks must be atomic enough that someone can execute them without discovering hidden subtasks halfway through.
+A task is **one meaningful project-level outcome**. A task may contain multiple independently checkable construction stages when those stages collectively produce one artifact or result. Detailed physical steps, soldering sequences, connector checks, test patterns, and safety checks live inside the task's `Do` section, an experiment, or a shared runbook unless they independently matter to project status.
 
-BAD task:
+**Compression must never remove execution guidance.** A project-level task may absorb multiple construction or test stages, but the resulting task and its referenced procedures must remain executable by a novice without relying on unstated electrical, wiring, firmware, or tool knowledge. If merging makes the physical procedure ambiguous, preserve the necessary detail inside the task/runbook or do not merge those tasks.
 
-`Test the ESP32 setup`
+## Backlog-Worthiness / PM-Utility Test
 
-GOOD tasks:
+Before a card is kept as a separate task, it must pass the PM-utility test. A task normally survives if several of the following are true:
 
-* Identify ESP32 board revision.
-* Verify GPIO mapping.
-* Wire HCT245 #1 power pins.
-* Wire HCT245 #2 power pins.
-* Install decoupling capacitors.
-* Wire one specific signal group.
-* Continuity-test the adapter.
-* Flash known firmware.
-* Run solid-red test.
-* Run checkerboard test.
-* Measure reported refresh rate.
-* Run one-hour stability test.
-* Record results.
+1. Does it materially change project status?
+2. Is it independently visible on a board?
+3. Does it independently block, wait externally, or need a separate decision?
+4. Does it produce a meaningful artifact, result, capability, procurement, or gate?
+5. Would combining it with another card make the combined card confusing or unsafe?
 
-If a task has multiple independently testable outcomes, split it.
+## Merge-Trigger List
 
-Prefer tasks that result in one concrete artifact, measurement, verified condition, or decision.
+Merge a smaller card into its parent task when the card's only significance is one of the following:
+
+* One conductor.
+* One connector.
+* One solder group.
+* One subset of GPIO signals.
+* One intermediate continuity check.
+* One test-pattern variant.
+* Recording evidence from the immediately preceding card.
+* Committing evidence.
+* Configuration existing solely to perform the same card's test.
+
+Safety does not automatically require another card. When safety is part of a larger task, it requires ordered steps and a named safety profile inside that larger task.
+
+## Novice-Executability / Goal-Path Standard
+
+For every surviving hardware or integration task, the following must be verifiable from the task and its referenced runbooks:
+
+* **Purpose** — Why is this task being done?
+* **Starting state** — What must already be true before beginning?
+* **Exact action** — What precise physical or logical action is performed?
+* **Interfaces** — What connectors, pins, protocols, or APIs are touched?
+* **Order** — What must happen before, during, and after this step?
+* **Power state** — Is power applied, removed, or monitored?
+* **Pre-power verification** — What must be checked before energizing?
+* **Success state** — What observable state confirms completion?
+* **Failure handling** — What is the safe recovery if the step fails?
+* **Hidden knowledge** — What unstated electrical, wiring, firmware, or tool knowledge is required?
+* **Next capability unlocked** — What downstream task becomes possible after this one?
+
+Jira compatibility must not influence task granularity. Define the right project-level task first; mechanical Jira mapping is a separate, deferred step.
 
 ---
 
@@ -520,6 +542,13 @@ Do not prematurely resolve ADR-024.
 
 Do not start implementation yet.
 
+> [!NOTE]
+> **Jira export is deferred.** Jira compatibility must not influence task granularity.
+> The artifacts in this section are planning deliverables for the repository backlog.
+> Jira import tables and CSV drafts are future mechanical views generated from the
+> canonical backlog when export is actually needed; they are not current project
+> deliverables and must not drive how tasks are sized or split.
+
 First produce:
 
 ## 1. Repository Audit
@@ -591,9 +620,9 @@ For every ADR, indicate:
 * tasks providing evidence;
 * milestone at which it should be resolved.
 
-## 9. Jira Import Table
+## 9. Jira Import Table (Future Mechanical View)
 
-Produce a normalized table containing the following columns aligned with the compact schema:
+When Jira export is eventually enabled, produce a normalized table containing the following columns aligned with the compact schema. This table is generated mechanically from the canonical backlog; it is not a current planning deliverable and must not influence task granularity.
 
 * `Issue Type` — `Epic` or `Task`.
 * `Epic` — Parent Epic identifier (e.g. `AF-001`).
@@ -607,9 +636,9 @@ Produce a normalized table containing the following columns aligned with the com
 * `Acceptance Criteria` — Verifiable criteria defining completion (represents the task's `Done when` criteria, abbreviated for table view).
 * `Procedure / References` — Direct references to experiments (`EXP-XXX`), wiring sections, ADRs, or BOM specifications.
 
-## 10. Jira CSV Draft
+## 10. Jira CSV Draft (Future Mechanical View)
 
-Generate a Jira-importable CSV draft matching the exact columns of the Jira Import Table:
+When Jira export is eventually enabled, generate a Jira-importable CSV draft matching the exact columns of the Jira Import Table:
 
 `Issue Type,Epic,Task ID,Summary,Milestone,Depends On,Labels,Applies If,Context,Acceptance Criteria,Procedure / References`
 
