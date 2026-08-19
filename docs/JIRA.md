@@ -593,23 +593,27 @@ For every ADR, indicate:
 
 ## 9. Jira Import Table
 
-Produce a normalized table with at least:
+Produce a normalized table containing the following columns aligned with the compact schema:
 
-`Issue Type`
-`Epic`
-`Task ID`
-`Summary`
-`Milestone`
-`Depends On`
-`Labels`
-`Applies If`
-`Context`
-`Acceptance Criteria`
-`Procedure / References`
+* `Issue Type` — `Epic` or `Task`.
+* `Epic` — Parent Epic identifier (e.g. `AF-001`).
+* `Task ID` — Unique task identifier (`AF-XXX`).
+* `Summary` — Concise title from the task heading.
+* `Milestone` — Target milestone code (`M0`, `M1`, `M2`, `MG`, `M3`, `M4`, `MR`, `MA`, `Cond-X`, `MF`).
+* `Depends On` — Prerequisite task IDs that must complete first.
+* `Labels` — Space- or comma-delimited labels from the label taxonomy.
+* `Applies If` — Condition for conditional execution (or empty / `N/A` if unconditional).
+* `Context` — Context or purpose explaining why the task exists (maps to the task's `Context:` field if present, or brief summary).
+* `Acceptance Criteria` — Verifiable criteria defining completion (represents the task's `Done when` criteria, abbreviated for table view).
+* `Procedure / References` — Direct references to experiments (`EXP-XXX`), wiring sections, ADRs, or BOM specifications.
 
 ## 10. Jira CSV Draft
 
-Generate a Jira-importable CSV draft if possible.
+Generate a Jira-importable CSV draft matching the exact columns of the Jira Import Table:
+
+`Issue Type,Epic,Task ID,Summary,Milestone,Depends On,Labels,Applies If,Context,Acceptance Criteria,Procedure / References`
+
+Ensure standard RFC-4180 CSV compliance (proper quoting of fields with commas/newlines).
 
 Do not push anything to Jira yet.
 
