@@ -15,7 +15,7 @@ Every task across the project backlog is assigned a permanent, unique identifier
 - **Stable Project IDs:** Tasks are identified by immutable IDs in the format `AF-XXX` (e.g., `AF-011`, `AF-174`).
 - **Non-Contiguous Milestone Ranges:** Initial task IDs originated in numeric blocks during initial backlog creation (`AF-001` through `AF-010` for Epics, `AF-011` through `AF-173` for initial tasks). During refactoring, splitting, or expanding tasks, new IDs are allocated sequentially starting from `AF-174+` and placed directly into whichever milestone/phase file they belong.
 - **Authoritative Mapping:** The single source of truth for task location and milestone association is the mapping `AF-ID → phase file / milestone`. Do not assume task IDs within a phase file are contiguous.
-- **Next Available ID:** `AF-187` (updated monotonically as new tasks or splits are introduced).
+- **Next Available ID:** `AF-188` (updated monotonically as new tasks or splits are introduced).
 - **Never Renumber or Delete:** Task IDs are never reused or deleted once assigned.
 - **SUPERSEDED Conventions:** If a task is decomposed or obsoleted such that no natural core task remains after a split, the entry is marked:
   ```markdown

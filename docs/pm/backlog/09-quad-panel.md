@@ -2,7 +2,7 @@
 
 Covers the gated four-panel 256×128 prototype on the architecture selected by ADR-016. The M3 path validates two 256×64 rows, both physical seam types, Nano-originated content, row-update behavior, coordinate mapping, and sustained stability under EXP-017.
 
-**AF-096 post-decision normalization for AF-098, AF-099, AF-100, AF-102, and AF-103:** These tasks retain both pre-decision branch definitions. Before ADR-016, each registry entry carries the labels `conditional blocked blocked:adr-016` plus its applicable controller label, and uses `Applies if` for its branch condition. After AF-096, the executor reads ADR-016 and substitutes the actual winner. For the winner, remove the labels `conditional blocked blocked:adr-016` and remove `Applies if`; add `critical-path` and retain the winning controller label. For the loser, retain or add `conditional blocked blocked:adr-016`, remove `critical-path` if present, and replace `Applies if` with the exact resolved line `Skip — ADR-016 selected WF4` when multi-ESP32 loses, or `Skip — ADR-016 selected multi-ESP32` when WF4 loses. The executor substitutes the actual winner; no `[other controller]` placeholder may remain. Only the selected branch executes after AF-096; do not claim a winner in this pre-decision file.
+**AF-096 post-decision normalization for AF-098, AF-099, AF-100, AF-102, AF-103, and AF-187:** These tasks retain both pre-decision branch definitions. The AF-096 sweep itself is registry-wide: it walks every M3+ controller-specific/ADR-016-conditional entry that exists at execution time; this file's entries are the current known M3 targets. Before ADR-016, each registry entry carries the labels `conditional blocked blocked:adr-016` plus its applicable controller label, and uses `Applies if` for its branch condition. After AF-096, the executor reads ADR-016 and substitutes the actual winner. For the winner, remove the labels `conditional blocked blocked:adr-016` and remove `Applies if`; add `critical-path` and retain the winning controller label. For the loser, retain or add `conditional blocked blocked:adr-016`, remove `critical-path` if present, and replace `Applies if` with the exact resolved line `Skip — ADR-016 selected WF4` when multi-ESP32 loses, or `Skip — ADR-016 selected multi-ESP32` when WF4 loses. The executor substitutes the actual winner; no `[other controller]` placeholder may remain. Only the selected branch executes after AF-096; do not claim a winner in this pre-decision file.
 
 ### AF-097 — Verify panels #3 and #4 unpowered
 
@@ -36,12 +36,12 @@ Keep everything disconnected, quarantine the ambiguous panel or connector, and r
 
 #### Do
 1. With the bench de-energized, place panels #1/#2 as the top row and #3/#4 directly below them.
-2. Connect WF4 X1 → panel #1 IN → panel #2 IN and WF4 X2 → panel #3 IN → panel #4 IN, using the verified orientations.
+2. Connect WF4 X1 → panel #1 IN and panel #1 OUT → panel #2 IN; connect WF4 X2 → panel #3 IN and panel #3 OUT → panel #4 IN, using the verified orientations.
 3. Connect four separate panel power branches in parallel to the PSU, one branch per panel; do not daisy-chain panel power.
 4. Photograph the complete topology and record branch identities, connector checks, and any measured observations at `docs/pm/evidence/AF-098-wf4-m3-topology.md`.
 
 #### Done when
-- The documented topology is X1 top row and X2 bottom row, each row chained left to right.
+- The documented topology is X1 top row and X2 bottom row, each row chained left to right through the first panel's OUT into the next panel's IN.
 - All four panels have separate parallel power branches and no panel-power daisy-chain.
 - Wiring and branch evidence is complete before AF-102.
 
@@ -58,14 +58,36 @@ De-energize fully before inspection. Isolate the affected ribbon, branch, connec
 #### Do
 1. Audit the delivered ESP32-S3 and HCT adapter inventory and identify whether a second controller path is physically available.
 2. If available, document its board identity, adapter status, firmware/configuration baseline, and intended bottom-row role; prepare the Nano transport endpoint without changing the proven first-controller path.
-3. If unavailable, record `BLOCKED: second controller hardware not received/purchased` in `docs/pm/evidence/AF-099-second-controller-prep.md`; do not substitute, purchase, or silently assume hardware.
+3. If unavailable, record `BLOCKED: second controller hardware not received/purchased` in `docs/pm/evidence/AF-099-second-controller-prep.md` and activate AF-187 to acquire the missing hardware explicitly; do not substitute or silently assume hardware. Complete AF-099 only after AF-187 delivers verified hardware and step 2 is performed with it.
 
 #### Done when
-- A second-controller path is either prepared from identified available hardware or explicitly recorded as blocked for missing hardware.
+- A second-controller path is prepared from verified available hardware — directly, or from hardware acquired through AF-187 — with any interim blocked record preserved.
 - No unpurchased hardware, GPIO assignment, or working capability is asserted as fact.
 
 #### If it fails
-Do not wire or flash an unidentified board. Preserve the inventory and logs, and resolve the missing hardware or identity issue before AF-100.
+Do not wire or flash an unidentified board. Preserve the inventory and logs, and resolve the missing hardware via AF-187 or the identity issue before AF-100.
+
+### AF-187 — Acquire second ESP32 controller-path hardware
+
+**Milestone:** M3
+**Depends on:** AF-099
+**Labels:** hardware controller-esp32 procurement conditional blocked blocked:adr-016
+**Applies if:** ADR-016 selects multi-ESP32 and AF-099 records that the second-controller hardware is unavailable.
+**Context:** ADR-013 permits additional ESP32 purchases only after the first controller proves itself, which the accepted ADR-016 multi-ESP32 selection satisfies; this task makes the second-controller purchase an explicit registry outcome instead of dead-ending the ESP32 path on missing hardware.
+
+#### Do
+1. From AF-099's blocked record, list the exact missing items — the ESP32-S3 board matching the proven first controller, plus any missing HCT adapter components per BOM.
+2. Order the listed items from the BOM-linked sources and record order references, items, and costs in `docs/pm/evidence/AF-187-second-controller-procurement.md`.
+3. On receipt and while de-energized, verify each item against the BOM and received-hardware evidence (board identity, adapter component identity, no damage), photograph it, and update the inventory record.
+4. Hand the verified hardware back to AF-099 to complete second-controller preparation; do not wire, flash, or energize anything in this task.
+
+#### Done when
+- The missing second-controller items are ordered and received, with order references and receipt evidence recorded.
+- Each received item is verified de-energized against the BOM, photographed, and reflected in the inventory record.
+- AF-099's blocked record is resolvable from this verified hardware, and no unpurchased or unidentified hardware is asserted.
+
+#### If it fails
+Keep the ESP32 path blocked and record the procurement status; do not substitute an unidentified board or component, and resume AF-099 only after correct hardware is received and verified.
 
 ### AF-100 — Assemble ESP32 2×2 topology
 
@@ -78,13 +100,13 @@ Do not wire or flash an unidentified board. Preserve the inventory and logs, and
 **Procedure:** EXP-017
 
 #### Do
-1. With all relevant hardware de-energized, connect ESP32 #1 → panel #1 IN → panel #2 IN.
-2. Connect the prepared ESP32 #2 → panel #3 IN → panel #4 IN.
+1. With all relevant hardware de-energized, connect ESP32 #1 → panel #1 IN and panel #1 OUT → panel #2 IN.
+2. Connect the prepared ESP32 #2 → panel #3 IN and panel #3 OUT → panel #4 IN.
 3. Connect four separate parallel panel power branches, one per panel, and record the controller-to-row mapping.
 4. Save wiring photos and the topology record under `docs/pm/evidence/AF-100-esp32-m3-topology.md`.
 
 #### Done when
-- Each controller drives one left-to-right 256×64 row and all four panels have separate power branches.
+- Each controller drives one left-to-right 256×64 row chained through the first panel's OUT into the second panel's IN, and all four panels have separate power branches.
 - The second controller identity and wiring are evidenced; no hot-plug occurred.
 
 #### If it fails
@@ -156,9 +178,9 @@ Stop output and de-energize. Route a missing/identity issue to AF-099, topology 
 ### AF-104 — Validate EXP-017 seam crossing
 
 **Milestone:** M3
-**Depends on:** AF-096, AF-101
+**Depends on:** AF-096, AF-101, AF-102 OR AF-103
 **Labels:** validation critical-path
-**Context:** After AF-096 completes, read the accepted ADR-016 result and run this task only after the selected first-light task passes: AF-102 for WF4 or AF-103 for the applicable ESP32 row topology; skip the unselected first-light task, which is not a dependency.
+**Context:** The `AF-102 OR AF-103` dependency resolves after AF-096: read the accepted ADR-016 result and run this task only after the selected first-light task passes — AF-102 for WF4 or AF-103 for the applicable ESP32 row topology — skipping the unselected branch.
 **Procedure:** EXP-017
 
 #### Do
@@ -178,9 +200,9 @@ Stop output and de-energize before physical inspection. Isolate row/chain mappin
 ### AF-105 — Observe dual-row synchronization behavior
 
 **Milestone:** M3
-**Depends on:** AF-096, AF-101
+**Depends on:** AF-096, AF-101, AF-102 OR AF-103
 **Labels:** validation software critical-path
-**Context:** After AF-096 completes, read the accepted ADR-016 result and run this task only after the selected first-light task passes: AF-102 for WF4 or AF-103 for the applicable ESP32 row topology; skip the unselected first-light task, which is not a dependency.
+**Context:** The `AF-102 OR AF-103` dependency resolves after AF-096: read the accepted ADR-016 result and run this task only after the selected first-light task passes — AF-102 for WF4 or AF-103 for the applicable ESP32 row topology — skipping the unselected branch.
 **Procedure:** EXP-017
 
 #### Do
