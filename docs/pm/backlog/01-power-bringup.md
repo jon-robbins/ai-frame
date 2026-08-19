@@ -11,7 +11,7 @@ Covers C14 mains inlet wiring, ferrule/spade crimping, unpowered AC isolation an
 **Labels:** hardware, safety-review, power, polarity-verify
 **Safety:** MAINS
 **Stop condition:** Disconnect wall plug before probing C14 inlet.
-**Resolves:** U-022, U-026
+**Resolves:** U-001, U-026
 
 #### Do
 1. Disconnect C14 inlet assembly completely from any AC mains supply or PSU wiring.
@@ -40,7 +40,7 @@ Do NOT attempt wire rework if internal C14 module routing is shorted or miswired
 **Milestone:** M0
 **Depends on:** AF-178, AF-179
 **Labels:** hardware, wiring, practice
-**Resolves:** U-001
+**Resolves:** U-003
 
 #### Do
 1. Cut 10 sacrificial 5 cm offcut lengths of 18 AWG stranded silicone wire.
@@ -67,7 +67,7 @@ If any sample fails visual check or pull test, adjust stripper depth and ratchet
 **Labels:** hardware, safety-review, power, mains
 **Safety:** MAINS
 **Stop condition:** Keep AC power cord unplugged from wall while wiring mains terminals.
-**Resolves:** U-001
+**Resolves:** U-001, U-003
 
 #### Do
 1. Cut 18 AWG brown (Live) wire to measured length plus 15 cm service slack loop.
@@ -96,7 +96,7 @@ If continuity drops or connection is loose, undo screw/spade, inspect crimp barr
 **Labels:** hardware, safety-review, power, mains
 **Safety:** MAINS
 **Stop condition:** Keep AC power cord unplugged from wall while wiring mains terminals.
-**Resolves:** U-001
+**Resolves:** U-001, U-003
 
 #### Do
 1. Cut 18 AWG blue (Neutral) wire to measured length plus 15 cm service slack loop.
@@ -125,7 +125,7 @@ If continuity drops or connection is loose, undo screw/spade, inspect crimp barr
 **Labels:** hardware, safety-review, power, mains, pe-bonding
 **Safety:** MAINS
 **Stop condition:** Keep AC power cord unplugged from wall while wiring mains terminals.
-**Resolves:** U-004
+**Resolves:** U-001, U-003, U-004
 
 #### Do
 1. Cut 18 AWG green/yellow (Earth) wire to measured length plus 15 cm service slack loop.
@@ -189,7 +189,7 @@ DO NOT energize. Identify any failed joint, disassemble, re-crimp, and re-run al
 **Procedure:** EXP-002
 **Safety:** MAINS
 **Stop condition:** Immediately switch OFF and unplug if smoke, pop, buzzing, or burning odor occurs.
-**Resolves:** U-001, U-021
+**Resolves:** U-022
 
 #### Do
 1. Verify all DC output terminals (+V and COM) are completely bare and disconnected from any loads.

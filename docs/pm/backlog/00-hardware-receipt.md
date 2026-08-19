@@ -106,7 +106,7 @@ Replace or quarantine damaged microSD card or LicheeRV Nano board.
 **Depends on:** AF-011
 **Labels:** hardware, esp32, inventory
 **Procedure:** EXP-001
-**Resolves:** U-014, U-015
+**Resolves:** U-006, U-014, U-015
 
 #### Do
 1. Inspect 2× ESP32-S3 DevKitC-1 N16R8 boards (verify 16 MB flash, 8 MB octal PSRAM markings).
@@ -130,7 +130,7 @@ Reject non-HCT logic ICs (HCT required for 3.3V→5V level shifting); replace da
 **Depends on:** AF-011
 **Labels:** hardware, power, safety, inventory
 **Procedure:** EXP-001
-**Resolves:** U-021, U-022, U-026
+**Resolves:** U-006, U-021, U-026
 
 #### Do
 1. Inspect A-200-5 switching power supply label to confirm single 5V/40A/200W output rating.
@@ -155,7 +155,7 @@ Do NOT energize if voltage rating is not 5V or if FG terminal is missing.
 **Depends on:** AF-011
 **Labels:** hardware, wiring, inventory
 **Procedure:** EXP-001
-**Resolves:** U-002, U-003, U-031
+**Resolves:** U-006, U-031
 
 #### Do
 1. Inspect 2× 1-to-4 DC power splitters and 6× panel power leads.
