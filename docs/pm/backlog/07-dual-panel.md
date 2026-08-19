@@ -272,7 +272,7 @@ Record the failed criterion for each path, preserve the evidence, and return to 
 
 #### Done when
 - WF4 and ESP32 subtrack rows account for all applicable AF-081–090 evidence and identify each path’s result.
-- The consolidated record includes the AF-091 outcome, selected/passing path, links to that path’s evidence, and a linked result or explicit missing-input record for the non-selected path.
+- The consolidated record includes the AF-091 outcome, the passing path or paths, links to their evidence, and a linked result or explicit missing-input record for the other candidate path, including non-passing or incomplete status when applicable; ADR-016 architecture selection happens later.
 - The summary includes tested settings/results and missing-input notes without changing or silently filling source measurements.
 - The record is sufficient to hand M2 evidence to the architecture decision without changing or silently filling source measurements.
 

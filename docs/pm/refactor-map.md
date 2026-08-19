@@ -447,7 +447,7 @@ M2 is authoritative in `docs/pm/backlog/07-dual-panel.md`. The historical M2 ent
 | **AF-089** | `07-dual-panel.md` / AF-089 | `KEEP` | Run the ESP32 shared patterns, defect checklist, dynamic tests, and EXP-012 stability record. |
 | **AF-090** | `07-dual-panel.md` / AF-090 | `CORRECT` | Verify the ESP32 x=128 seam with dependency on M1 Nano E2E `AF-069`; seam-crossing gradient, text, and test content must be Nano-rendered and sent through the proven Nano→ESP32 transport, with Nano-origin evidence under EXP-012. |
 | **AF-091** | `07-dual-panel.md` / AF-091 | `CORRECT / AGGREGATE` | Restore the permanent M2 gate aggregator. It passes M2 when either branch has a complete 256×64 dual-panel evidence set and the passing candidate demonstrates Nano-controlled 256×64 output, including content crossing x=128, through the branch-specific proven transport; both paths are evaluated, but both are not required to pass. |
-| **AF-092** | `07-dual-panel.md` / AF-092 | `RESTORE / AGGREGATE` | Restore the permanent M2 subtrack aggregator with concrete output `docs/pm/evidence/AF-092-m2-summary.md`. It records the selected path’s linked evidence and the non-selected path’s linked result or missing-input record for the architecture decision. |
+| **AF-092** | `07-dual-panel.md` / AF-092 | `RESTORE / AGGREGATE` | Restore the permanent M2 subtrack aggregator with concrete output `docs/pm/evidence/AF-092-m2-summary.md`. It records the passing path or paths’ linked evidence and the other candidate path’s linked result or missing-input record, including non-passing or incomplete status when applicable; ADR-016 architecture selection happens later. |
 
 ## 12. M2 Factual Assertion Audit
 
