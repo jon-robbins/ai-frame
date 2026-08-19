@@ -1,325 +1,378 @@
-# Phase 01 — Safe AC & DC Power Bring-Up (M0)
+# Phase 01 — Safe Power Bringup (M0)
 
-Covers C14 mains inlet wiring, crimp inspection, AC insulation and continuity validation, switching power supply (PSU) no-load voltage and hold testing (EXP-002), and single-panel cold DC power validation (EXP-003).
+Covers C14 mains inlet wiring, ferrule/spade crimping, unpowered AC isolation and continuity verification, switching power supply no-load energization (EXP-002), and single-panel cold DC power bringup (EXP-003).
 
 ---
 
-### AF-012 — Prepare C14 fused switched inlet assembly
+### AF-012 — Verify C14 rear tab routing through fuse and switch
 
 **Milestone:** M0
 **Depends on:** AF-178
-**Labels:** hardware, power, safety
+**Labels:** hardware, safety-review, power, polarity-verify
 **Safety:** MAINS
-**Stop condition:** Disconnect wall plug before assembling or probing C14 inlet.
+**Stop condition:** Disconnect wall plug before probing C14 inlet.
+**Resolves:** U-022, U-026
 
 #### Do
-1. Install candidate T2A 5×20mm slow-blow fuse into C14 fuse carriage and insert carriage into inlet.
-2. Prepare 18 AWG insulated spade jumper leads with heat-shrink tubing.
-3. Wire switch jumper connections between C14 fused terminal and rocker switch input.
-4. Verify unpowered continuity from AC inlet pins through fuse and switch to output spade tabs.
+1. Disconnect C14 inlet assembly completely from any AC mains supply or PSU wiring.
+2. Install candidate T2A 5×20mm slow-blow fuse into C14 fuse carriage and insert into inlet.
+3. Using multimeter in continuity / resistance mode, test continuity from Line (L) male prong to fuse terminal.
+4. Verify continuity from fuse output tab to switch input tab, and from switch output tab to rear L wire tab.
+5. Verify Neutral (N) male prong connects through switch pole to rear N wire tab.
+6. Verify Protective Earth (PE) center prong connects directly to rear PE ground tab and is completely unswitched and unfused.
+7. Verify open circuit between L and N tabs with switch in OFF position.
+8. Verify open circuit between L/N and PE tabs in both switch positions.
 
 #### Done when
-- Candidate T2A slow-blow fuse firmly seated in fuse carriage.
-- Switch jumper connections fully insulated with heat-shrink tubing and zero bare metal exposed.
-- Multimeter confirms direct continuity from AC pins to switched output tabs when switch is ON.
-- Multimeter confirms open circuit when switch is OFF.
+- Direct continuity confirmed through fuse and switch to L rear tab when switch is ON.
+- Direct continuity confirmed through switch to N rear tab when switch is ON.
+- PE ground path confirmed continuous (< 0.5 Ω) and completely unswitched in all switch positions.
+- Open circuit confirmed between L and N when switch is OFF.
+- Complete electrical isolation confirmed between L/N and PE in all switch states.
 
 #### If it fails
-Replace loose spade connectors, ensure full heat-shrink coverage, and re-test continuity before proceeding.
+Do NOT attempt wire rework if internal C14 module routing is shorted or miswired; quarantine and replace the C14 inlet assembly.
 
 ---
 
-### AF-013 — Wire AC mains cable from C14 inlet to PSU terminal block
+### AF-013 — Ferrule and spade crimp practice and inspection on offcut wire
 
 **Milestone:** M0
-**Depends on:** AF-012
-**Labels:** hardware, power, safety, wiring
-**Safety:** MAINS
-**Stop condition:** Do not plug into wall power while wiring AC terminals.
+**Depends on:** AF-178, AF-179
+**Labels:** hardware, wiring, practice
+**Resolves:** U-001
 
 #### Do
-1. Cut and strip 3-core 18 AWG / 0.75mm² AC mains cable.
-2. Crimp 6.3mm insulated female spade terminals on C14 ends and bootlace ferrules / fork terminals on PSU ends.
-3. Connect Live (brown/black) from C14 to PSU L terminal.
-4. Connect Neutral (blue/white) from C14 to PSU N terminal.
-5. Connect Protective Earth (green/yellow) from C14 ground tab to PSU FG (Frame Ground) terminal.
-6. Secure mechanical cable strain relief clamping.
+1. Cut 10 sacrificial 5 cm offcut lengths of 18 AWG stranded silicone wire.
+2. Strip ~6 mm insulation from wire ends without nicking conductor strands.
+3. Practice crimping 5 bootlace ferrule samples using the ratchet ferrule crimper (verify square crimp, no stray strands, 0.5–1 mm insulation clearance).
+4. Practice crimping 5 insulated 6.3 mm female spade terminal samples using the ratchet crimp tool (verify two-stage crimp on conductor and insulation wings).
+5. Perform gentle pull test (< 5 kg hand tug) on each sample to verify no pullout.
+6. Label samples F1–F5 and S1–S5 and capture inspection photo.
 
 #### Done when
-- Live, Neutral, and FG wires securely screwed into PSU terminal block.
-- Mechanical strain relief secured so tension cannot pull terminals loose.
-- Zero stray copper strands exposed outside crimp barrels or terminal blocks.
+- 5 ferrule samples pass 4-point visual inspection (full strand capture, square crimp, no insulation pinch, no metal cracks) and pull test.
+- 5 spade samples pass 4-point visual inspection (full strand capture, undeformed tongue, insulation wing grip, zero exposed wire gap) and pull test.
+- Group photo of 10 labeled samples captured and recorded in evidence log.
 
 #### If it fails
-Re-strip and re-crimp spade or ferrule terminals if any wire strands fray or connections loosen.
+If any sample fails visual check or pull test, adjust stripper depth and ratchet nest; repeat practice until 5 consecutive ferrules and spades pass cleanly.
 
 ---
 
-### AF-014 — Verify unpowered protective earth and chassis continuity
+### AF-014 — Wire C14 Live conductor to PSU L terminal
 
 **Milestone:** M0
-**Depends on:** AF-013
-**Labels:** hardware, power, safety, test
+**Depends on:** AF-012, AF-013
+**Labels:** hardware, safety-review, power, mains
 **Safety:** MAINS
-**Stop condition:** Keep power cord unplugged from wall.
+**Stop condition:** Keep AC power cord unplugged from wall while wiring mains terminals.
+**Resolves:** U-001
 
 #### Do
-1. Keep AC mains cord completely disconnected from wall power.
-2. Set digital multimeter to continuity / low-resistance mode.
-3. Measure continuity between C14 inlet ground pin and PSU FG screw terminal.
-4. Measure continuity between C14 inlet ground pin and PSU aluminum chassis / casing.
-5. Record measured resistance values in the evidence log.
+1. Cut 18 AWG brown (Live) wire to measured length plus 15 cm service slack loop.
+2. Strip ~6 mm insulation and crimp a 6.3 mm insulated female spade terminal onto the C14 end.
+3. Strip ~6 mm insulation and crimp a bootlace ferrule onto the PSU end.
+4. Insert ferrule into PSU L screw-barrier clamp and tighten screw firmly.
+5. Push 6.3 mm spade connector firmly onto C14 Live output tab with full insulation seating.
+6. Measure continuity from C14 Line male prong to PSU L terminal screw head with DMM.
+7. Perform wiggle test (wiggle wire at both ends 3 times while monitoring continuous DMM beep).
 
 #### Done when
-- Direct electrical continuity confirmed from C14 inlet ground pin to PSU FG terminal and metal chassis.
-- Protective Earth confirmed continuous and unswitched in all switch states.
-- Measured PE resistance recorded in evidence log.
+- Live wire connects C14 switched Live tab to PSU L screw terminal with single continuous conductor.
+- DMM confirms solid continuity (< 0.5 Ω) from C14 L prong to PSU L screw head when switch is ON.
+- Wiggle test shows zero dropouts or intermittent continuity.
+- Both crimp terminations pass 4-point visual inspection with service loop slack intact.
 
 #### If it fails
-Inspect PE terminal crimps; scrape paint or anodization at chassis contact point if continuity is open.
+If continuity drops or connection is loose, undo screw/spade, inspect crimp barrels, re-crimp with fresh terminal, and re-test.
 
 ---
 
-### AF-015 — Verify unpowered AC line and neutral isolation
+### AF-015 — Wire C14 Neutral conductor to PSU N terminal
 
 **Milestone:** M0
-**Depends on:** AF-013
-**Labels:** hardware, power, safety, test
+**Depends on:** AF-014
+**Labels:** hardware, safety-review, power, mains
 **Safety:** MAINS
-**Stop condition:** Keep power cord unplugged from wall.
+**Stop condition:** Keep AC power cord unplugged from wall while wiring mains terminals.
+**Resolves:** U-001
 
 #### Do
-1. Keep AC power cord unplugged from wall.
-2. With C14 rocker switch in OFF position, measure resistance between Live (L) and Neutral (N), Live (L) and PE/FG, and Neutral (N) and PE/FG.
-3. Toggle C14 switch to ON position and repeat measurements between L-FG and N-FG.
-4. Record all measured resistance values in evidence log.
+1. Cut 18 AWG blue (Neutral) wire to measured length plus 15 cm service slack loop.
+2. Strip ~6 mm insulation and crimp a 6.3 mm insulated female spade terminal onto the C14 end.
+3. Strip ~6 mm insulation and crimp a bootlace ferrule onto the PSU end.
+4. Insert ferrule into PSU N screw-barrier clamp and tighten screw firmly.
+5. Push 6.3 mm spade connector firmly onto C14 Neutral output tab with full insulation seating.
+6. Measure continuity from C14 Neutral male prong to PSU N terminal screw head with DMM.
+7. Perform wiggle test (wiggle wire at both ends 3 times while monitoring continuous DMM beep).
 
 #### Done when
-- Open circuit (infinite resistance) confirmed between L and N when switch is OFF.
-- Open circuit confirmed between Live and FG / chassis in both switch positions.
-- Open circuit confirmed between Neutral and FG / chassis in both switch positions.
+- Neutral wire connects C14 switched Neutral tab to PSU N screw terminal with single continuous conductor.
+- DMM confirms solid continuity (< 0.5 Ω) from C14 N prong to PSU N screw head when switch is ON.
+- Wiggle test shows zero dropouts or intermittent continuity.
+- Both crimp terminations pass 4-point visual inspection with service loop slack intact.
 
 #### If it fails
-Disassemble C14 wiring and inspect for solder bridges, short circuits, or miswired switch terminals.
+If continuity drops or connection is loose, undo screw/spade, inspect crimp barrels, re-crimp with fresh terminal, and re-test.
 
 ---
 
-### AF-016 — Complete pre-energization visual and mechanical safety inspection
+### AF-016 — Wire C14 Protective Earth conductor to PSU FG terminal
 
 **Milestone:** M0
-**Depends on:** AF-014, AF-015
-**Labels:** hardware, power, safety, review
+**Depends on:** AF-015
+**Labels:** hardware, safety-review, power, mains, pe-bonding
 **Safety:** MAINS
-**Stop condition:** Do not energize until all 8 points on safety checklist pass.
+**Stop condition:** Keep AC power cord unplugged from wall while wiring mains terminals.
+**Resolves:** U-004
 
 #### Do
-1. Execute the full 8-point MAINS checklist from `docs/pm/runbooks/safety.md`.
-2. Verify terminal barrier cover is closed and securely seated over PSU screw terminals.
-3. Verify AC cable strain relief holds firmly under gentle tug test.
-4. Ensure bench area is clean, dry, non-conductive, and free of loose metal or wire trimmings.
-5. Confirm wall outlet switch / plug is within arm's reach for emergency disconnect.
+1. Cut 18 AWG green/yellow (Earth) wire to measured length plus 15 cm service slack loop.
+2. Strip ~6 mm insulation and crimp a 6.3 mm insulated female spade terminal onto the C14 end.
+3. Strip ~6 mm insulation and crimp a bootlace ferrule onto the PSU end.
+4. Insert ferrule into PSU FG (Frame Ground) screw-barrier clamp and tighten screw firmly.
+5. Push 6.3 mm spade connector firmly onto C14 Earth/Ground tab with full insulation seating.
+6. Measure continuity from C14 center Earth male prong to PSU FG terminal and PSU metal chassis.
+7. Verify PE continuity with switch in OFF position, then repeat with switch in ON position.
+8. Perform spot isolation check (verify no continuity between PE and L or N).
 
 #### Done when
-- All 8 MAINS safety checklist items verified and signed off in evidence log.
-- PSU clear plastic terminal barrier cover is in place.
-- Emergency disconnect path confirmed unobstructed.
+- Earth wire connects C14 ground tab directly to PSU FG screw terminal and chassis.
+- DMM confirms direct PE continuity (< 0.5 Ω) from C14 Earth prong to PSU FG terminal and chassis in both OFF and ON switch states.
+- Wiggle test confirms uninterrupted earth bonding.
+- Zero continuity (complete electrical isolation) between PE and L or N terminals.
 
 #### If it fails
-Abort energization until all safety checklist failures are fully resolved.
+If PE continuity depends on switch state or is open, immediately remove all AC wiring and re-verify C14 internal routing per AF-012.
 
 ---
 
-### AF-017 — Execute initial PSU no-load energization and verify indicator LED
+### AF-017 — Visual and cross-continuity inspection of AC mains wiring
 
 **Milestone:** M0
 **Depends on:** AF-016
-**Labels:** hardware, power, safety, test
-**Procedure:** EXP-002
+**Labels:** hardware, safety-review, power, isolation
 **Safety:** MAINS
-**Stop condition:** Immediately switch OFF and unplug if smoke, pop, buzzing, or burning odor occurs.
+**Stop condition:** Do not energize until all visual and isolation checks pass.
+**Resolves:** U-001, U-004
 
 #### Do
-1. Verify all DC output terminals have no load connected.
-2. Plug IEC C13 power cable into wall outlet while maintaining emergency disconnect access.
-3. Stand at arm's length with face turned away from PSU and toggle C14 switch ON.
-4. Observe green power indicator LED on A-200-5 PSU.
-5. Listen and check for abnormal acoustic noise, arcing, or thermal anomalies.
+1. Perform 7-point visual inspection under bright light with magnifying glass:
+   - Check all 6 crimp joints (3 spade, 3 ferrule) for zero stray conductor strands.
+   - Verify all 3 PSU screw terminals are tightened firmly.
+   - Verify wire insulation is intact with no nicks or pinching.
+   - Verify zero bare copper exposed outside terminals or screw clamps.
+   - Verify cable routing maintains slack and strain relief.
+2. Perform 6-point cross-continuity electrical isolation matrix:
+   - With switch OFF: measure resistance for L↔N, L↔PE, N↔PE (all must be open circuit).
+   - With switch ON: measure resistance for L↔N, L↔PE, N↔PE (all must be open circuit; L-N high impedance).
+3. Wiggle all 3 wires during cross-checks to ensure no intermittent short circuits.
+4. Sign off pre-energization safety checklist in evidence log.
 
 #### Done when
-- Green power LED on A-200-5 PSU illuminates steadily.
-- Zero popping, buzzing, smoke, or abnormal thermal symptoms.
-- Initial energization timestamp and observations recorded in evidence log.
+- 7-point visual inspection passes with zero defects or exposed conductors.
+- Electrical cross-continuity matrix confirms 100% isolation across all 6 test combinations in both switch states.
+- Zero intermittent contact detected during wire wiggle test.
+- Pre-energization checklist signed off in `docs/pm/evidence/AF-017-ac-wiring-inspection.md`.
 
 #### If it fails
-Switch OFF immediately, unplug from wall, and inspect fuse and AC terminal wiring.
+DO NOT energize. Identify any failed joint, disassemble, re-crimp, and re-run all visual and electrical checks from scratch.
 
 ---
 
-### AF-018 — Measure and calibrate PSU no-load output DC voltage
+### AF-018 — PSU no-load energization and voltage hold test (EXP-002)
 
 **Milestone:** M0
 **Depends on:** AF-017
-**Labels:** hardware, power, calibration
+**Labels:** hardware, safety-review, power, validation
 **Procedure:** EXP-002
 **Safety:** MAINS
-**Stop condition:** Switch OFF and unplug before adjusting wiring.
+**Stop condition:** Immediately switch OFF and unplug if smoke, pop, buzzing, or burning odor occurs.
+**Resolves:** U-001, U-021
 
 #### Do
-1. Set digital multimeter to DC voltage mode.
-2. Measure DC voltage across all 3 pairs of +V and COM screw terminals on PSU.
-3. If voltage deviates from 5.00 V (acceptable range 4.80–5.25 V), gently adjust onboard V-ADJ potentiometer to calibrate output to ~5.05 V.
-4. Run 10-minute continuous no-load stability hold, recording voltage and PSU casing temperature every 2 minutes.
+1. Verify all DC output terminals (+V and COM) are completely bare and disconnected from any loads.
+2. Verify C14 switch is in OFF position.
+3. Plug C13 mains cord into wall outlet first, then into C14 inlet (ensures Earth pin mates first).
+4. Stand at arm's length to the side of the PSU (do not lean over PSU) and flip C14 switch ON.
+5. Observe green power LED and listen for abnormal acoustic noise, popping, or arcing.
+6. Using DMM in DC voltage mode, measure output voltage across all 3 +V and COM terminal pairs.
+7. If voltage deviates from 5.00 V (acceptable range 4.80–5.25 V), adjust V-ADJ potentiometer to ~5.05 V.
+8. Execute 10-minute hold test, logging DC voltage and PSU casing temperature at t = 0, 1, 5, and 10 minutes.
+9. Switch C14 OFF, unplug mains cord, and record observations in EXP-002 evidence log.
 
 #### Done when
-- DC voltage across all 3 +V/COM terminal pairs measures ~5.0 V nominal.
-- Output voltage drift is < 0.05 V over 10-minute hold duration.
-- PSU case remains cool with zero thermal runaway.
-- Voltage calibration values and 10-minute hold table logged in evidence file.
+- Green power indicator LED on A-200-5 illuminates steadily without popping, buzzing, or smoke.
+- Single 5V DC output rail measures ~5.0 V nominal across all terminal pairs (4.80–5.25 V range).
+- Voltage drift is ≤ 0.05 V over 10-minute hold duration.
+- PSU case temperature remains cool / ambient (≤ 40 °C).
+- 4-point measurement table logged in `docs/pm/evidence/AF-018-exp-002-psu-no-load.md`.
 
 #### If it fails
-If output voltage cannot be calibrated within tolerance or fluctuates erratically, power OFF and inspect or replace PSU.
+Switch OFF immediately and unplug from wall. If voltage cannot be adjusted within tolerance or case overheats, mark PSU defective and request supplier replacement.
 
 ---
 
-### AF-019 — Wire 1-to-4 DC power distribution harness to PSU terminals
+### AF-019 — Verify panel power harness branch #1 polarity
 
 **Milestone:** M0
-**Depends on:** AF-018
-**Labels:** hardware, power, wiring
-**Safety:** MAINS
-**Stop condition:** Turn C14 switch OFF and unplug from wall before connecting DC harness.
+**Depends on:** AF-018, AF-179
+**Labels:** hardware, safety-review, power, polarity-verify
+**Resolves:** U-002, U-003
 
 #### Do
-1. Switch C14 inlet OFF and unplug mains cable from wall.
-2. Connect red fork terminals of 1-to-4 DC harness to PSU +V screw terminals.
-3. Connect black fork terminals of 1-to-4 DC harness to PSU COM screw terminals.
-4. Tighten screw terminals firmly and close clear plastic barrier cover.
+1. Verify PSU is switched OFF and unplugged from wall power.
+2. Select 1-to-4 DC power harness and label branch #1 as `PANEL-1` on wire and 4-pin connector.
+3. Test continuity from red fork terminal (PSU +V) to 4-pin connector V+ pin with DMM (expected: beep).
+4. Test continuity from black fork terminal (PSU COM) to 4-pin connector GND pin with DMM (expected: beep).
+5. Cross-test red fork to GND pin and black fork to V+ pin (expected: open circuit, no beep).
+6. Check 4-pin connector keying against panel header; if unkeyed, apply high-visibility orientation index mark with Sharpie.
 
 #### Done when
-- Red wire to +V and black wire to COM connections verified on terminal block.
-- All screw terminals tightened securely with zero loose strands.
-- PSU plastic terminal cover snapped closed.
+- Direct continuity confirmed from red fork terminal to panel V+ connector pin.
+- Direct continuity confirmed from black fork terminal to panel GND connector pin.
+- Zero cross-continuity (complete isolation) between +5V and GND lines.
+- Connector orientation is unambiguous (keyed shroud or Sharpie alignment index).
 
 #### If it fails
-Correct any reversed fork terminals or loose screws before re-energizing.
+If cross-continuity detects a short circuit, quarantine harness branch #1 and test spare harness branch.
 
 ---
 
-### AF-020 — Verify DC polarity and voltage on unloaded panel power plugs
+### AF-020 — Verify panel #1 PCB power terminal polarity against capacitor
 
 **Milestone:** M0
-**Depends on:** AF-019
-**Labels:** hardware, power, test
-**Procedure:** EXP-003
-**Safety:** MAINS
-**Stop condition:** Power OFF before touching any connector pins.
+**Depends on:** AF-174
+**Labels:** hardware, safety-review, panel, polarity-verify
+**Resolves:** U-002
 
 #### Do
-1. Plug in AC mains cord and toggle C14 switch ON with panel power connectors hanging unconnected.
-2. Measure DC voltage at each of the 4 output connectors of the 1-to-4 harness using DMM fine probes.
-3. Verify polarity on each plug (red wire = +5.0V, black wire = GND).
-4. Record voltages in EXP-003 evidence log.
+1. Place LED Panel 1 on ESD-safe bench with rear PCB accessible.
+2. Locate 4-pin power input header and adjacent electrolytic decoupling capacitor.
+3. Identify capacitor negative terminal by white/colored stripe on capacitor body.
+4. Using DMM in continuity mode, probe capacitor negative lead against all 4 power header pins to locate GND pin.
+5. Probe capacitor positive lead against power header pins to locate VCC (+5V) pin.
+6. Compare capacitor-verified pins against silkscreen `VCC` / `GND` labels on panel PCB.
+7. Mark verified polarity directly onto panel PCB backing with permanent Sharpie.
 
 #### Done when
-- +5.0V DC confirmed on designated positive pins of all 4 harness branch connectors.
-- Zero polarity reversals detected across all connectors.
-- Voltage readings across all 4 branches match within 0.05 V.
+- Electrolytic capacitor negative terminal confirmed continuous with PCB GND pins.
+- Electrolytic capacitor positive terminal confirmed continuous with PCB VCC pins.
+- Silkscreen labels match capacitor polarity (or discrepancies clearly marked with Sharpie).
+- Zero short circuit between PCB VCC and GND pins.
 
 #### If it fails
-Power OFF immediately; isolate, mark, and replace any miswired harness branch.
+If a dead short (0 Ω) exists between VCC and GND pins, quarantine panel immediately as defective; do not apply power.
 
 ---
 
-### AF-021 — Connect DC power cable to LED Panel 1 and verify mechanical fit
+### AF-021 — Single-panel cold DC power test (EXP-003)
 
 **Milestone:** M0
-**Depends on:** AF-020, AF-174
-**Labels:** hardware, display, power
-**Safety:** 5V-HIGH-CURRENT
-**Stop condition:** Power OFF PSU before plugging power cable into panel.
-
-#### Do
-1. Toggle C14 switch OFF and verify PSU LED discharges completely.
-2. Inspect 4-pin power input header on LED Panel 1 (confirm VCC and GND silkscreen labels).
-3. Insert verified 4-pin harness connector into Panel 1 power header.
-4. Verify locking tab engages securely and connector is keyed correctly.
-
-#### Done when
-- 4-pin power plug firmly seated in Panel 1 power header.
-- Locking tab engaged with correct physical orientation.
-- Red harness wire aligns with VCC and black harness wire aligns with GND silkscreen on panel PCB.
-
-#### If it fails
-Do NOT force connector if keying does not match; re-verify panel pinout and connector orientation.
-
----
-
-### AF-022 — Inspect Panel 1 HUB75 input port and verify unpowered isolation
-
-**Milestone:** M0
-**Depends on:** AF-021
-**Labels:** hardware, display, safety
-**Safety:** HUB75
-**Stop condition:** Keep PSU powered OFF.
-
-#### Do
-1. Inspect 16-pin HUB75 DATA_IN shrouded header on Panel 1 (distinguish DATA_IN from DATA_OUT).
-2. Verify pin 1 indicator and keyed notch orientation on the header.
-3. With power harness plugged in but PSU powered OFF, measure resistance between Panel 1 VCC and GND terminals using DMM.
-4. Measure unpowered resistance from VCC/GND to HUB75 ground pins.
-
-#### Done when
-- No dead short between Panel 1 VCC and GND (resistance rises > 100 Ω as capacitors charge).
-- DATA_IN header keyed notch and pin 1 orientation documented.
-- Logic ground continuity confirmed between power GND and HUB75 GND pins.
-
-#### If it fails
-Quarantine Panel 1 if a short circuit (0 Ω) exists between VCC and GND.
-
----
-
-### AF-023 — Execute Panel 1 cold power energization and verify standby state
-
-**Milestone:** M0
-**Depends on:** AF-022
-**Labels:** hardware, display, power, test
+**Depends on:** AF-018, AF-019, AF-020
+**Labels:** hardware, safety-review, power, validation
 **Procedure:** EXP-003
 **Safety:** 5V-HIGH-CURRENT
-**Stop condition:** Switch OFF immediately if panel LEDs flash erratically, emit smoke, or driver ICs heat excessively.
+**Stop condition:** Power OFF PSU immediately if LEDs flash erratically, emit smoke, or driver ICs overheat.
+**Resolves:** U-002, U-003
 
 #### Do
-1. Energize PSU with Panel 1 connected (no controller or HUB75 ribbon cable attached).
-2. Observe Panel 1 LED matrix face for unwanted flashing or lit LEDs.
-3. Measure DC voltage at Panel 1 power connector terminals under quiescent/standby load.
-4. Monitor driver IC temperatures during a 5-minute standby hold using infrared thermometer or finger touch.
+1. With PSU OFF and unplugged, connect harness branch #1 red fork to PSU +V and black fork to PSU COM.
+2. Plug 4-pin harness connector into Panel 1 power header, verifying alignment marks.
+3. Confirm NO HUB75 ribbon cable or controller is connected to Panel 1.
+4. Plug AC mains cable into wall, stand to the side, and toggle C14 switch ON.
+5. Observe Panel 1 face for 10 seconds (confirm LEDs remain dark with no data input).
+6. Measure DC voltage at PSU output screw terminals and back-probe Panel 1 power connector socket.
+7. Run 10–15 minute stability hold, recording PSU voltage, panel voltage, and driver IC thermal state.
+8. Switch C14 OFF and unplug from wall power.
 
 #### Done when
 - Panel 1 LEDs remain completely dark/blank during cold standby energization.
-- Voltage at Panel 1 terminals measures ≥ 4.85 V DC (nominal ~5.0 V).
-- All driver ICs and panel PCB remain cool / room temperature over 5-minute hold.
-- Standby current and voltage recorded in EXP-003 evidence log.
+- Voltage at PSU terminals measures 4.90–5.20 V DC.
+- Voltage at Panel 1 power connector measures ≥ 4.85 V DC (voltage drop < 0.15 V).
+- Driver ICs and panel PCB remain cool / ambient (≤ 35 °C) over 10–15 minute hold.
+- EXP-003 data logged in `docs/pm/evidence/AF-021-exp-003-panel-power.md`.
 
 #### If it fails
-Power OFF immediately; inspect panel for shorted SMD LEDs, reversed capacitors, or damaged driver ICs.
+Power OFF immediately. Check polarity alignment; inspect panel for shorted SMD LEDs, reversed capacitors, or damaged driver ICs.
 
 ---
 
-### AF-024 — Conduct M0 safe power bring-up review and milestone exit verification
+### AF-022 — Verify HUB75 cable and panel #1 IN header orientation
 
 **Milestone:** M0
-**Depends on:** AF-023, AF-180, AF-171
-**Labels:** hardware, review, milestone-gate
+**Depends on:** AF-174, AF-179
+**Labels:** hardware, safety-review, hub75, polarity-verify
+**Resolves:** U-031
 
 #### Do
-1. Compile all M0 test logs, multimeter reading tables, and inspection records (EXP-001, EXP-002, EXP-003).
-2. Verify all AC mains wiring safety checks, PE continuity, and isolation measurements are documented.
-3. Verify BOM status updates in `docs/BOM.md` and photo archiving in `hardware/photos/`.
-4. Review M0 exit criteria against `docs/pm/backlog/README.md` Section 4.
+1. Inspect rear of Panel 1 to identify HUB75 DATA_IN shrouded header vs DATA_OUT header.
+2. Inspect 16-pin ~40cm HUB75 ribbon cable connectors for keyed central polarizing notches on both ends.
+3. Test-fit cable connector into Panel 1 DATA_IN header to confirm keyed notch engages smoothly.
+4. Using DMM in continuity mode, verify pin-to-pin continuity on ground pins and signal pins from end to end.
+5. Verify no cross-short between signal pins and logic ground pins on cable.
 
 #### Done when
-- EXP-001, EXP-002, and EXP-003 evidence logs complete and linked in `docs/pm/evidence/`.
-- AC and DC safety checklists fully verified and signed off.
-- M0 exit gate criteria satisfied and documented, unblocking Milestone 1 parallel tracks.
+- DATA_IN header on Panel 1 unambiguously identified and documented.
+- Keyed notch verified on both ribbon cable ends (or Sharpie top-side index marked).
+- End-to-end ground continuity verified on all HUB75 GND pins.
+- Zero internal short circuits between signal lines and ground.
 
 #### If it fails
-Block progression to M1 until all open M0 safety, wiring, or hardware intake issues are resolved.
+Discard defective or shorted ribbon cable and replace with a verified spare ~40cm HUB75 cable.
+
+---
+
+### AF-023 — Batch verify polarity for panels #2–#6 and harness branches
+
+**Milestone:** M0
+**Depends on:** AF-019, AF-020, AF-022
+**Labels:** hardware, safety-review, panel, polarity-verify
+**Resolves:** U-002, U-003
+
+#### Do
+1. For each remaining LED panel (Panel 2 through Panel 6):
+   - Execute AF-020 capacitor-to-pin polarity verification on panel PCB.
+   - Execute AF-022 DATA_IN header identification and label verification.
+   - Mark verified polarity and DATA_IN orientation on panel rear with permanent Sharpie.
+2. For each remaining DC harness branch (Branch #2 through Branch #6):
+   - Execute AF-019 continuity and cross-isolation checks.
+   - Apply Sharpie branch labels (`PANEL-2` through `PANEL-6`) and connector orientation marks.
+3. Record individual per-panel and per-branch check results in evidence log.
+
+#### Done when
+- Polarity verified against onboard capacitor for all 5 remaining panels (Panels 2–6).
+- DATA_IN header verified and marked on Panels 2–6.
+- Continuity and isolation confirmed on all 5 remaining harness branches (Branches 2–6).
+- All 15 sub-checks enumerated and recorded individually in `docs/pm/evidence/AF-023-batch-polarity.md`.
+
+#### If it fails
+Quarantine any individual panel or harness branch that fails continuity, polarity, or isolation without blocking the remaining panels.
+
+---
+
+### AF-024 — Milestone M0 exit gate review and verification
+
+**Milestone:** M0
+**Depends on:** AF-021, AF-023, AF-180
+**Labels:** docs, validation, milestone-gate
+
+#### Do
+1. Review all completed M0 test logs, measurement tables, and inspection checklists:
+   - EXP-001 hardware inventory manifest and BOM update (`AF-011`..`AF-180`, `AF-171`).
+   - AC mains visual, PE bonding, and isolation inspection records (`AF-012`..`AF-017`).
+   - EXP-002 PSU no-load energization and voltage calibration logs (`AF-018`).
+   - EXP-003 single-panel cold DC power logs and batch polarity records (`AF-019`..`AF-023`).
+2. Verify all M0 exit criteria from `docs/pm/backlog/README.md` Section 4 are 100% satisfied.
+3. Confirm evidence files are committed in `docs/pm/evidence/` and photos archived in `hardware/photos/`.
+4. Sign off M0 exit gate to unblock Milestone 1 parallel development tracks.
+
+#### Done when
+- EXP-001, EXP-002, and EXP-003 evidence logs complete, reviewed, and committed.
+- All 8-point MAINS safety checks and DC polarity pre-checks verified without open defects.
+- All 27 BOM line items reconciled with status updated in `docs/BOM.md`.
+- Formal M0 exit gate approved, unblocking M1 parallel controller tracks.
+
+#### If it fails
+Block progression to Milestone 1 until all outstanding M0 hardware discrepancies, safety checklist failures, or missing evidence logs are resolved.

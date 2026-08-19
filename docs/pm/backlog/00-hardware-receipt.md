@@ -10,7 +10,7 @@ Covers delivery package intake, physical inspection of all received components a
 **Depends on:** —
 **Labels:** hardware, intake, inventory
 **Procedure:** EXP-001
-**Resolves:** U-001
+**Resolves:** U-006
 
 #### Do
 1. Check outer shipping boxes and package condition for transit damage.
@@ -32,9 +32,9 @@ Quarantine damaged packages, photograph packing slips, and escalate missing item
 
 **Milestone:** M0
 **Depends on:** AF-011
-**Labels:** hardware, display, intake
+**Labels:** hardware, panel, inventory
 **Procedure:** EXP-001
-**Resolves:** U-002
+**Resolves:** U-006, U-031
 
 #### Do
 1. Inspect all 6 delivered LED panels.
@@ -56,9 +56,9 @@ Log mismatched panel models in the intake discrepancy log; quarantine any panel 
 
 **Milestone:** M0
 **Depends on:** AF-011
-**Labels:** hardware, controller-wf4, intake
+**Labels:** hardware, controller, inventory
 **Procedure:** EXP-001
-**Resolves:** U-003, U-004
+**Resolves:** U-006
 
 #### Do
 1. Inspect HD-WF4 and HD-WF2 controller boards.
@@ -80,7 +80,7 @@ Note physical damage, bent pins, or PCB revision discrepancies in the intake log
 
 **Milestone:** M0
 **Depends on:** AF-011
-**Labels:** hardware, nano, intake
+**Labels:** hardware, nano, inventory
 **Procedure:** EXP-001
 **Resolves:** U-006
 
@@ -104,7 +104,7 @@ Replace or quarantine damaged microSD card or LicheeRV Nano board.
 
 **Milestone:** M0
 **Depends on:** AF-011
-**Labels:** hardware, controller-esp32, intake
+**Labels:** hardware, esp32, inventory
 **Procedure:** EXP-001
 **Resolves:** U-014, U-015
 
@@ -128,7 +128,7 @@ Reject non-HCT logic ICs (HCT required for 3.3V→5V level shifting); replace da
 
 **Milestone:** M0
 **Depends on:** AF-011
-**Labels:** hardware, power, safety, intake
+**Labels:** hardware, power, safety, inventory
 **Procedure:** EXP-001
 **Resolves:** U-021, U-022, U-026
 
@@ -153,9 +153,9 @@ Do NOT energize if voltage rating is not 5V or if FG terminal is missing.
 
 **Milestone:** M0
 **Depends on:** AF-011
-**Labels:** hardware, power, wiring, intake
+**Labels:** hardware, wiring, inventory
 **Procedure:** EXP-001
-**Resolves:** U-031
+**Resolves:** U-002, U-003, U-031
 
 #### Do
 1. Inspect 2× 1-to-4 DC power splitters and 6× panel power leads.
@@ -177,7 +177,8 @@ Replace or re-crimp any harness branch with loose connections, damaged insulatio
 
 **Milestone:** M0
 **Depends on:** AF-174, AF-175, AF-176, AF-177, AF-178, AF-179
-**Labels:** docs, inventory
+**Labels:** docs, bom, inventory
+**Resolves:** U-006
 
 #### Do
 1. Review all intake findings and physical inspection notes from AF-174 through AF-179.
@@ -197,8 +198,8 @@ Flag unreceived or quarantined components in BOM notes and update delivery track
 ### AF-171 — Record component identification photos for inventory verification
 
 **Milestone:** M0
-**Depends on:** AF-180
-**Labels:** hardware, intake, evidence
+**Depends on:** AF-174, AF-175, AF-176, AF-177, AF-178, AF-179
+**Labels:** docs, photos, inventory
 **Procedure:** EXP-001
 
 #### Do
