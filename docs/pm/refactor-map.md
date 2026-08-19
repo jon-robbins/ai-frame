@@ -1,7 +1,7 @@
-# Milestone 0 (M0) & Milestone 1 (M1) Refactor Map & Assertion Audit
+# Milestone 0 (M0), Milestone 1 (M1) & Milestone 2 (M2) Refactor Map & Assertion Audit
 
 **Document:** `docs/pm/refactor-map.md`  
-**Purpose:** Authoritative migration matrix and formal factual assertion audit for Milestone 0 (M0) tasks (`AF-011` through `AF-024`, plus `AF-171`) and Milestone 1 (M1) tasks (`AF-025` through `AF-080`, plus `AF-172`, `AF-173`), establishing the exact decompositions, assembly merges, target file destinations, and ground-truth corrections required for Pass 4A and Pass 4B backlog restructuring.
+**Purpose:** Authoritative migration matrix and formal factual assertion audit for Milestone 0 (M0) tasks (`AF-011` through `AF-024`, plus `AF-171`), Milestone 1 (M1) tasks (`AF-025` through `AF-080`, plus `AF-172`, `AF-173`), and Milestone 2 (M2) tasks (`AF-081` through `AF-092`), establishing the exact decompositions, assembly merges, target file destinations, and ground-truth corrections required for backlog restructuring.
 
 ---
 
@@ -425,6 +425,52 @@ The following table documents every factual error, hallucinated component, inval
 | `ADR-014` | HCT buffering for the ESP32→HUB75 interface | SN74HCT245N adapter electrical and display validation | `AF-053`, `AF-054`, `AF-055`, `AF-059`, `AF-061`, `AF-065`, `AF-067` |
 | `ADR-016` | Final display-controller architecture | Candidate scoring and final controller decision evidence | `AF-047`, `AF-072`, `AF-075`, `AF-080` |
 | `ADR-017` | Final Nano→controller transport | Protocol and transport evidence feeding final selection | `AF-033`, `AF-034`, `AF-044`, `AF-068`, `AF-070`, `AF-183`, `AF-184`, `AF-185`, `AF-186` |
+
+---
+
+# PART III — Milestone 2 (M2) Refactor Map & Audit
+
+## 11. M2 Migration Matrix
+
+M2 is authoritative in `docs/pm/backlog/07-dual-panel.md`. The historical M2 entries are restored as permanent IDs and normalized to the compact task schema; AF-081–AF-090 retain their intended individual outcomes, while AF-091 and AF-092 are the M2 gate and evidence/outcome aggregators. No M0/M1 task is redesigned by this pass.
+
+| Historical ID | Current task / destination | Classification | Migration and lineage disposition |
+|---|---|---|---|
+| **AF-081** | `07-dual-panel.md` / AF-081 | `KEEP` | Verify panel #2 power polarity and HUB75 orientation unpowered; labels normalized. |
+| **AF-082** | `07-dual-panel.md` / AF-082 | `KEEP` | Verify the panel #2 power branch mapping and isolation before energization; retain the no-assumed-branch-count rule. |
+| **AF-083** | `07-dual-panel.md` / AF-083 | `KEEP` | Wire the WF4 two-panel chain and separate panel power branches under EXP-005; topology unchanged. |
+| **AF-084** | `07-dual-panel.md` / AF-084 | `KEEP` | Configure the WF4 256×64 left-to-right row and record ordering evidence under EXP-005. |
+| **AF-085** | `07-dual-panel.md` / AF-085 | `KEEP` | Run the WF4 shared patterns, defect checklist, and EXP-005 stability record. |
+| **AF-086** | `07-dual-panel.md` / AF-086 | `KEEP` | Verify the WF4 x=128 seam; this is the WF4 input to AF-091. |
+| **AF-087** | `07-dual-panel.md` / AF-087 | `KEEP` | Prepare the ESP32 two-panel row and separate panel power branches under EXP-012. |
+| **AF-088** | `07-dual-panel.md` / AF-088 | `CORRECT` | Retain the ESP32 256×64 outcome, but require supported variations to be exercised and exactly record tested settings/results without inventing a finite set or threshold. |
+| **AF-089** | `07-dual-panel.md` / AF-089 | `KEEP` | Run the ESP32 shared patterns, defect checklist, dynamic tests, and EXP-012 stability record. |
+| **AF-090** | `07-dual-panel.md` / AF-090 | `KEEP` | Verify the ESP32 x=128 seam; this is the ESP32 input to AF-091. |
+| **AF-091** | `07-dual-panel.md` / AF-091 | `RESTORE / AGGREGATE` | Restore the permanent M2 gate aggregator. It passes M2 when either WF4 AF-086 or ESP32 AF-090 has a complete 256×64 dual-panel evidence set; both paths are evaluated, but both are not required to pass. |
+| **AF-092** | `07-dual-panel.md` / AF-092 | `RESTORE / AGGREGATE` | Restore the permanent M2 subtrack aggregator with concrete output `docs/pm/evidence/AF-092-m2-summary.md`. It records the selected path’s linked evidence and the non-selected path’s linked result or missing-input record for the architecture decision. |
+
+## 12. M2 Factual Assertion Audit
+
+The audit below uses current authoritative sources only. `docs/pm/02-requirements-matrix.md` is stale and is explicitly excluded from M2 lineage or factual authority.
+
+| Assertion / claim | Current authority | Audit disposition |
+|---|---|---|
+| M2 is a gated two-panel 256×64 canvas milestone; at least one controller path must pass the dual-panel criteria. | [`docs/pm/backlog/README.md`](backlog/README.md) §4, M2; [`docs/JIRA.md`](../JIRA.md) Milestone 2 | AF-091 is the gate aggregator and uses the README gate rule: WF4 AF-086 **or** ESP32 AF-090 may satisfy the gate when the complete criteria evidence passes. |
+| The WF4 two-panel experiment chains panels, powers them in parallel, tests 256×64 mapping/order/seam patterns, and runs at least 30 minutes. | [`docs/EXPERIMENTS.md`](../EXPERIMENTS.md) EXP-005 | AF-083–AF-086 preserve this procedure and evidence lineage; no additional electrical threshold is introduced. |
+| The ESP32 two-panel experiment chains panels, powers them in parallel, exercises supported display/configuration variations, measures reported refresh, and runs the documented stability observation. | [`docs/EXPERIMENTS.md`](../EXPERIMENTS.md) EXP-012 | AF-087–AF-090 preserve the experiment. AF-088 records exactly which supported variations were tested and their results rather than asserting an invented exhaustive list. |
+| JIRA’s broader Milestone 2 narrative mentions Nano-controlled end-to-end updates, while the operational PM README M2 gate and EXP-005/EXP-012 criteria define the dual-panel gate as the two-controller experiment evidence. Nano E2E is already an M1/prerequisite concern and is not silently claimed as satisfied by AF-081–092. | [`docs/JIRA.md`](../JIRA.md) Milestone 2; [`docs/pm/backlog/README.md`](backlog/README.md) §4; [`docs/EXPERIMENTS.md`](../EXPERIMENTS.md) EXP-005 and EXP-012 | This is a cross-document interpretation/qualification, not a factual deletion: AF-091 evaluates each controller branch against its corresponding dual-panel experiment, while Nano E2E remains covered by M1 AF-080 / Nano transport work (EXP-007/EXP-013) or another prerequisite and is outside the AF-081–092 M2 gate input. |
+| The panels are P2 128×64 modules and project power distribution is parallel. | [`docs/PROJECT.md`](../PROJECT.md) §§1.1, 3.1, 3.4; [`docs/BOM.md`](../BOM.md) | AF-081–AF-090 retain the current panel/power context and require delivered-hardware markings and evidence where physical details must be verified. |
+
+## 13. M2 Verification & Traceability Coverage
+
+| Source / evidence domain | Covering task IDs |
+|---|---|
+| EXP-005 WF4 two-panel row | `AF-081`–`AF-086`, `AF-091`, `AF-092` |
+| EXP-012 ESP32 two-panel row | `AF-081`, `AF-082`, `AF-087`–`AF-090`, `AF-091`, `AF-092` |
+| M2 gate outcome and architecture-decision inputs | `AF-091`, `AF-092` |
+| Current M2 gate definition and cross-document requirements | `docs/pm/backlog/README.md`, `docs/JIRA.md`, `docs/EXPERIMENTS.md` |
+
+The stale `docs/pm/02-requirements-matrix.md` is not used as a source, replacement map, or acceptance authority for this M2 pass.
 
 ---
 

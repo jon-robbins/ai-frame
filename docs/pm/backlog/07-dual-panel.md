@@ -8,7 +8,7 @@ Covers chaining two 128×64 P2 panels horizontally to form a 256×64 canvas. Val
 
 **Milestone:** M2
 **Depends on:** AF-080
-**Labels:** hardware panel polarity orientation validation
+**Labels:** hardware polarity-verify validation safety-review
 **Safety:** 5V-HIGH-CURRENT
 **Stop condition:** Keep panel and controller de-energized and stop immediately if polarity, IN/OUT, key, or orientation markings are missing or contradictory.
 
@@ -29,7 +29,7 @@ Keep all power disconnected. Do not connect the harness or ribbon cable; isolate
 
 **Milestone:** M2
 **Depends on:** AF-081
-**Labels:** hardware power polarity harness validation
+**Labels:** hardware power polarity-verify validation safety-review
 **Safety:** 5V-HIGH-CURRENT
 **Stop condition:** Keep the PSU disconnected and the panel #2 power connector unmated; before any continuity or short check, electrically isolate the panel #2 branch at both ends from the PSU DC terminals and any parallel branches; stop on any polarity mismatch, cross-pair continuity, damaged connector, or exposed conductor.
 
@@ -53,7 +53,7 @@ Leave the PSU disconnected and the panel power connector unmated. Quarantine the
 
 **Milestone:** M2
 **Depends on:** AF-082, AF-042
-**Labels:** hardware controller-wf4 wiring validation candidate
+**Labels:** hardware controller-wf4 power validation safety-review
 **Safety:** HUB75
 **Stop condition:** De-energize panel and controller power before every HUB75 or panel-power connection/disconnection; never hot-plug.
 **Procedure:** EXP-005
@@ -76,7 +76,7 @@ De-energize before touching anything. Inspect keying, IN/OUT selection, connecto
 
 **Milestone:** M2
 **Depends on:** AF-083
-**Labels:** firmware controller-wf4 configuration validation candidate
+**Labels:** firmware controller-wf4 validation critical-path
 **Safety:** HUB75
 **Stop condition:** Do not touch or disconnect energized HUB75/power; de-energize before physical inspection.
 **Procedure:** EXP-005
@@ -98,7 +98,7 @@ Stop the experiment and preserve the output evidence. Re-check the configured ca
 
 **Milestone:** M2
 **Depends on:** AF-084
-**Labels:** validation controller-wf4 test-pattern stability candidate
+**Labels:** validation controller-wf4 critical-path
 **Safety:** HUB75
 **Stop condition:** Do not touch or move any energized HUB75 connection; stop the run and de-energize before physical inspection if an abnormal display or reset occurs.
 **Procedure:** EXP-005
@@ -122,7 +122,7 @@ Stop the run and de-energize before inspecting cables. Record the failed pattern
 
 **Milestone:** M2
 **Depends on:** AF-085
-**Labels:** validation controller-wf4 seam critical-path candidate
+**Labels:** validation controller-wf4 critical-path
 **Safety:** HUB75
 **Stop condition:** Keep energized wiring untouched; de-energize panel and controller power before any seam-related cable or orientation inspection.
 
@@ -145,7 +145,7 @@ De-energize before changing anything. Check panel order, 256×64 chain configura
 
 **Milestone:** M2
 **Depends on:** AF-082, AF-067
-**Labels:** hardware controller-esp32 wiring validation candidate
+**Labels:** hardware controller-esp32 power validation safety-review
 **Safety:** HUB75
 **Stop condition:** De-energize panel and controller power before every HUB75 or panel-power connection/disconnection; never hot-plug.
 **Procedure:** EXP-012
@@ -168,7 +168,7 @@ De-energize before touching the rig. Inspect the interface, keying, IN/OUT selec
 
 **Milestone:** M2
 **Depends on:** AF-087
-**Labels:** firmware controller-esp32 configuration validation candidate
+**Labels:** firmware controller-esp32 validation critical-path
 **Safety:** HUB75
 **Stop condition:** Do not touch or disconnect energized HUB75/power; de-energize before physical inspection.
 **Procedure:** EXP-012
@@ -176,13 +176,13 @@ De-energize before touching the rig. Inspect the interface, keying, IN/OUT selec
 #### Do
 1. Configure the ESP32 logical dimensions as 256×64 with the two-panel row ordering required by EXP-012.
 2. Exercise the documented static images, scrolling content, and changing full-screen colors.
-3. Test the EXP-012-required brightness, color-depth, and buffer configurations; for each configuration, record the setting, observed display effects, reported refresh rate, and available runtime metrics such as PSRAM/DMA status.
-4. Save the configuration and runtime logs, including the observed effects and metrics for every tested configuration without inventing thresholds.
+3. Exercise supported brightness, color-depth, and buffer variations relevant to EXP-012; for each variation, record exactly what was tested, the observed display effects, reported refresh rate, and available runtime metrics such as PSRAM/DMA status.
+4. Save the configuration and runtime logs, including the exact tested variations, observed results, and available metrics without inventing a finite set or threshold.
 
 #### Done when
 - The firmware configuration and runtime log confirm a 256×64 two-panel row.
 - Left-to-right panel ordering is verified with numbered regions or coordinates.
-- Every EXP-012-required brightness, color-depth, and buffer configuration is tested, with its observed effects, reported refresh rate, and available PSRAM/DMA/runtime metrics recorded without invented thresholds.
+- Supported brightness, color-depth, and buffer variations exercised for EXP-012 are listed with the exact tested settings, observed effects, reported refresh rate, and available PSRAM/DMA/runtime metrics; no untested variation is implied and no threshold is invented.
 
 #### If it fails
 Stop the run and preserve compile/boot logs. De-energize before inspecting HUB75 wiring; isolate configuration, allocation, panel-order, and firmware faults and document the next corrective experiment.
@@ -191,7 +191,7 @@ Stop the run and preserve compile/boot logs. De-energize before inspecting HUB75
 
 **Milestone:** M2
 **Depends on:** AF-088
-**Labels:** validation controller-esp32 test-pattern stability candidate
+**Labels:** validation controller-esp32 critical-path
 **Safety:** HUB75
 **Stop condition:** Do not touch or move any energized HUB75 connection; stop the run and de-energize before physical inspection if an abnormal display or reset occurs.
 **Procedure:** EXP-012
@@ -215,7 +215,7 @@ Stop the run and de-energize before inspecting cables. Preserve serial/runtime l
 
 **Milestone:** M2
 **Depends on:** AF-089
-**Labels:** validation controller-esp32 seam critical-path candidate
+**Labels:** validation controller-esp32 critical-path
 **Safety:** HUB75
 **Stop condition:** Keep energized wiring untouched; de-energize panel and controller power before any seam-related cable or orientation inspection.
 
@@ -233,3 +233,46 @@ Stop the run and de-energize before inspecting cables. Preserve serial/runtime l
 
 #### If it fails
 De-energize before changing anything. Check panel order, 256×64 chain configuration, and HUB75 seating/orientation; correct the identified cause and repeat AF-088, AF-089, or AF-090 as applicable.
+
+### AF-091 — Validate M2 dual-panel gate for at least one controller path
+
+**Milestone:** M2
+**Depends on:** AF-086 OR AF-090
+**Labels:** validation decision critical-path
+**Context:** This is the M2 gate defined by the [backlog README](README.md) and evaluated against both [EXP-005](../../EXPERIMENTS.md#exp-005--hd-wf4--25664-row) for the WF4 branch and [EXP-012](../../EXPERIMENTS.md#exp-012--esp32-s3--25664-row) for the ESP32 branch; each branch is evaluated against its corresponding experiment, and either complete passing path satisfies M2.
+
+#### Do
+1. Review the WF4 evidence from AF-081 through AF-086 and the ESP32 evidence from AF-081, AF-082, and AF-087 through AF-090.
+2. For the WF4 path, record pass/fail against the M2 criteria using AF-085/AF-086 and EXP-005 evidence: two chained panels forming 256×64, independent parallel panel power, correct left-to-right order, content crossing the physical seam, Standard Test Pattern Suite and Standard Defect Checklist results for both panels, and at least 30 minutes of stable runtime.
+3. For the ESP32 path, record pass/fail against the M2 criteria using AF-089/AF-090 and the alternate EXP-012 evidence: two chained panels forming 256×64, independent parallel panel power, correct left-to-right order, content crossing the physical seam, Standard Test Pattern Suite and Standard Defect Checklist results for both panels, and at least 1 hour of stable runtime.
+4. Record each path’s result and link it to its configuration, photos, pattern/checklist log, runtime record, and seam evidence. Set the M2 gate outcome to PASS when either WF4 AF-086 or ESP32 AF-090 has a complete passing evidence set; do not require both paths to pass. Otherwise record FAIL and identify the missing or failed criterion.
+
+#### Done when
+- At least one controller path, WF4 via AF-086 or ESP32 via AF-090, is explicitly recorded as passing the M2 256×64 dual-panel criteria, including its branch-specific stability duration (WF4 ≥30 minutes; ESP32 ≥1 hour).
+- The gate record names the passing path or paths and links the supporting AF-081–090 evidence and source criteria.
+- The M2 outcome is explicitly recorded as PASS or FAIL: PASS when either AF-086 or AF-090 passes, with no advancement claimed when neither path passes.
+
+#### If it fails
+Record the failed criterion for each path, preserve the evidence, and return to the corresponding source task for corrective work. Re-run AF-091 only after the affected path has new complete evidence.
+
+### AF-092 — Consolidate M2 subtrack evidence and outcome inputs
+
+**Milestone:** M2
+**Depends on:** AF-091
+**Labels:** docs validation decision critical-path
+**Context:** This aggregator records the M2 outcome and the evidence inputs needed by the subsequent architecture decision, using the [backlog README](README.md) M2 gate, [JIRA.md](../../JIRA.md) Milestone 2, and [EXP-005/EXP-012](../../EXPERIMENTS.md) source procedures.
+
+#### Do
+1. Inventory the WF4 subtrack evidence from AF-081 through AF-086 and the ESP32 subtrack evidence from AF-081, AF-082, and AF-087 through AF-090, including configuration, wiring, pattern/checklist, runtime, and seam records.
+2. Record one subtrack row for WF4 and one for ESP32 with status, tested configuration or variations, observed results, stability record, failed criteria if any, and evidence links.
+3. Record the AF-091 M2 outcome, the passing controller path or paths, and the exact evidence inputs available for the architecture decision; identify missing inputs instead of inferring them.
+4. Save the consolidated summary at `docs/pm/evidence/AF-092-m2-summary.md`.
+
+#### Done when
+- WF4 and ESP32 subtrack rows account for all applicable AF-081–090 evidence and identify each path’s result.
+- The consolidated record includes the AF-091 outcome, selected/passing path, links to that path’s evidence, and a linked result or explicit missing-input record for the non-selected path.
+- The summary includes tested settings/results and missing-input notes without changing or silently filling source measurements.
+- The record is sufficient to hand M2 evidence to the architecture decision without changing or silently filling source measurements.
+
+#### If it fails
+Do not close M2 evidence. Return to the affected source task, restore the missing artifact or measurement, and update the subtrack row and outcome inputs before repeating AF-092.
