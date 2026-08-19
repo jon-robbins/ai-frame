@@ -77,13 +77,13 @@ Do not record an ambiguous outcome. Resolve the inventory discrepancy from recei
 
 #### Do
 1. Read AF-099's recorded outcome.
-2. If `READY`: while de-energized, verify the identified second controller and adapter against the BOM and received-hardware evidence; document board identity, adapter status, firmware/configuration baseline, and intended bottom-row role in `docs/pm/evidence/AF-187-second-controller-hardware.md`; prepare the Nano transport endpoint without changing the proven first-controller path.
-3. If `MISSING`: order the exact recorded items from BOM-linked sources and record order references, items, and costs in the evidence file; on receipt and while de-energized, verify each item against the BOM and received-hardware evidence (board identity, adapter component identity, no damage), photograph it, update the inventory record, then perform the step-2 documentation and transport-endpoint preparation.
+2. If `READY`: while de-energized, verify the identified second controller and adapter against the BOM and received-hardware evidence; document board identity, adapter status, firmware/configuration baseline, and intended bottom-row role in `docs/pm/evidence/AF-187-second-controller-hardware.md`.
+3. If `MISSING`: order the exact recorded items from BOM-linked sources and record order references, items, and costs in the evidence file; on receipt and while de-energized, verify each item against the BOM and received-hardware evidence (board identity, adapter component identity, no damage), photograph it, update the inventory record, then perform the step-2 documentation.
 4. Do not wire, flash, or energize anything in this task; AF-100 performs assembly.
 
 #### Done when
 - AF-099's outcome is resolved into verified, documented second-controller hardware — verified in place for `READY`, or ordered/received/verified for `MISSING` — with order references and receipt evidence where a purchase occurred.
-- The second controller path is documented (board identity, adapter status, firmware/configuration baseline, intended bottom-row role) and the Nano transport endpoint is prepared without changing the proven first-controller path.
+- The second controller path is documented (board identity, adapter status, firmware/configuration baseline, intended bottom-row role); Nano transport-endpoint configuration is left to AF-103.
 - No unpurchased or unidentified hardware is asserted as fact; ADR-013's staged-purchase rule is respected.
 
 #### If it fails
