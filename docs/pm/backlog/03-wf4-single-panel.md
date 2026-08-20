@@ -69,7 +69,7 @@ Disconnect the PSU and WF4 first. Correct only the failed polarity, termination,
 ### AF-041 — Connect HUB75 signal ribbon from HD-WF4 X1 to panel #1 IN header
 
 **Milestone:** M1
-**Depends on:** AF-040, AF-022
+**Depends on:** AF-040, AF-021
 **Labels:** hardware controller-wf4 polarity-verify
 **Safety:** HUB75
 **Stop condition:** Disconnect panel and controller power before changing HUB75 wiring or ribbon cables.

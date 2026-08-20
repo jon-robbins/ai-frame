@@ -551,3 +551,24 @@ The stale requirements matrix is not used to justify its obsolete P1.53, RD-65A,
 `docs/EXPERIMENTS.md` EXP-017 is the planned experiment definition; `docs/pm/evidence/AF-097-...` through `AF-108-...` and the standard hardware-photo/log paths are the evidence destinations named by the restored tasks. The MG prerequisite is restored in `08-architecture-decision.md`; no derived Jira file, M0/M1 file, M2 file, or M4+ file is part of this migration.
 
 *This refactor map serves as the authoritative specification for populating the M0, M1, M2, MG, and M3 phase files during the refactor passes; PART IV covers the restored MG prerequisite and PART V covers the included M3 section for `docs/pm/backlog/09-quad-panel.md`.*
+
+---
+
+## M0 Merge Lineage (Task 3 Apply)
+
+| Absorbed ID | Surviving ID |
+|---|---|
+| AF-174 | AF-011 |
+| AF-175 | AF-011 |
+| AF-176 | AF-011 |
+| AF-177 | AF-011 |
+| AF-178 | AF-011 |
+| AF-179 | AF-011 |
+| AF-012 | AF-014 |
+| AF-015 | AF-014 |
+| AF-016 | AF-014 |
+| AF-017 | AF-014 |
+| AF-019 | AF-021 |
+| AF-020 | AF-021 |
+| AF-022 | AF-021 |
+| AF-023 | AF-021 |

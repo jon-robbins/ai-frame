@@ -247,7 +247,7 @@ Preserve logs and correct one build/configuration issue before reflashing.
 ### AF-067 — Single panel physical display test via ESP32+HCT245 (EXP-011)
 
 **Milestone:** M1
-**Depends on:** AF-066, AF-065, AF-021, AF-022
+**Depends on:** AF-066, AF-065, AF-021
 **Labels:** hardware controller-esp32 power validation
 **Safety:** 5V-HIGH-CURRENT
 **Stop condition:** Stop and disconnect power immediately if polarity, wiring, or an abnormal smell, heat, or sound is detected.

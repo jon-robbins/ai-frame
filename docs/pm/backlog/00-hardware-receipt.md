@@ -1,208 +1,105 @@
 # Phase 00 — Hardware Receipt & Inventory (M0)
 
-Covers delivery package intake, physical inspection of all received components against BOM.md, component marking and photography, silkscreen recording, and inventory verification (covers/executes EXP-001).
+Covers delivery intake, physical inspection, inventory verification, and receipt evidence for every BOM category (executes EXP-001).
 
 ---
 
-### AF-011 — Reconcile delivered shipment against expected BOM line items
+### AF-011 — Receive, inspect, and inventory all delivered hardware against BOM
 
 **Milestone:** M0
 **Depends on:** —
 **Labels:** hardware delivery-review
 **Procedure:** EXP-001
-**Resolves:** U-006
+**Resolves:** U-006, U-014, U-015, U-021, U-026, U-031
 
 #### Do
-1. Check outer shipping boxes and package condition for transit damage.
-2. Unbox all delivered components onto an ESD-safe workspace and reconcile the delivered shipment against expected BOM line items.
-3. Match packing slips line-by-line against `docs/BOM.md`.
-4. Log any missing items, damaged components, or physical discrepancies in the intake manifest.
+1. Prepare an ESD-safe workspace, camera, multimeter, the delivery paperwork, and `docs/BOM.md`; inspect each shipping box for transit damage before opening it.
+2. Unbox all items, reconcile each packing-slip line to its BOM line item, and create an intake manifest that records received, missing, damaged, quarantined, or unidentifiable items.
+3. Photograph every item category using `hardware/photos/AF-011-<category>-<item>-<front-or-rear>.jpg`; use `panels`, `controllers`, `nano`, `esp32-logic`, `psu-c14`, and `power-harness-cables` as category names, and record each photo filename beside its BOM line item in the intake manifest.
+4. Inspect all delivered LED panels: record visible silkscreen and driver-IC markings, power-header polarity labels, HUB75 IN/OUT labels, pin-1 indicators, keyed orientation, and count all six panels against the BOM.
+5. Inspect the HD-WF4 and HD-WF2 controllers, Nano-W and microSD/accessories, ESP32-S3 and logic/adapter parts: record board and IC markings, revisions, connector and port counts, terminal labels, physical damage, and header condition without inferring any undocumented revision or pinout.
+6. Inspect the A-200-5 PSU, C14 inlet, candidate fuse, DC harnesses, HUB75 cables, AC cable, spade terminals, and ferrules: record PSU and terminal markings, C14 tab layout, fuse marking and carriage fit, conductor colors, branch counts, connector types/keying, wire markings, insulation, and visible crimp condition. With all power disconnected, verify each harness branch has no positive-to-negative short and gently pull-test accessible crimp terminals for movement.
+7. Photograph legible close-ups of all required markings and discrepancies, log any mismatch or damage, and quarantine unsafe or uncertain parts rather than using them.
 
 #### Done when
-- Delivered shipment reconciled against expected BOM line items.
-- Damaged or missing components (if any) are logged in the intake manifest.
-- Physical intake manifest is complete and ready for component identification.
+- The intake manifest reconciles every BOM line item to a received, missing, damaged, quarantined, or unidentifiable state.
+- The manifest maps every BOM category to its `AF-011` photo filenames in `hardware/photos/`.
+- All six panels and both controller boards are identified, with their visible connector orientation and marking evidence recorded.
+- Nano-W, ESP32-S3, logic/adapter parts, PSU/C14/fuse, harnesses, and cables have their receipt observations recorded without substituting assumed specifications for delivered evidence.
+- Harness branch count, construction observations, unpowered positive-to-negative isolation results, and accessible-crimp pull-test results are recorded for every delivered branch.
+- All discrepancies, damaged items, and unresolved identification questions are logged and quarantined where safety requires it.
 
 #### If it fails
-Quarantine damaged packages, photograph packing slips, and escalate missing items to the supplier.
+Quarantine the affected item, photograph the discrepancy and packing documentation, record the BOM line item as unresolved, and obtain a corrected item before using it in AF-013, AF-014, AF-018, or AF-021. Re-run the affected intake checks after replacement.
 
 ---
 
-### AF-174 — Identify and record delivered P2 LED panels
+### AF-174 — SUPERSEDED
+
+Replaced by: AF-011
+
+(Do not export to Jira)
+
+---
+
+### AF-175 — SUPERSEDED
+
+Replaced by: AF-011
+
+(Do not export to Jira)
+
+---
+
+### AF-176 — SUPERSEDED
+
+Replaced by: AF-011
+
+(Do not export to Jira)
+
+---
+
+### AF-177 — SUPERSEDED
+
+Replaced by: AF-011
+
+(Do not export to Jira)
+
+---
+
+### AF-178 — SUPERSEDED
+
+Replaced by: AF-011
+
+(Do not export to Jira)
+
+---
+
+### AF-179 — SUPERSEDED
+
+Replaced by: AF-011
+
+(Do not export to Jira)
+
+---
+
+### AF-180 — Update BOM receipt status and component inventory notes from intake findings
 
 **Milestone:** M0
 **Depends on:** AF-011
-**Labels:** hardware delivery-review
-**Procedure:** EXP-001
-**Resolves:** U-006, U-031
-
-#### Do
-1. Inspect all 6 delivered LED panels.
-2. Verify 128×64 matrix resolution and 2.0 mm pitch (SMD1515, 256×128 mm).
-3. Record silkscreen model markings (P2-32S) and exact visible driver IC markings.
-4. Inspect HUB75E port markings, pin 1 orientation, keyed notch, and IN/OUT header labels.
-5. Capture macro photos directly into `hardware/photos/`.
-
-#### Done when
-- Silkscreen markings and exact driver IC part numbers recorded for all 6 panels in evidence log.
-- 1/32 scan rate verification recorded (check board markings if printed, or note confirmation deferred to functional testing).
-- HUB75E pin 1, keyed notch, and DATA_IN / DATA_OUT orientations verified on all panels.
-- Photos saved to `hardware/photos/`.
-
-#### If it fails
-Log mismatched panel models in the intake discrepancy log; quarantine any panel if pitch, dimensions, or scan rate differ from P2 128×64.
-
----
-
-### AF-175 — Identify delivered HD-WF4 and HD-WF2 controller boards
-
-**Milestone:** M0
-**Depends on:** AF-011
-**Labels:** hardware delivery-review controller-wf4 controller-wf2
-**Procedure:** EXP-001
-**Resolves:** U-006
-
-#### Do
-1. Inspect HD-WF4 and HD-WF2 controller boards.
-2. Record PCB revisions, SoC markings, and onboard flash/RAM ICs.
-3. Inspect HUB75 output ports (4× HUB75 on WF4, 2× HUB75 on WF2).
-4. Inspect 5V terminal blocks, polarity markings, and USB ports.
-5. Capture macro photos directly into `hardware/photos/`.
-
-#### Done when
-- Controller PCB photos captured and saved with legible IC markings in `hardware/photos/`.
-- Connector orientations, port counts, and pinouts documented in evidence log.
-- 5V power terminal block polarity markings verified.
-
-#### If it fails
-Note physical damage, bent pins, or PCB revision discrepancies in the intake log.
-
----
-
-### AF-176 — Identify delivered LicheeRV Nano-W board and accessories
-
-**Milestone:** M0
-**Depends on:** AF-011
-**Labels:** hardware delivery-review nano
-**Procedure:** EXP-001
-**Resolves:** U-006
-
-#### Do
-1. Inspect Sipeed LicheeRV Nano-W board and confirm SG2002 SoC and onboard 256 MB DDR3 memory.
-2. Inspect Wi-Fi antenna connector, Type-C USB ports, and onboard LEDs.
-3. Check pin header straightness and soldering quality.
-4. Inspect Lenovo 64GB microSD card per BOM.md.
-5. Capture macro photos directly into `hardware/photos/`.
-
-#### Done when
-- Board revision, SoC markings, and RAM configuration recorded in evidence log.
-- Lenovo 64GB microSD card per BOM.md capacity and model markings verified.
-- Pin header alignment and physical condition inspected with zero damage.
-- Photos saved to `hardware/photos/`.
-
-#### If it fails
-Replace or quarantine damaged microSD card or LicheeRV Nano board.
-
----
-
-### AF-177 — Identify delivered ESP32-S3 boards and logic ICs
-
-**Milestone:** M0
-**Depends on:** AF-011
-**Labels:** hardware delivery-review controller-esp32
-**Procedure:** EXP-001
-**Resolves:** U-006, U-014, U-015
-
-#### Do
-1. Inspect ESP32-S3 DevKitC-1 N16R8 board (1× prototype BOM), verifying 16 MB flash, 8 MB octal PSRAM markings.
-2. Inspect 2× SN74HCT245N DIP-20 buffer ICs per BOM.md, confirming exact HCT logic series (not HC, LS, or AHCT).
-3. Inspect 5×7 cm perfboards, 100 nF and 1000 µF capacitors, and DuPont jumper leads.
-4. Inspect IC lead straightness and pin header condition.
-5. Capture macro photos directly into `hardware/photos/`.
-
-#### Done when
-- ESP32-S3 DevKitC-1 N16R8 board (1× prototype BOM) markings verified and logged.
-- 2× SN74HCT245N DIP-20 buffer ICs per BOM.md confirmed (HCT series verified for 3.3V→5V logic level shifting).
-- Lead straightness and pin headers checked with no bent pins.
-- Photos saved to `hardware/photos/`.
-
-#### If it fails
-Reject non-HCT logic ICs (HCT required for 3.3V→5V level shifting); replace damaged ICs or bent pin headers.
-
----
-
-### AF-178 — Identify delivered A-200-5 PSU and C14 inlet assembly
-
-**Milestone:** M0
-**Depends on:** AF-011
-**Labels:** hardware delivery-review power safety-review
-**Procedure:** EXP-001
-**Resolves:** U-006, U-021, U-026
-
-#### Do
-1. Inspect A-200-5 switching power supply label to confirm single 5V/40A/200W output rating.
-2. Inspect terminal screw arrangement (verify delivered terminal block arrangement on receipt) and clear plastic safety barrier.
-3. Inspect IEC C14 fused switched inlet module and 6.3 mm rear spade tabs.
-4. Examine candidate T2A 5×20mm slow-blow fuse and fuse carriage fit.
-5. Capture macro photos directly into `hardware/photos/`.
-
-#### Done when
-- Single 5V DC output rail confirmed on PSU rating plate (no secondary voltage rails).
-- Terminal barrier, screw threads, and terminal markings photographed and verified.
-- C14 inlet 6.3 mm spade terminal dimensions confirmed.
-- Candidate T2A 5×20mm slow-blow fuse seating and carriage fit confirmed.
-- Photos saved to `hardware/photos/`.
-
-#### If it fails
-Do NOT energize if voltage rating is not 5V or if FG terminal is missing.
-
----
-
-### AF-179 — Inspect delivered DC power cables and 1-to-4 harnesses
-
-**Milestone:** M0
-**Depends on:** AF-011
-**Labels:** hardware delivery-review power
-**Procedure:** EXP-001
-**Resolves:** U-006, U-031
-
-#### Do
-1. Inspect both 1-to-4 DC power harnesses and count branches (expecting 8 branches total).
-2. Record conductor colors, wire gauge markings if present, connector/end-terminal types, fused/unfused construction, keying, and visible crimp quality.
-3. Verify delivered harness construction and insulation integrity.
-4. Perform unpowered continuity check between positive and negative terminals on all harness branches.
-5. Capture photos directly into `hardware/photos/`.
-
-#### Done when
-- Both 1-to-4 harnesses inspected, branch count confirmed (8 total), and construction details recorded (wire gauge, termination types, fused/unfused status, polarity consistency).
-- Harness terminal crimps pull-tested gently with zero loose wires.
-- Multimeter confirms zero short circuits between positive and negative terminals.
-- Photos saved to `hardware/photos/`.
-
-#### If it fails
-Replace or re-crimp any harness branch with loose connections, damaged insulation, or reversed polarity.
-
----
-
-### AF-180 — Update BOM receipt status and component inventory
-
-**Milestone:** M0
-**Depends on:** AF-174, AF-175, AF-176, AF-177, AF-178, AF-179
 **Labels:** docs delivery-review
 **Resolves:** U-006
 
 #### Do
-1. Review all intake findings and physical inspection notes from AF-174 through AF-179.
-2. Update `docs/BOM.md` Status column to `RECEIVED` for all verified line items.
-3. Record physical observations, exact part markings, and revision numbers in BOM notes.
-4. Document any missing or quarantined components.
+1. Review AF-011's intake manifest, photo-to-BOM mapping, and recorded discrepancies.
+2. Update `docs/BOM.md` Status to `RECEIVED` only for line items verified in AF-011.
+3. Record exact delivered markings, revisions, and unresolved or quarantined discrepancies in BOM notes.
 
 #### Done when
-- `docs/BOM.md` Status column updated to `RECEIVED` for all verified received line items.
-- Unresolved discrepancies or quarantined items logged in BOM notes.
+- `docs/BOM.md` records the receipt status for every verified line item.
+- BOM notes preserve exact markings, revisions, and unresolved or quarantined discrepancies from AF-011.
 
 #### If it fails
-Flag unreceived or quarantined components in BOM notes and update delivery tracking.
+Leave unverified items out of the `RECEIVED` state, correct the AF-011 manifest or evidence mapping, and repeat the BOM update review.
 
 ---
 
