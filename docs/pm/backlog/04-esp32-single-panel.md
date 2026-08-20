@@ -210,10 +210,11 @@ Remove power before rewiring. Preserve the first artifact/log, then isolate powe
 **Safety:** CH340, HUB75
 **Stop condition:** Use only TX/RX/GND for UART/CH340; disconnect panel and controller power before changing HUB75 wiring.
 **Procedure:** EXP-013
+**Wiring:** `hardware/schematics/PROTOTYPE_WIRING.md` §6
 **Context:** Establish reliable Nano-to-ESP32 frame transport and test native USB CDC only when measured UART capacity is insufficient for the target workload.
 
 #### Do
-1. Connect the three-wire UART with documented endpoints and no CH340 VCC/3.3 V; implement/test magic, length, frame-number, and CRC32 framing using known frames.
+1. Connect the three-wire UART using native 3.3 V logic: Nano A16 TX -> ESP32 selected UART RX, Nano A17 RX <- ESP32 selected UART TX, and GND <-> GND. CH340 is optional diagnostic equipment, not the Nano-to-ESP32 bridge; keep its VCC/5V/3.3V pins disconnected from independently powered targets. Implement/test magic, length, frame-number, and CRC32 framing using known frames.
 2. Run the wired transport for at least one hour, recording transfer time, dispatch-to-visible latency, frame counts/drop rate, units, method, and conditions.
 3. If AF-068 measurements show UART is insufficient for the target dashboard refresh workload, test the same known frame over documented native USB CDC and compare transfer/visible latency in a reproducible table; otherwise record that the fallback trigger was not met.
 
