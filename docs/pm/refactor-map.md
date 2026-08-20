@@ -636,3 +636,38 @@ This applied-state table is authoritative for M1 compression. It supersedes the 
 | AF-069 | ESP32 arbitrary-text E2E proof, conditional firmware comparison, cited scoring, and candidate evidence commit. |
 | AF-077 | WF2 stock-firmware characterization on both outputs. |
 | AF-078 | WF2 alternative-firmware evaluation and cited reference-subtrack summary. |
+
+---
+
+## M2 + MG Merge Lineage (Task 5 Apply)
+
+This applied-state table is authoritative for M2 compression. Each absorbed M2 ID remains in `07-dual-panel.md` as a `SUPERSEDED` stub with the listed replacement; active dependency edges across the backlog registry use the surviving ID only. MG retains its four audit-approved project-level cards, with AF-093 consuming the consolidated AF-091 M2 evidence.
+
+| Absorbed ID | Surviving ID |
+|---|---|
+| AF-082 | AF-081 |
+| AF-084 | AF-083 |
+| AF-085 | AF-083 |
+| AF-086 | AF-083 |
+| AF-088 | AF-087 |
+| AF-089 | AF-087 |
+| AF-090 | AF-087 |
+| AF-092 | AF-091 |
+
+### Applied M2 Survivor Scope
+
+| Survivor | Absorbed project-level coverage retained in the live card |
+|---|---|
+| AF-081 | Panel #2 unpowered polarity, HUB75 orientation, isolated branch continuity, cross-pair/short checks, and evidence. |
+| AF-083 | WF4 two-panel physical topology, parallel power, 256×64 order/configuration, pattern and defect validation, ≥30-minute stability, and Nano-originated x=128 seam proof. |
+| AF-087 | ESP32 two-panel physical topology, parallel power, 256×64 configuration/variations/metrics, pattern and defect validation, ≥1-hour stability, and Nano-originated x=128 seam proof. |
+| AF-091 | M2 OR-gate criteria, both candidate subtrack rows, explicit PASS/FAIL and missing-input record, and MG evidence handoff. |
+
+### Applied MG Identity Lineage
+
+| Audit-approved card | Applied live ID | Dependency/registry state |
+|---|---|---|
+| AF-093 | AF-093 | Depends on consolidated M2 survivor AF-091. |
+| AF-094 | AF-094 | Unchanged live architecture-decision card. |
+| AF-095 | AF-095 | Unchanged live transport-decision card. |
+| AF-096 | AF-096 | Unchanged registry-wide sweep semantics and current M3 target enumeration; no M2/MG ID substitution applies. |

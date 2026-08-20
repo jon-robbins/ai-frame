@@ -9,7 +9,7 @@ Covers controller candidate comparison across 13 scoring criteria (EXP-014), arc
 ### AF-093 — Complete EXP-014 measured scoring matrix
 
 **Milestone:** MG
-**Depends on:** AF-092
+**Depends on:** AF-091
 **Labels:** decision validation
 **Procedure:** EXP-014
 **Context:** Complete the current 13-criterion comparison between WF4 and the three-controller ESP32 architecture (Nano + three ESP32 controllers) using measured evidence from the candidate tracks and current project sources.
