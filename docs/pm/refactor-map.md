@@ -554,6 +554,46 @@ The stale requirements matrix is not used to justify its obsolete P1.53, RD-65A,
 
 ---
 
+## PART VI — Gate-B-approved M4 compression and lineage
+
+**Scope:** `docs/pm/backlog/10-six-panel.md` only. Gate B approved the following eight historical-ID survivors for M4. This part is the applied M4 mapping; it supersedes the older uncompressed M4 prose in `docs/pm/05-backlog.md` and does not allocate a new ID during migration.
+
+### Compressed survivor matrix
+
+| Historical ID(s) | Decision | Survivor | Depends on | Project-level outcome | Absorbed lineage and retained execution detail |
+|---|---|---|---|---|---|
+| AF-109 | KEEP | AF-109 | AF-104 | Verify panels #5/#6 unpowered | Retains de-energized V+/V-, HUB75 IN/OUT/key, and top-edge verification with panel-specific evidence. |
+| AF-110 | KEEP | AF-110 | AF-096, AF-109, AF-112 | Bring up WF4 six-panel topology and first light | Retains WF4 X1 top, X2 middle, X3 bottom, X4 unused; every row is explicit `controller OUT -> left panel IN -> left panel OUT -> right panel IN`; six independent parallel power branches, power checks, configuration, and Nano first light remain inside the card. |
+| AF-111 | KEEP | AF-111 | AF-096, AF-100, AF-109, AF-112 | Bring up multi-ESP32 six-panel topology and first light | Retains controller #1 top, #2 middle, #3 bottom; each row's explicit OUT-to-IN HUB75 hops; proven adapter/configuration path, six independent parallel power branches, power checks, and Nano first light. The third-controller readiness outcome is `READY` or `MISSING`, not an assumed purchase. |
+| AF-112 | KEEP | AF-112 | AF-096, AF-101, AF-104 | Extend Nano framebuffer to 256x192 three-row dispatch | Retains the 256x192 source frame and exact 256x64 crops `y=0..63`, `y=64..127`, and `y=128..191` in top/middle/bottom dispatch order. |
+| AF-113, AF-114 | MERGE | AF-113 | AF-112, AF-110 OR AF-111 | Validate complete 256x192 canvas | AF-114's three vertical and two horizontal seam checks, coordinate grid, and arbitrary-content placement are absorbed into AF-113. |
+| AF-115, AF-116 | MERGE | AF-115 | AF-113 | Characterize dashboard brightness and loaded thermals | AF-116's EXP-015 four-level loaded voltage, thermal, controller-stability, and display-observation table is absorbed into AF-115; AF-120 alone sets the later operating ceiling. |
+| AF-117, AF-118 | MERGE | AF-117 | AF-113 | Validate boot, controller-transport, and Wi-Fi recovery | AF-118's Wi-Fi recovery is absorbed. API failure, cache/stale-data behavior, and live-data resume are expressly deferred to MA AF-133. |
+| AF-119 | KEEP | AF-119 | AF-113, AF-115, AF-117 | M4 gate | Converges full-canvas, loaded thermal, and physical boot/controller-transport/Wi-Fi recovery evidence into explicit PASS/FAIL. |
+
+### Superseded lineage
+
+| Historical ID | Registry state | Replaced by | Reason |
+|---|---|---|---|
+| AF-114 | `SUPERSEDED` | AF-113 | Seam and coordinate validation is one complete-canvas outcome, not a separate project-level card. |
+| AF-116 | `SUPERSEDED` | AF-115 | Brightness observations and EXP-015 loaded thermal characterization are one operating-envelope outcome. |
+| AF-118 | `SUPERSEDED` | AF-117 | Wi-Fi recovery is a physical recovery subsection; MA AF-133 owns API/cache/live-data behavior. |
+
+### Factual and safety audit
+
+- **Topology remains novice-executable:** AF-110 and AF-111 name every controller-to-row assignment and every `OUT -> IN` HUB75 hop. No reader must infer a chain from a diagram or a previous phase.
+- **All physical connection changes are de-energized:** both topology cards require the PSU, controllers, and panels de-energized before HUB75 or panel-power changes, verify connector keying and panel polarity before energizing, require six parallel panel-power branches, and prohibit panel-power daisy chains and hot-plugging.
+- **Energization sequencing is not fabricated:** the cards require the proven experiment/runbook procedure and documented power checks; they do not prescribe an unsupported signal-before-power or power-before-signal sequence.
+- **EXP-006 is WF4-only:** AF-110 invokes EXP-006 because it is the HD-WF4 full-256x192 experiment. AF-111 is a multi-ESP32 integration task that uses the proven ESP32 adapter and M3 configuration evidence; it does not claim EXP-006 coverage.
+- **Recovery boundary is deliberate:** AF-117 proves boot, controller-transport, and Wi-Fi recovery. API failures, cache/stale-data behavior, and live-data resume remain MA AF-133 acceptance work.
+- **AF-188 is execution-time contingency only:** no AF-188 card is instantiated in the migrated registry. If AF-111 records the third controller as `MISSING`, the executor creates AF-188 for procurement, receipt, and verification, marks AF-111 externally blocked until it passes, and makes the block project-visible. If `READY`, AF-188 is never created.
+
+### Registry dependency rewiring
+
+The live M4 dependency graph is `AF-104 -> AF-109`, `AF-096/AF-101/AF-104 -> AF-112`, `AF-096/AF-109/AF-112 -> AF-110` or `AF-096/AF-100/AF-109/AF-112 -> AF-111`, then `AF-112 + selected first light -> AF-113 -> AF-115 and AF-117 -> AF-119`. No active registry entry depends on AF-114, AF-116, or AF-118. Planned MA AF-122 through AF-133 begin only after AF-119 when their phase is migrated.
+
+---
+
 ## M0 Merge Lineage (Task 3 Apply)
 
 | Absorbed ID | Surviving ID |
