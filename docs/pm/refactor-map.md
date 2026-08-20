@@ -564,6 +564,7 @@ The stale requirements matrix is not used to justify its obsolete P1.53, RD-65A,
 | AF-177 | AF-011 |
 | AF-178 | AF-011 |
 | AF-179 | AF-011 |
+| AF-171 | AF-011 |
 | AF-012 | AF-014 |
 | AF-015 | AF-014 |
 | AF-016 | AF-014 |
