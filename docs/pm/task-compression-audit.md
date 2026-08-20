@@ -167,9 +167,9 @@
 
 ---
 
-## Gate B proposed M4+ survivor map
+## Gate B applied M4+ survivor map
 
-**Status:** Proposal for Gate B only. Files `10-six-panel.md` through `14-mounted-frame.md` remain unchanged until Gate B approves this map. The applied M0–M3 registry has 48 live cards: M0 = 7, M1 = 26, M2 = 4, MG = 4, M3 = 7. M3 is seven live cards, not the six-card Gate A candidate, because AF-187 remains independent so the multi-ESP32 path is visibly executable as `AF-099 -> AF-187 -> AF-100`.
+**Status:** Gate B approved and applied. Files `10-six-panel.md` through `14-mounted-frame.md` now implement this map. The applied M0–M3 registry has 48 live cards: M0 = 7, M1 = 26, M2 = 4, MG = 4, M3 = 7. M3 is seven live cards, not the six-card Gate A candidate, because AF-187 remains independent so the multi-ESP32 path is visibly executable as `AF-099 -> AF-187 -> AF-100`.
 
 ### M4 — Six-panel full prototype
 
@@ -200,7 +200,7 @@
 
 | Surviving ID | Proposed Depends on | Project-level outcome | Purpose | What I actually do | Done state | Next capability unlocked | Absorbed IDs | Execution guidance source |
 |---|---|---|---|---|---|---|---|---|
-| AF-120 | AF-115 | Calibrate operating brightness ceiling | Turn M4 observations into an evidence-backed operating setting | Derive and record the dashboard ceiling and worst physical recovery times from M4 evidence; do not assert unsupported thermal limits | Ceiling and operational timing evidence are explicit | Representative long-run test and enclosure design | — | AF-120 monolith task; AF-115/AF-117 evidence; EXP-015/016 |
+| AF-120 | AF-119, AF-133 | Calibrate operating brightness ceiling | Turn completed M4 observations and the finished MA runtime into an evidence-backed operating setting | After the M4 gate and MA runtime pass, derive and record the dashboard ceiling and worst physical recovery times from M4 evidence; do not assert unsupported thermal limits | Ceiling and operational timing evidence are explicit after M4 and MA completion | Representative long-run test and enclosure design | — | AF-120 monolith task; AF-115/AF-117/AF-119/AF-133 evidence; EXP-015/016 |
 | AF-121 | AF-120, AF-133, AF-169 when Cond-X active | Complete 24-hour dashboard-normal burn-in | Prove sustained open-bench reliability with the finished MA runtime | Run normal mixed dashboard content at the recorded ceiling after MA AF-133 is finished; when Cond-X is active, exercise the final PCB in the representative rig; capture start, eight-hour, and end evidence; record stability, SSH, and thermal observations | >=24-hour record has no unresolved display, process, or thermal failure, including the final PCB when Cond-X is active | Frame work can rely on a stable finished dashboard | — | AF-121 monolith task; AF-120, AF-133, AF-169 when active; reliability evidence guidance |
 
 ### Cond-X — Conditional ESP32 PCB

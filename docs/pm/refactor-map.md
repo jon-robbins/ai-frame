@@ -751,10 +751,10 @@ The current M3 entries subject to AF-096's registry-wide two-class normalization
 
 | Historical ID(s) | Decision | Survivor | Depends on | Retained project-level outcome |
 |---|---|---|---|---|
-| AF-120 | KEEP | AF-120 | AF-115 | Evidence-backed dashboard brightness ceiling and recorded physical recovery observations. |
+| AF-120 | KEEP | AF-120 | AF-119, AF-133 | Evidence-backed dashboard brightness ceiling and recorded physical recovery observations after M4 and MA completion. |
 | AF-121 | KEEP | AF-121 | AF-120, AF-133; AF-169 when Cond-X active | >=24-hour normal-dashboard burn-in, using the AF-169 final PCB whenever Cond-X is active. |
 
-AF-120 remains separate from AF-115 so measured M4 observations are not presented as a production setting. AF-121 waits for AF-133; its final-PCB condition is an execution condition, not an unconditional inactive-branch dependency. Both cards retain explicit abnormal-behavior and de-energization guidance.
+AF-120 remains separate from AF-115 so measured M4 observations are not presented as a production setting; it waits for the completed M4 gate and MA runtime. AF-121 waits for AF-120 and AF-133; its final-PCB condition is an execution condition, not an unconditional inactive-branch dependency. Both cards retain explicit abnormal-behavior and de-energization guidance.
 
 ---
 
@@ -849,4 +849,4 @@ If AF-111 later records the third controller as `MISSING`, execution allocates A
 
 AF-139 is the MAINS-profile card and keeps stop conditions for disconnected-wall work, terminal-marking L/N/PE identification, PE-to-FG/chassis continuity, AC/DC separation, strain relief, insulation, and runbook checks. L/N/PE and cable categories remain checklist items, not cards.
 
-**Whole-registry dependency result:** `AF-119 -> AF-122 -> AF-125 -> AF-127 -> AF-129 -> AF-130 -> AF-132 -> AF-133`; `AF-115 -> AF-120 -> AF-121`, with AF-133 unconditional and AF-169 additionally required when Cond-X is active; `AF-134 -> AF-137 -> AF-147 -> AF-139 -> AF-144 -> AF-146 -> AF-149 -> AF-151`, with AF-134 additionally requiring AF-121 and AF-133 unconditionally and AF-169 when Cond-X is active. No active dependency points to a superseded MR/MA/Cond-X/MF ID.
+**Whole-registry dependency result:** `AF-119 -> AF-122 -> AF-125 -> AF-127 -> AF-129 -> AF-130 -> AF-132 -> AF-133`; `AF-119, AF-133 -> AF-120 -> AF-121`, with AF-169 additionally required when Cond-X is active; `AF-134 -> AF-137 -> AF-147 -> AF-139 -> AF-144 -> AF-146 -> AF-149 -> AF-151`, with AF-134 additionally requiring AF-121 and AF-133 unconditionally and AF-169 when Cond-X is active. No active dependency points to a superseded MR/MA/Cond-X/MF ID.

@@ -5,7 +5,7 @@ Covers the evidence-backed dashboard brightness ceiling and one representative 2
 ### AF-120 — Calibrate operating brightness ceiling
 
 **Milestone:** MR
-**Depends on:** AF-115
+**Depends on:** AF-119, AF-133
 **Labels:** validation thermal power critical-path
 **Safety:** 5V-HIGH-CURRENT
 **Stop condition:** Stop output and de-energize if AF-115 evidence shows voltage instability, resets, blanking, smoke, smell, or abnormal connector, conductor, PSU, or controller heating. Do not invent a thermal limit that the measurements do not support.
