@@ -161,3 +161,114 @@
 - No coverage gaps were identified in any of the three goal paths through M3.
 
 **Gate A decision required:** Approve the survivor/merge proposals above before any phase file is edited.
+
+---
+
+## Gate B proposed M4+ survivor map
+
+**Status:** Proposal for Gate B only. Files `10-six-panel.md` through `14-mounted-frame.md` remain unchanged until Gate B approves this map. The applied M0–M3 registry has 48 live cards: M0 = 7, M1 = 26, M2 = 4, MG = 4, M3 = 7. M3 is seven live cards, not the six-card Gate A candidate, because AF-187 remains independent so the multi-ESP32 path is visibly executable as `AF-099 -> AF-187 -> AF-100`.
+
+### M4 — Six-panel full prototype
+
+| Surviving ID | Project-level outcome | Purpose | What I actually do | Done state | Next capability unlocked | Absorbed IDs | Execution guidance source |
+|---|---|---|---|---|---|---|---|
+| AF-109 | Verify panels #5/#6 unpowered | Add the remaining panels safely | Keep power disconnected; verify V+/V-, HUB75 IN/OUT/key, physical orientation, and photo evidence | Both panels have contradiction-free records | Selected 2×3 topology | — | AF-109 monolith task; received-hardware evidence; HUB75/5V runbooks |
+| AF-110 | Bring up WF4 six-panel topology and first light | Produce the WF4 256×192 hardware path | De-energize; wire X1/X2/X3 to top/middle/bottom rows with explicit panel OUT -> next panel IN hops; use six parallel branches; configure and send Nano frames | Six panels show ordered Nano 256×192 content with topology/configuration evidence | Full-canvas validation | — | AF-110 monolith task; EXP-006; EXP-017 precedent; HUB75/5V runbooks |
+| AF-111 | Bring up multi-ESP32 six-panel topology and first light | Produce the ESP32 256×192 hardware path | Verify or visibly procure the third-controller path; build it from proven adapter guidance; assign controllers #1/#2/#3 to rows; make all connections de-energized; configure from the proven M3 configuration; send Nano frames | Three documented controller rows show ordered Nano 256×192 content | Full-canvas validation | — | AF-111 monolith task; AF-054/AF-067/AF-087 and M3 AF-099/AF-187/AF-100; HUB75/5V runbooks |
+| AF-112 | Extend Nano framebuffer to 256×192 three-row dispatch | Supply the logical canvas for either topology | Render 256×192, crop y=0..63, 64..127, and 128..191, and dispatch in top/middle/bottom order | Source, crop, and dispatch evidence prove three exact rows | Full-canvas validation | — | AF-112 monolith task; AF-101; ADR-002/017 |
+| AF-113 | Validate complete 256×192 canvas | Prove arbitrary content maps correctly anywhere | Run full patterns, all five seam and coordinate checks, and arbitrary-content placement on the selected first-light path | Three vertical/horizontal seams, panel order, and coordinates are correct | Thermal and recovery qualification | AF-114 | AF-113/AF-114 monolith tasks; EXP-006 for WF4; EXP-011/012/013-informed ESP32 integration |
+| AF-115 | Characterize dashboard brightness and loaded thermals | Set a measured operating envelope | Sweep 25/50/75/100%; record visual behavior, PSU/farthest-panel voltage, PSU/wiring temperatures, controller stability, and display behavior at every level | Complete four-level measurement table identifies observed acceptable operation without inventing limits | MR brightness-ceiling decision | AF-116 | AF-115/AF-116 monolith tasks; EXP-015; 5V-HIGH-CURRENT runbook |
+| AF-117 | Validate boot, transport, Wi-Fi, and API recovery | Prove the dashboard recovers from realistic interruptions | Run five power cycles; record first-image/network-data time; test Wi-Fi loss/rejoin and API failure with cached/fallback content and live-data recovery | Five recorded recovery cycles pass and fallback/resume evidence is saved | M4 gate and reliability work | AF-118 | AF-117/AF-118 monolith tasks; EXP-016; application recovery guidance |
+| AF-119 | M4 gate | Converge full-canvas, thermal, and recovery evidence | Review AF-113, AF-115, and AF-117 evidence against M4 criteria; issue PASS/FAIL without starting MR | Explicit PASS/FAIL links six-panel, five-seam, thermal, and recovery evidence | MR and finished-product work | — | AF-119 monolith task; backlog README M4 gate |
+
+### MR — Reliability and burn-in
+
+| Surviving ID | Project-level outcome | Purpose | What I actually do | Done state | Next capability unlocked | Absorbed IDs | Execution guidance source |
+|---|---|---|---|---|---|---|---|
+| AF-120 | Calibrate operating brightness ceiling | Turn M4 observations into an evidence-backed operating setting | Derive and record the dashboard ceiling and worst recovery times from M4 evidence; do not assert unsupported thermal limits | Ceiling and operational timing evidence are explicit | Representative long-run test and enclosure design | — | AF-120 monolith task; AF-115/AF-117 evidence; EXP-015/016 |
+| AF-121 | Complete 24-hour dashboard-normal burn-in | Prove sustained open-bench reliability | Run normal mixed dashboard content at the recorded ceiling; capture start, eight-hour, and end evidence; record stability, SSH, and thermal observations | >=24-hour record has no unresolved display, process, or thermal failure | Application and frame closeout can rely on a stable prototype | — | AF-121 monolith task; AF-120; reliability evidence guidance |
+
+### MA — Production application pipeline
+
+| Surviving ID | Project-level outcome | Purpose | What I actually do | Done state | Next capability unlocked | Absorbed IDs | Execution guidance source |
+|---|---|---|---|---|---|---|---|
+| AF-122 | Productionize Nano runtime baseline | Make the host maintainable and recoverable | Apply OS baseline, network/SSH hardening, and a reproducible Python environment; record rollback and service prerequisites | Documented secure boot-to-runtime baseline is reproducible | Application services | AF-123, AF-124 | AF-122..AF-124 monolith stages; Nano operating evidence |
+| AF-125 | Production renderer and reusable pattern library | Make content rendering reusable and testable | Implement/verify multiline text, alignment, fonts, and standard patterns with dimension/sentinel tests | Renderer and pattern API pass documented output checks | Canonical framebuffer integration | AF-126 | AF-125/AF-126 monolith stages; AF-029/AF-030 evidence |
+| AF-127 | Canonical framebuffer and transport contract | Keep rendering controller-agnostic | Define/test framebuffer operations, row regions, serialization, transport errors, reconnect contract, and status handling | Unit tests prove dimensions, crop edges, bytes, and failure behavior | Concrete selected transport | AF-128 | AF-127/AF-128 monolith stages; AF-032; ADR-002 |
+| AF-129 | Implement selected controller transport | Connect the production application to the accepted M3/M4 architecture | Implement only the ADR-017-selected transport, with reconnect behavior and configuration evidence; explicitly skip deselected transports | Chosen transport sends production frames and exposes failure/reconnect state | Physical production E2E | — | AF-129 monolith task; ADR-017; proven M1/M3 transport evidence |
+| AF-130 | Validate production six-panel application-to-display integration | Harden end-to-end rendering at V1 dimensions | Send arbitrary multiline/aligned content and 500 sequential frames through the selected transport; centralize 256×192 configuration rather than renderer constants | Physical six-panel E2E run has no unresolved send/display error and dimension ownership is explicit | Runtime recovery and dashboard services | AF-131 | AF-130/AF-131 monolith stages; AF-112/AF-119 |
+| AF-132 | Add application recovery supervision | Keep the display service observable and self-recovering | Add structured logs, reconnect/backoff, controller-loss handling, and configurable watchdog escalation; exercise recovery | Failure/recovery behavior and logs are demonstrated | Data-driven dashboard runtime | — | AF-132 monolith stage; AF-117; service supervision guidance |
+| AF-133 | Deliver dashboard widgets, caching, offline fallback, and service startup | Produce the finished useful display experience | Implement time/date, data/artwork widgets, durable caching, stale-data indication, service startup, and reboot-to-dashboard test | Dashboard starts unattended, displays useful content, shows cached/stale state during API loss, and resumes live data | Finished product and final enclosure validation | — | AF-133 monolith stage; AF-117/AF-118 recovery evidence; MA gate criteria |
+
+### Cond-X — Conditional ESP32 PCB
+
+| Surviving ID | Project-level outcome | Purpose | What I actually do | Done state | Next capability unlocked | Absorbed IDs | Execution guidance source |
+|---|---|---|---|---|---|---|---|
+| AF-152 | Freeze proven ESP32 mechanical and GPIO interface | Prevent the PCB from encoding provisional assumptions | Measure the actual board and record the M3-proven GPIO mapping plus differences from provisional material | Footprint, no-go areas, and validated mapping are reviewable | Schematic work | AF-153 | AF-152/AF-153 monolith tasks; AF-052; passing ESP32 evidence; ADR-013 |
+| AF-154 | Produce complete HCT adapter schematic | Define every validated electrical interface | Capture ESP32, two HCT245 stages, decoupling, keyed HUB75, and safe 5 V entry using proven mapping/orientation | Schematic includes all required nets, components, polarity/orientation, and current-path rules | ERC and layout | AF-155, AF-156, AF-157, AF-158 | AF-154..AF-158 monolith tasks; ADR-014; PIN_LEVEL_APPENDIX; 5V/HUB75 runbooks |
+| AF-159 | Pass schematic ERC | Establish an electrically reviewed schematic | Run ERC; fix errors and critical warnings; record any bounded non-critical waiver | ERC evidence records zero errors and justified waivers | PCB layout | — | AF-159 monolith task; KiCad ERC guidance |
+| AF-160 | Produce and review PCB layout with DRC | Turn the proven schematic into fabricable layout | Place components, enforce trace/plane/decoupling/orientation rules, perform physical connector/service review, run and resolve DRC | Layout and DRC evidence show safe fabrication-ready geometry and connector access | Manufacturing package | AF-161, AF-162 | AF-160..AF-162 monolith tasks; KiCad DRC guidance; AF-054 reference adapter |
+| AF-163 | Generate fabrication and assembly package | Give the fabricator complete, reviewable inputs | Generate Gerbers, drills, BOM, and CPL where assembly is used; check revision and package completeness | Archived package has all required fabrication/assembly outputs | Prototype order | AF-164, AF-165, AF-166 | AF-163..AF-166 monolith tasks; KiCad fabrication guidance |
+| AF-167 | Order, receive, and electrically inspect PCB prototype | Obtain a verified physical implementation | Order the reviewed package; on receipt inspect boards and perform every-net continuity/isolation testing | Receipt, order, and continuity evidence accept the prototype batch or route a design fault back to layout | Populated row validation | AF-168 | AF-167/AF-168 monolith tasks; BOM; continuity procedure |
+| AF-169 | Validate PCB row and replace perfboard adapter | Prove the fabricated board can take over without regression | Populate one PCB; validate the proven 256×64 row and >=1-hour stability; swap it into the same test rig; compare patterns/behavior; update wiring evidence | PCB adapter passes the row test, replaces perfboard in the rig, and canonical documentation/photo evidence identifies the v1.0 PCB | ESP32 production hardware is complete | AF-170 | AF-169/AF-170 monolith tasks; AF-054/AF-067/AF-087; ADR-014 |
+
+**Conditional rule:** All Cond-X survivors retain the existing two-class AF-096 semantics. If WF4 wins they become resolved skip entries; if multi-ESP32 wins they become executable only after explicit ADR-013 prerequisites. This is not a third conditional class.
+
+### MF — Mounted frame and final closeout
+
+| Surviving ID | Project-level outcome | Purpose | What I actually do | Done state | Next capability unlocked | Absorbed IDs | Execution guidance source |
+|---|---|---|---|---|---|---|---|
+| AF-134 | Capture enclosure constraints and complete internal layout | Make the frame design buildable from measured facts | Measure components; create scaled placement, clearance, airflow, service-loop, and minimum-depth plan | Dimensioned layout resolves placement and service constraints | Safe mechanical/electrical design | AF-135, AF-136 | AF-134..AF-136 monolith tasks; MR evidence; ADR-024 inputs |
+| AF-137 | Design PSU/controller placement and ventilation | Keep heat-producing electronics serviceable and cooled | Position PSU, controllers, and Nano; design intake/exhaust and fan contingency from measured thermal evidence | Layout identifies locations, airflow path, and no blocked fan path | Safe routing and enclosure test | AF-138, AF-143 | AF-137/AF-138/AF-143 monolith tasks; EXP-015; AF-120/AF-121 |
+| AF-139 | Implement safe mains/DC separation, cable routing, strain relief, and PE bonding | Make the enclosure electrically safe and maintainable | With mains disconnected, build barrier, route AC/DC separately, add strain relief and service loops, bond PE/FG/chassis, and verify continuity | Barrier, routing, strain relief, and PE continuity evidence are complete | Closed enclosure power-on work | AF-140, AF-141, AF-142 | AF-139..AF-142 monolith tasks; MAINS/5V/HUB75 safety runbooks; ADR-006 |
+| AF-144 | Validate closed-enclosure thermal behavior and operating brightness | Prove enclosure heat behavior at the measured ceiling | Run >=60 minutes closed at the ceiling; record PSU/controller/wiring/air temperatures and display stability; set documented dim behavior | Closed frame is stable at the recorded operating setting with measured evidence | Closed-frame Wi-Fi and mounting | AF-145 | AF-144/AF-145 monolith tasks; AF-120; EXP-015; safety runbooks |
+| AF-146 | Validate closed-frame Wi-Fi | Ensure enclosure placement does not break connectivity | Measure Wi-Fi with enclosure closed and panels on; relocate or apply documented mitigation if needed | Signal/mitigation evidence supports reliable dashboard connectivity | Final mechanical installation | — | AF-146 monolith task; AF-117/AF-133 |
+| AF-147 | Build, mount, and align six-panel backplate | Make the physical display precise and serviceable | Design fastener/alignment layout, build the backplate, mount all panels, and verify flatness and seam alignment | Six panels are securely mounted with documented seam/alignment result | Wall mounting | AF-148 | AF-147/AF-148 monolith tasks; measured panel evidence |
+| AF-149 | Finish, wall-mount, and run final 72-hour validation | Prove the installed product works in its intended environment | Select/install finish and rated wall hardware; mount the frame; run normal dashboard content for 72 hours with periodic SSH/photo/thermal/Wi-Fi/data checks | Wall-mounted system completes the 72-hour evidence run without unresolved product failure | Final V1 gate | AF-150 | AF-149/AF-150 monolith tasks; AF-121; AF-133; mounting safety guidance |
+| AF-151 | MF final gate | Declare V1 proof complete only with all safety and product evidence | Review enclosure, PE, routing, thermal, Wi-Fi, service access, content, and 72-hour evidence; issue PASS/FAIL | Explicit gate result proves the finished product or identifies the correction path | V1 closeout | — | AF-151 monolith task; backlog README MF gate |
+
+## Finished-product goal-path trace
+
+### Content/data path
+
+`user and live data -> Nano application/widgets -> renderer/framebuffer -> selected transport -> controller(s) -> HUB75 -> six physical panels -> readable mounted display`
+
+| Transition | Planned surviving coverage |
+|---|---|
+| User/data -> application/widgets and cache | AF-133 supplies dashboard widgets, persisted cache, stale-data indicator, and unattended service startup. |
+| Application -> renderer/framebuffer | AF-125 provides rendering/pattern behavior; AF-127 provides the controller-agnostic framebuffer contract. |
+| Framebuffer -> selected transport | AF-129 implements only ADR-017's selected transport, with AF-132 reconnect/supervision behavior. |
+| Transport -> controllers -> HUB75 | WF4: AF-110. ESP32: AF-111, with M3 AF-099 -> AF-187 -> AF-100 as the prior two-controller proof. Both retain de-energized wiring, orientation, and first-light evidence. |
+| Controllers -> six-panel canvas | AF-112 supplies three rows; AF-113 proves arbitrary mapping and all five seams; AF-119 gates the physical canvas. |
+| Canvas -> useful resilient product | AF-117 proves power/network/API recovery; AF-121 burn-in, AF-144 closed-frame test, AF-146 Wi-Fi, AF-149 final mounted run, and AF-151 final gate prove continued delivery. |
+
+**COVERAGE GAP:** None. Cond-X AF-152 through AF-169 is an optional ESP32 hardware-improvement branch and is not required for the WF4 finished-product path; when ESP32 is selected it is governed by the same AF-096 two-class resolution and ADR-013 prerequisites.
+
+### Power and safety path
+
+`230 V AC -> protected/switched inlet -> 5 V PSU -> fused parallel DC branches -> panels/controllers -> enclosed, bonded, thermally validated wall installation`
+
+| Transition | Planned surviving coverage |
+|---|---|
+| AC inlet -> safe PSU | Existing M0 AF-014 and AF-018 retain mains harness, PE, no-load energization, and MAINS runbook controls. |
+| PSU -> safe DC distribution | Existing M0 AF-021 and M3 AF-098/AF-100 require de-energized checks and separate parallel panel branches; M4 AF-110/AF-111 extend this to six branches. |
+| Loaded distribution -> measured operating envelope | AF-115 incorporates EXP-015 four-level loaded measurements; AF-120 records the evidence-based operating ceiling; AF-121 confirms normal-duty reliability. |
+| Bench build -> safe enclosure | AF-134/AF-137 establish measured layout and airflow; AF-139 enforces mains/DC separation, routing, strain relief, and PE continuity under MAINS/5V/HUB75 runbooks. |
+| Enclosure -> final safe operation | AF-144 validates closed thermal behavior, AF-147 mounts/alignment, AF-149 validates the wall installation, and AF-151 checks the final safety evidence. |
+
+**COVERAGE GAP:** None. The map explicitly retains safety profiles and task-specific stop conditions for energization, high-current wiring, HUB75 changes, and mains enclosure work; it does not replace them with a generic checklist.
+
+### Prototype progression path
+
+`1 panel -> 2 panels -> decision -> 4-panel 256×128 -> 6-panel 256×192 -> reliable application -> mounted finished product`
+
+| Transition | Planned surviving coverage |
+|---|---|
+| 1 panel -> 2 panels | Existing AF-042/AF-067 single-panel proof and AF-081 -> AF-083 or AF-087 dual-row proof. |
+| 2 panels -> selected architecture | AF-091 evidence consolidation -> AF-093 scoring -> AF-094 ADR-016 -> AF-095 ADR-017 -> AF-096 registry normalization. |
+| Decision -> 4 panels | AF-097 -> AF-098 (WF4) or AF-099 -> AF-187 -> AF-100 (ESP32), plus AF-101 -> AF-104 EXP-017/M3 gate. |
+| 4 panels -> 6 panels | AF-109 -> AF-110 or AF-111, AF-112 -> AF-113 -> AF-115/AF-117 -> AF-119 M4 gate. |
+| Prototype -> reliable dashboard | AF-120 -> AF-121 establishes operating conditions; AF-122 through AF-133 deliver the production runtime, transport, recovery, widgets, cache, and offline behavior. |
+| Dashboard -> finished mounted product | AF-134 -> AF-137 -> AF-139 -> AF-144/AF-146 -> AF-147 -> AF-149 -> AF-151. |
+
+**COVERAGE GAP:** None. Every transition has a project-level survivor, a named evidence-producing outcome, and novice-executable wiring, safety, experiment, or software guidance source.

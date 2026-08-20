@@ -2,7 +2,7 @@
 
 Covers the gated four-panel 256×128 prototype on the architecture selected by ADR-016. The M3 path validates two 256×64 rows, both physical seam types, Nano-originated content, row-update behavior, coordinate mapping, and sustained stability under EXP-017.
 
-**AF-096 post-decision normalization for AF-098, AF-099, AF-100, AF-102, AF-103, and AF-187:** These tasks retain both pre-decision branch definitions. The AF-096 sweep itself is registry-wide: it walks every M3+ controller-specific/ADR-016-conditional entry that exists at execution time; this file's entries are the current known M3 targets. Before ADR-016, each registry entry carries the labels `conditional blocked blocked:adr-016` plus its applicable controller label, and uses `Applies if` for its branch condition. After AF-096, the executor reads ADR-016 and substitutes the actual winner. For the winner, remove the labels `conditional blocked blocked:adr-016` and remove `Applies if`; add `critical-path` and retain the winning controller label. For the loser, retain or add `conditional blocked blocked:adr-016`, remove `critical-path` if present, and replace `Applies if` with the exact resolved line `Skip — ADR-016 selected WF4` when multi-ESP32 loses, or `Skip — ADR-016 selected multi-ESP32` when WF4 loses. The executor substitutes the actual winner; no `[other controller]` placeholder may remain. Only the selected branch executes after AF-096; do not claim a winner in this pre-decision file.
+**AF-096 post-decision normalization for surviving M3 conditional entries AF-098, AF-099, AF-187, and AF-100:** The AF-096 sweep is registry-wide: it walks every M3+ controller-specific or ADR-016-conditional entry that exists at execution time; these are this file's current known M3 targets. Before ADR-016, each entry carries `conditional blocked blocked:adr-016` plus its applicable controller label and uses `Applies if` for its branch condition. After AF-096, the executor reads ADR-016 and substitutes the actual winner. For the winner, remove `conditional blocked blocked:adr-016` and `Applies if`, add `critical-path`, and retain the winning controller label. For the loser, retain or add `conditional blocked blocked:adr-016`, remove `critical-path` if present, and replace `Applies if` with the exact resolved line `Skip — ADR-016 selected WF4` when multi-ESP32 loses, or `Skip — ADR-016 selected multi-ESP32` when WF4 loses. The executor substitutes the actual winner; no `[other controller]` placeholder may remain. Only the selected branch executes after AF-096; this pre-decision file does not claim a winner.
 
 ### AF-097 — Verify panels #3 and #4 unpowered
 
@@ -14,7 +14,7 @@ Covers the gated four-panel 256×128 prototype on the architecture selected by A
 
 #### Do
 1. Retrieve panels #3 and #4 and keep all panel and controller power disconnected.
-2. Record each panel’s physical V+/V− markings, HUB75 IN/OUT and key orientation, and top-edge orientation against the received-hardware evidence.
+2. Record each panel's physical V+/V- markings, HUB75 IN/OUT and key orientation, and top-edge orientation against the received-hardware evidence.
 3. Photograph both panels and save the records under `docs/pm/evidence/AF-097-panels3-4-reverify.md` and `hardware/photos/AF-097-panel3-reverify.jpg`, `hardware/photos/AF-097-panel4-reverify.jpg`.
 
 #### Done when
@@ -22,31 +22,30 @@ Covers the gated four-panel 256×128 prototype on the architecture selected by A
 - Evidence identifies both panels and is linked to the received-hardware baseline.
 
 #### If it fails
-Keep everything disconnected, quarantine the ambiguous panel or connector, and resolve the discrepancy from received-hardware or manufacturer evidence before AF-098, AF-099, or any energization.
+Keep everything disconnected, quarantine the ambiguous panel or connector, and resolve the discrepancy from received-hardware or manufacturer evidence before topology assembly or any energization.
 
-### AF-098 — Assemble WF4 2×2 topology and parallel power branches
+### AF-098 — Assemble WF4 2×2 topology and achieve 256×128 first light (EXP-017)
 
 **Milestone:** M3
-**Depends on:** AF-097
-**Labels:** hardware controller-wf4 power validation safety-review conditional blocked blocked:adr-016
-**Applies if:** ADR-016 selects WF4; this task supplies the selected controller’s two-row topology.
-**Safety:** 5V-HIGH-CURRENT
-**Stop condition:** De-energize the PSU, controller, and panels before any HUB75 or panel-power connection change; never hot-plug.
+**Depends on:** AF-097, AF-101
+**Labels:** hardware firmware controller-wf4 power validation safety-review conditional blocked blocked:adr-016
+**Applies if:** ADR-016 selects WF4; this task supplies the selected controller's two-row topology and first light.
+**Safety:** HUB75, 5V-HIGH-CURRENT
+**Stop condition:** De-energize the PSU, controller, and panels before every HUB75 or panel-power connection change; never hot-plug. Stop output and de-energize before inspecting any abnormal panel, controller, cable, or power behavior.
 **Procedure:** EXP-017
 
 #### Do
-1. With the bench de-energized, place panels #1/#2 as the top row and #3/#4 directly below them.
-2. Connect WF4 X1 → panel #1 IN and panel #1 OUT → panel #2 IN; connect WF4 X2 → panel #3 IN and panel #3 OUT → panel #4 IN, using the verified orientations.
-3. Connect four separate panel power branches in parallel to the PSU, one branch per panel; do not daisy-chain panel power.
-4. Photograph the complete topology and record branch identities, connector checks, and any measured observations at `docs/pm/evidence/AF-098-wf4-m3-topology.md`.
+1. With the bench de-energized, place panels #1/#2 as the top row and #3/#4 directly below them. Connect WF4 X1 -> panel #1 IN and panel #1 OUT -> panel #2 IN; connect WF4 X2 -> panel #3 IN and panel #3 OUT -> panel #4 IN, using the verified orientations.
+2. Connect four separate panel-power branches in parallel to the PSU, one branch per panel; do not daisy-chain panel power. Photograph the topology and record branch identities and connector checks in `docs/pm/evidence/AF-098-wf4-m3-topology.md`.
+3. Energize only through the documented EXP-017/runbook procedure. Configure WF4 for two 256×64 rows forming 256×128, send the AF-101 Nano-originated frame, and save configuration, first-light photos, and transport logs in `docs/pm/evidence/AF-098-wf4-first-light.md`.
 
 #### Done when
-- The documented topology is X1 top row and X2 bottom row, each row chained left to right through the first panel's OUT into the next panel's IN.
-- All four panels have separate parallel power branches and no panel-power daisy-chain.
-- Wiring and branch evidence is complete before AF-102.
+- The documented topology is X1 top row and X2 bottom row, each chained left to right through the first panel's OUT into the next panel's IN; all four panels use separate parallel power branches.
+- Four panels display the Nano-originated 256×128 frame with intended row order and no unexplained blank, duplicate, or reversed region.
+- Wiring, configuration, source frame, transport log, and first-light evidence are saved before AF-104.
 
 #### If it fails
-De-energize fully before inspection. Isolate the affected ribbon, branch, connector, or orientation issue and repeat AF-097 or the relevant wiring check before continuing.
+Stop output and de-energize fully. Isolate the ribbon, branch, connector, orientation, configuration, or dispatch fault; correct the named source task and repeat the affected check before continuing.
 
 ### AF-099 — Audit second ESP32 controller-path readiness
 
@@ -58,59 +57,57 @@ De-energize fully before inspection. Isolate the affected ribbon, branch, connec
 #### Do
 1. Audit the delivered ESP32-S3 and HCT adapter inventory and identify whether a second controller path is physically available.
 2. If suitable hardware is available, record `READY` in `docs/pm/evidence/AF-099-second-controller-readiness.md` with the identified board identity and adapter status.
-3. If unavailable, record `MISSING` in the same evidence file with the exact items required — the ESP32-S3 board matching the proven first controller, plus any missing HCT adapter components per BOM; do not substitute or silently assume hardware.
+3. If unavailable, record `MISSING` in the same evidence file with the exact ESP32-S3 board matching the proven first controller and any missing HCT adapter components per BOM; do not substitute or silently assume hardware.
 
 #### Done when
-- The evidence record states exactly one outcome — `READY` with identified hardware or `MISSING` with the exact required items.
+- The evidence record states exactly one outcome: `READY` with identified hardware or `MISSING` with the exact required items.
 - No unpurchased hardware, GPIO assignment, or working capability is asserted as fact, and this audit does not wait for procurement.
 
 #### If it fails
-Do not record an ambiguous outcome. Resolve the inventory discrepancy from received-hardware or manufacturer evidence before recording `READY` or `MISSING`; AF-187 and AF-100 rely on this audit.
+Do not record an ambiguous outcome. Resolve the inventory discrepancy from received-hardware or manufacturer evidence before AF-187.
 
 ### AF-187 — Resolve second ESP32 controller-path hardware readiness
 
 **Milestone:** M3
 **Depends on:** AF-099
 **Labels:** hardware controller-esp32 purchasing conditional blocked blocked:adr-016
-**Applies if:** ADR-016 selects multi-ESP32; this task ensures verified second-controller hardware exists before AF-100 assembly.
-**Context:** AF-099's audit outcome drives this task: `READY` hardware is verified in place, while `MISSING` hardware is purchased per ADR-013 — which permits additional ESP32s only after the first controller proves itself, a condition satisfied by the accepted ADR-016 multi-ESP32 selection.
+**Applies if:** ADR-016 selects multi-ESP32; this task resolves AF-099 into verified second-controller hardware before assembly.
 
 #### Do
-1. Read AF-099's recorded outcome.
-2. If `READY`: while de-energized, verify the identified second controller and adapter against the BOM and received-hardware evidence; document board identity, adapter status, firmware/configuration baseline, and intended bottom-row role in `docs/pm/evidence/AF-187-second-controller-hardware.md`.
-3. If `MISSING`: order the exact recorded items from BOM-linked sources and record order references, items, and costs in the evidence file; on receipt and while de-energized, verify each item against the BOM and received-hardware evidence (board identity, adapter component identity, no damage), photograph it, update the inventory record, then perform the step-2 documentation.
-4. Do not wire, flash, or energize anything in this task; AF-100 performs assembly.
+1. Read AF-099's `READY` or `MISSING` outcome.
+2. For `READY`, while de-energized verify the identified second controller and adapter against BOM and received-hardware evidence; document board identity, adapter status, firmware/configuration baseline, and intended bottom-row role in `docs/pm/evidence/AF-187-second-controller-hardware.md`.
+3. For `MISSING`, order the exact recorded items under ADR-013. Record order references, items, and costs; on receipt, verify board and adapter identity and condition while de-energized, photograph them, update inventory, and complete the step-2 record. Do not wire, flash, or energize in this task.
 
 #### Done when
-- AF-099's outcome is resolved into verified, documented second-controller hardware — verified in place for `READY`, or ordered/received/verified for `MISSING` — with order references and receipt evidence where a purchase occurred.
-- The second controller path is documented (board identity, adapter status, firmware/configuration baseline, intended bottom-row role); Nano transport-endpoint configuration is left to AF-103.
+- AF-099's outcome is resolved into verified, documented second-controller hardware: verified in place for `READY`, or ordered, received, and verified for `MISSING`.
+- The evidence records board identity, adapter status, firmware/configuration baseline, intended bottom-row role, and purchase/receipt evidence where applicable.
 - No unpurchased or unidentified hardware is asserted as fact; ADR-013's staged-purchase rule is respected.
 
 #### If it fails
-Keep the ESP32 path blocked and record the readiness status; do not substitute an unidentified board or component, and retry only after correct hardware is received and verified.
+Keep the ESP32 path blocked and record the readiness status. Do not substitute an unidentified board or component; retry only after correct hardware is received and verified.
 
-### AF-100 — Assemble ESP32 2×2 topology
+### AF-100 — Assemble ESP32 2×2 topology and achieve dual-controller first light (EXP-017)
 
 **Milestone:** M3
-**Depends on:** AF-187
-**Labels:** hardware controller-esp32 power validation safety-review conditional blocked blocked:adr-016
-**Applies if:** ADR-016 selects multi-ESP32 and AF-187 confirms the second controller path is ready; this task maps one controller to each 256×64 row.
-**Safety:** 5V-HIGH-CURRENT
-**Stop condition:** De-energize controller, panels, and PSU before every HUB75 or panel-power connection change; never hot-plug.
+**Depends on:** AF-187, AF-101
+**Labels:** hardware firmware controller-esp32 power validation safety-review conditional blocked blocked:adr-016
+**Applies if:** ADR-016 selects multi-ESP32 and AF-187 confirms the second controller path is ready; this task maps one controller to each 256×64 row and validates first light.
+**Safety:** HUB75, 5V-HIGH-CURRENT
+**Stop condition:** De-energize the PSU, controllers, and panels before every HUB75 or panel-power connection change; never hot-plug. Stop output and de-energize before inspecting any abnormal panel, controller, adapter, cable, or power behavior.
 **Procedure:** EXP-017
 
 #### Do
-1. With all relevant hardware de-energized, connect ESP32 #1 → panel #1 IN and panel #1 OUT → panel #2 IN.
-2. Connect the prepared ESP32 #2 → panel #3 IN and panel #3 OUT → panel #4 IN.
-3. Connect four separate parallel panel power branches, one per panel, and record the controller-to-row mapping.
-4. Save wiring photos and the topology record under `docs/pm/evidence/AF-100-esp32-m3-topology.md`.
+1. With all relevant hardware de-energized, connect ESP32 #1 -> panel #1 IN and panel #1 OUT -> panel #2 IN. Connect the AF-187-verified ESP32 #2 -> panel #3 IN and panel #3 OUT -> panel #4 IN.
+2. Connect four separate parallel panel-power branches, one per panel; record controller-to-row mapping and save wiring photos in `docs/pm/evidence/AF-100-esp32-m3-topology.md`.
+3. Energize only through the documented EXP-017/runbook procedure. Configure each controller for its 256×64 row, send both AF-101 Nano row crops, and record controller identities, firmware, transport endpoints, first-light output, and logs in `docs/pm/evidence/AF-100-esp32-first-light.md`.
 
 #### Done when
-- Each controller drives one left-to-right 256×64 row chained through the first panel's OUT into the second panel's IN, and all four panels have separate power branches.
-- The second controller identity and wiring are evidenced; no hot-plug occurred.
+- Each controller drives one left-to-right 256×64 row chained through the first panel's OUT into the second panel's IN; all four panels have separate parallel power branches and no hot-plug occurred.
+- Four panels display the Nano-originated 256×128 frame with correct top/bottom order and no unexplained blank, duplicate, or reversed region.
+- Both controller configurations and dual-dispatch evidence are saved before AF-104.
 
 #### If it fails
-De-energize before touching the rig. Return to AF-187 for an unavailable or unidentified controller, or isolate the failed row, ribbon, branch, or adapter and correct it before repeating AF-100.
+Stop output and de-energize. Route unavailable or unidentified hardware to AF-187; isolate topology, adapter, configuration, or framebuffer/dispatch faults before repeating this task.
 
 ### AF-101 — Extend the Nano framebuffer to 256×128 dual-row dispatch
 
@@ -121,161 +118,74 @@ De-energize before touching the rig. Return to AF-187 for an unavailable or unid
 
 #### Do
 1. Render Nano-originated RGB content into a 256×128 logical framebuffer using the existing framebuffer and transport abstraction.
-2. Produce two 256×64 row crops: y=0..63 and y=64..127.
-3. Dispatch both row crops through the selected architecture’s proven transport path and save source frame, crop, dispatch, and log artifacts under `docs/pm/evidence/AF-101-nano-256x128-dispatch.md`.
+2. Produce two exact 256×64 row crops: y=0..63 and y=64..127, without changing the renderer's coordinate origin.
+3. Dispatch both row crops through the selected architecture's proven transport path and save source frame, crop, dispatch, and log artifacts under `docs/pm/evidence/AF-101-nano-256x128-dispatch.md`.
 
 #### Done when
-- The Nano produces a 256×128 source frame and two exact 256×64 row regions without changing the renderer’s coordinate origin.
+- The Nano produces a 256×128 source frame and two exact 256×64 row regions without changing the renderer's coordinate origin.
 - Dispatch records identify both row crops, their order, dimensions, and Nano origin.
 
 #### If it fails
 Keep the display unmodified and inspect framebuffer dimensions, crop bounds, row ordering, and transport payload logs. Correct the software path and repeat AF-101 before first light.
 
-### AF-102 — Configure WF4 256×128 first light
+### AF-102 — SUPERSEDED
+
+Replaced by: AF-098
+
+(Do not export to Jira)
+
+### AF-103 — SUPERSEDED
+
+Replaced by: AF-100
+
+(Do not export to Jira)
+
+### AF-104 — Validate complete 2×2 canvas under EXP-017 and audit M3 gate
 
 **Milestone:** M3
-**Depends on:** AF-098, AF-101
-**Labels:** firmware controller-wf4 validation conditional blocked blocked:adr-016
-**Applies if:** ADR-016 selects WF4; this task validates first light on the assembled WF4 topology.
+**Depends on:** AF-096, AF-101, AF-098 OR AF-100
+**Labels:** validation software stability thermal-review decision critical-path
 **Safety:** HUB75
-**Stop condition:** Stop output and de-energize before inspecting any abnormal panel, controller, cable, or power behavior.
+**Stop condition:** Stop output and de-energize if blanking, freezing, garbling, resets, smoke, smell, or abnormal heating occurs. De-energize before physical inspection or connector changes.
+**Context:** Read the accepted ADR-016 result and execute only after the selected first-light task passes: AF-098 for WF4 or AF-100 for multi-ESP32. This is the M3 gate aggregator; a PASS authorizes Gate B review only and does not begin M4 work.
 **Procedure:** EXP-017
 
 #### Do
-1. Apply the documented EXP-017/runbook energization procedure to the verified WF4 topology.
-2. Configure the WF4 for two 256×64 rows forming a 256×128 display and record the saved configuration.
-3. Send a Nano-originated 256×128 test frame through the AF-101 dispatch path and record first-light output and logs in `docs/pm/evidence/AF-102-wf4-first-light.md`.
+1. From the Nano, render a gradient and one-pixel test content crossing both vertical x=128 seams and content crossing the horizontal y=64 seam. Render one 256×128 Nano-originated frame crossing all three seams simultaneously; save source frames, transport evidence, full-display photos, and pass/fail observations in `docs/pm/evidence/AF-104-exp-017-seams.md`.
+2. Send repeated 256×128 frames with a shared visible event. Record top/bottom row timestamps or frame markers, observed deltas, test conditions, and an explicit dashboard-tolerable or not-tolerable assessment without inventing a numeric cutoff in `docs/pm/evidence/AF-104-row-sync-observation.md`.
+3. Render a Nano 256×128 coordinate grid with corner labels (0,0), (255,0), (0,127), and (255,127), both x=128 boundaries, the y=64 boundary, and panel-region identifiers. Photograph/check each panel corner and boundary in `docs/pm/evidence/AF-104-coordinate-grid.md`.
+4. Run the documented EXP-017 pattern sequence for at least 30 minutes on the passing architecture. Record pattern, start/end timestamps, runtime, display observations, controller events, logs, and measured Nano/controller temperatures and CPU where available in `docs/pm/evidence/AF-104-exp-017-stability.md`.
+5. Review the selected-path evidence, check the 2×2 topology, 256×128 Nano content path, seams, row-update assessment, coordinates, and stability; mark the M3 gate PASS or FAIL and save the complete checklist in `docs/pm/evidence/AF-104-m3-gate.md`.
 
 #### Done when
-- Four panels display the 256×128 Nano-originated frame with the intended row order and no unexplained blank, duplicate, or reversed region.
-- Configuration, source frame, transport log, and first-light evidence are saved.
+- Both x=128 seams and the y=64 seam are crossed without an unexplained gap, duplication, or coordinate discontinuity; a single Nano-originated frame visibly crosses all three.
+- The row-update method, deltas, conditions, and dashboard assessment are recorded; all four corner labels and all seam labels land on the expected physical regions without row/column inversion.
+- The EXP-017 run is at least 30 minutes, has reproducible timestamps and pattern evidence, and shows no unexplained blank, freeze, garble, or reset; available temperature and CPU measurements are included without invented thresholds.
+- The gate record explicitly names the winning architecture, checks every M3 criterion, links complete evidence, and declares PASS or FAIL. A PASS does not start M4.
 
 #### If it fails
-Stop output and de-energize. Check configuration, row assignment, panel order, and verified connections; route hardware faults to AF-098 and software/transport faults to AF-101.
+Stop output and de-energize before physical inspection. Preserve frames, photos, logs, timestamps, and measurements; identify the failed criterion and return to the relevant topology, configuration, transport, or framebuffer task before repeating the affected observation and gate.
 
-### AF-103 — Bring up ESP32 dual-controller first light
+### AF-105 — SUPERSEDED
 
-**Milestone:** M3
-**Depends on:** AF-100, AF-101
-**Labels:** firmware controller-esp32 validation conditional blocked blocked:adr-016
-**Applies if:** ADR-016 selects multi-ESP32; this task validates first light on the prepared two-controller topology.
-**Safety:** HUB75
-**Stop condition:** Stop output and de-energize before inspecting any abnormal panel, controller, adapter, cable, or power behavior.
-**Procedure:** EXP-017
+Replaced by: AF-104
 
-#### Do
-1. Apply the documented EXP-017/runbook energization procedure to the verified two-controller topology.
-2. Configure each controller for its 256×64 row and record controller identities, firmware, row assignment, and transport endpoints.
-3. Send both Nano-generated row crops from AF-101 and record first-light output, logs, and any available runtime observations in `docs/pm/evidence/AF-103-esp32-first-light.md`.
+(Do not export to Jira)
 
-#### Done when
-- Four panels display the 256×128 Nano-originated frame with the intended top/bottom row order and no unexplained blank, duplicate, or reversed region.
-- Both controller configurations and the dual dispatch evidence are saved.
+### AF-106 — SUPERSEDED
 
-#### If it fails
-Stop output and de-energize. Route a missing/identity issue to AF-187, topology faults to AF-100, and framebuffer/dispatch faults to AF-101; preserve logs before retrying.
+Replaced by: AF-104
 
-### AF-104 — Validate EXP-017 seam crossing
+(Do not export to Jira)
 
-**Milestone:** M3
-**Depends on:** AF-096, AF-101, AF-102 OR AF-103
-**Labels:** validation critical-path
-**Context:** The `AF-102 OR AF-103` dependency resolves after AF-096: read the accepted ADR-016 result and run this task only after the selected first-light task passes — AF-102 for WF4 or AF-103 for the applicable ESP32 row topology — skipping the unselected branch.
-**Procedure:** EXP-017
+### AF-107 — SUPERSEDED
 
-#### Do
-1. From the Nano, render a gradient and one-pixel test content crossing both vertical x=128 seams: top row and bottom row.
-2. Render content crossing the horizontal y=64 seam across the full width.
-3. Render a single Nano-originated 256×128 frame whose content crosses both vertical seams and the horizontal seam simultaneously.
-4. Save the source frame, transport evidence, full-display photos, and pass/fail observations at `docs/pm/evidence/AF-104-exp-017-seams.md`.
+Replaced by: AF-104
 
-#### Done when
-- Both vertical x=128 seams and the horizontal y=64 seam are correctly crossed without an unexplained gap, duplication, or coordinate discontinuity.
-- A single Nano-originated 256×128 content frame visibly crosses all three seam locations simultaneously.
-- Evidence covers both the rendered source and physical output for the selected, passing branch; the unselected branch is skipped.
+(Do not export to Jira)
 
-#### If it fails
-Stop output and de-energize before physical inspection. Isolate row/chain mapping versus crop/transport errors, correct the relevant upstream task, and repeat AF-104.
+### AF-108 — SUPERSEDED
 
-### AF-105 — Observe dual-row synchronization behavior
+Replaced by: AF-104
 
-**Milestone:** M3
-**Depends on:** AF-096, AF-101, AF-102 OR AF-103
-**Labels:** validation software critical-path
-**Context:** The `AF-102 OR AF-103` dependency resolves after AF-096: read the accepted ADR-016 result and run this task only after the selected first-light task passes — AF-102 for WF4 or AF-103 for the applicable ESP32 row topology — skipping the unselected branch.
-**Procedure:** EXP-017
-
-#### Do
-1. Send repeated Nano-originated 256×128 frames with a visible event shared across both rows.
-2. Observe and record timestamps or frame markers for the corresponding top and bottom row updates, including the observed deltas and test conditions.
-3. Assess whether the observed behavior is tolerable for the dashboard use case; do not create or apply a numeric cutoff.
-4. Save capture/log evidence at `docs/pm/evidence/AF-105-row-sync-observation.md`.
-
-#### Done when
-- Observed row-update deltas, method, timestamps/frame markers, and conditions are recorded.
-- The record contains an explicit dashboard-tolerable or not-tolerable assessment grounded in the observation, without an invented threshold, for the selected branch; the unselected branch is skipped.
-
-#### If it fails
-Stop the observation if output becomes abnormal, preserve captures, and investigate dispatch ordering, transport behavior, or controller timing before repeating AF-105.
-
-### AF-106 — Render Nano coordinate grid and boundary labels
-
-**Milestone:** M3
-**Depends on:** AF-104
-**Labels:** validation software critical-path
-**Procedure:** EXP-017
-
-#### Do
-1. Render on the Nano a 256×128 coordinate grid with corner labels for (0,0), (255,0), (0,127), and (255,127).
-2. Label both vertical x=128 boundaries and the horizontal y=64 boundary, while retaining visible panel-region identifiers.
-3. Display the frame through the passing architecture and photograph/check each panel corner and boundary; save the checklist at `docs/pm/evidence/AF-106-coordinate-grid.md`.
-
-#### Done when
-- All four corner labels, both x=128 seam labels, and the y=64 seam label land on the expected physical regions.
-- The source frame and physical verification demonstrate Nano-originated coordinates with no row/column inversion.
-
-#### If it fails
-Stop output and de-energize before inspecting cables. Determine whether the fault is coordinate generation, crop dispatch, controller row assignment, or panel order; correct the source task and repeat AF-106.
-
-### AF-107 — Observe EXP-017 four-panel stability for at least 30 minutes
-
-**Milestone:** M3
-**Depends on:** AF-106
-**Labels:** validation stability thermal-review critical-path
-**Safety:** HUB75
-**Stop condition:** Stop output and de-energize if blanking, freezing, garbling, resets, smoke, smell, or abnormal heating occurs.
-**Procedure:** EXP-017
-
-#### Do
-1. Run a documented EXP-017 pattern sequence for at least 30 minutes on the passing architecture.
-2. Record pattern, start/end timestamps, runtime, display observations, controller events, logs, and measured Nano/controller temperatures and CPU where available.
-3. Save the complete observation at `docs/pm/evidence/AF-107-exp-017-stability.md`.
-
-#### Done when
-- The recorded runtime is at least 30 minutes and the pattern and timestamps are reproducible from the evidence.
-- Logs and observations show no unexplained blank, freeze, garble, or reset during the run.
-- Measured temperatures and CPU data are included where available, with no invented threshold.
-
-#### If it fails
-Stop output and de-energize. Preserve logs and measurements, identify whether the fault is thermal, transport, controller, power, or software related, correct the upstream task, and repeat the stability observation.
-
-### AF-108 — Validate the M3 EXP-017 gate
-
-**Milestone:** M3
-**Depends on:** AF-096, AF-105, AF-107
-**Labels:** validation decision critical-path
-**Context:** This is the M3 gate aggregator; a pass authorizes the next milestone review but does not begin M4 work.
-
-#### Do
-1. Confirm AF-096 selected and recorded the winning architecture, then review the winning-path evidence from AF-097 through AF-107.
-2. Check the 2×2 topology, 256×128 Nano framebuffer/content path, both x=128 vertical seams, y=64 horizontal seam, Nano-controlled content crossing all seam types, row-sync assessment, coordinate evidence, and AF-107 stability record.
-3. Confirm the complete EXP-017 evidence set is linked, mark the M3 gate PASS or FAIL, and save `docs/pm/evidence/AF-108-m3-gate.md`.
-4. If PASS, record that M4 has not begun; if FAIL, identify the exact upstream task requiring correction.
-
-#### Done when
-- The winning architecture is named and all M3 gate criteria from the backlog README and JIRA are explicitly checked.
-- Evidence includes 2×2/256×128, both seam types, Nano-originated content, row-sync assessment, coordinate labels, at least 30 minutes of stability, and complete EXP-017 records.
-- The outcome is explicitly PASS or FAIL, and no M4 task is started by this gate.
-
-#### If it fails
-Record the failed criterion, keep M4 blocked, and return to the named source task for correction and new evidence before re-gating.
+(Do not export to Jira)

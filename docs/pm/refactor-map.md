@@ -671,3 +671,34 @@ This applied-state table is authoritative for M2 compression. Each absorbed M2 I
 | AF-094 | AF-094 | Unchanged live architecture-decision card. |
 | AF-095 | AF-095 | Unchanged live transport-decision card. |
 | AF-096 | AF-096 | Unchanged registry-wide sweep semantics and current M3 target enumeration; no M2/MG ID substitution applies. |
+
+---
+
+## M3 Merge Lineage (Task 6 Apply)
+
+This applied-state table is authoritative for M3 compression. Each absorbed M3 ID remains in `09-quad-panel.md` as a `SUPERSEDED` stub with the listed replacement; active dependency edges use only live IDs. The applied seven-card shape deliberately retains AF-187 as the independently visible readiness/procurement resolution outcome, preserving the executable multi-ESP32 chain `AF-099 audit -> AF-187 resolve hardware -> AF-100 assemble and first light`.
+
+| Absorbed ID | Surviving ID |
+|---|---|
+| AF-102 | AF-098 |
+| AF-103 | AF-100 |
+| AF-105 | AF-104 |
+| AF-106 | AF-104 |
+| AF-107 | AF-104 |
+| AF-108 | AF-104 |
+
+### Applied M3 Survivor Scope
+
+| Survivor | Absorbed project-level coverage retained in the live card |
+|---|---|
+| AF-097 | Panels #3/#4 unpowered polarity, HUB75 IN/OUT/key, physical orientation, and received-hardware evidence. |
+| AF-098 | Conditional WF4 2×2 topology, four parallel panel-power branches, 256×128 configuration, and Nano-originated first light formerly covered by AF-102. |
+| AF-099 | Conditional second ESP32-path audit with one explicit `READY` or `MISSING` outcome and no hidden procurement wait. |
+| AF-187 | Conditional readiness/procurement resolution between AF-099 and AF-100: verify in-place hardware or order, receive, verify, and document the exact hardware under ADR-013. |
+| AF-100 | Conditional ESP32 2×2 topology, four parallel branches, per-controller 256×64 configuration, dual-row Nano dispatch, and first light formerly covered by AF-103. |
+| AF-101 | Nano 256×128 framebuffer, two exact row crops, selected-transport dispatch, and source/crop/log evidence. |
+| AF-104 | EXP-017 all-seam proof, row-update observation and dashboard assessment, coordinate-grid evidence, >=30-minute stability evidence, and the PASS/FAIL M3 gate formerly covered by AF-105 through AF-108. |
+
+### Applied M3 Conditional Registry
+
+The current M3 entries subject to AF-096's registry-wide two-class normalization are AF-098 (WF4), AF-099 and AF-187 (ESP32 readiness), and AF-100 (ESP32 assembly). Before ADR-016 each uses `conditional blocked blocked:adr-016` plus its controller label and an `Applies if` condition. The selected class becomes executable and `critical-path`; the losing class remains blocked with the exact resolved skip line. AF-101 and AF-104 are architecture-independent convergence cards, and no pre-decision file claims a winner.
