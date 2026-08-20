@@ -742,3 +742,111 @@ This applied-state table is authoritative for M3 compression. Each absorbed M3 I
 ### Applied M3 Conditional Registry
 
 The current M3 entries subject to AF-096's registry-wide two-class normalization are AF-098 (WF4), AF-099 and AF-187 (ESP32 readiness), and AF-100 (ESP32 assembly). Before ADR-016 each uses `conditional blocked blocked:adr-016` plus its controller label and an `Applies if` condition. The selected class becomes executable and `critical-path`; the losing class remains blocked with the exact resolved skip line. AF-101 and AF-104 are architecture-independent convergence cards, and no pre-decision file claims a winner.
+
+---
+
+## PART VII — MR applied compression and lineage
+
+**Scope:** `docs/pm/backlog/11-reliability.md`. The applied MR registry has exactly two live cards.
+
+| Historical ID(s) | Decision | Survivor | Depends on | Retained project-level outcome |
+|---|---|---|---|---|
+| AF-120 | KEEP | AF-120 | AF-115 | Evidence-backed dashboard brightness ceiling and recorded physical recovery observations. |
+| AF-121 | KEEP | AF-121 | AF-120, AF-133; AF-169 when Cond-X active | >=24-hour normal-dashboard burn-in, using the AF-169 final PCB whenever Cond-X is active. |
+
+AF-120 remains separate from AF-115 so measured M4 observations are not presented as a production setting. AF-121 waits for AF-133; its final-PCB condition is an execution condition, not an unconditional inactive-branch dependency. Both cards retain explicit abnormal-behavior and de-energization guidance.
+
+---
+
+## PART VIII — MA applied compression and lineage
+
+**Scope:** `docs/pm/backlog/12-application.md`. The applied MA registry has exactly seven live cards; every active dependency targets a live ID.
+
+| Historical ID(s) | Decision | Survivor | Depends on | Retained project-level outcome |
+|---|---|---|---|---|
+| AF-122, AF-123, AF-124 | MERGE | AF-122 | AF-119 | Reproducible secure Nano runtime, service prerequisites, and rollback. |
+| AF-125, AF-126 | MERGE | AF-125 | AF-122 | Production multiline/aligned renderer, fonts, reusable patterns, and output checks. |
+| AF-127, AF-128 | MERGE | AF-127 | AF-125 | Controller-agnostic framebuffer, serialization, status/error, and reconnect contract. |
+| AF-129 | KEEP | AF-129 | AF-096, AF-095, AF-127 | Only the ADR-017-selected production transport and its failure/reconnect state. |
+| AF-130, AF-131 | MERGE | AF-130 | AF-113, AF-129 | Six-panel application-to-display validation, 500-frame run, and 256x192 ownership. |
+| AF-132 | KEEP | AF-132 | AF-129, AF-130 | Structured logging, reconnect/backoff, controller-loss, and watchdog recovery. |
+| AF-133 | KEEP | AF-133 | AF-130, AF-132 | Widgets, cache, stale-data state, unattended startup, API fallback, and live-data resume. |
+
+| Superseded ID | Replaced by |
+|---|---|
+| AF-123 | AF-122 |
+| AF-124 | AF-122 |
+| AF-126 | AF-125 |
+| AF-128 | AF-127 |
+| AF-131 | AF-130 |
+
+AF-117 owns physical recovery, AF-132 owns application supervision, and AF-133 owns API/cache/live-data acceptance. No M4 card is rewired to claim MA-only outcomes.
+
+---
+
+## PART IX — Cond-X applied compression and 19-stage lineage
+
+**Scope:** `docs/pm/backlog/13-esp32-pcb.md`. The applied Cond-X registry has exactly seven live cards and preserves all 19 historical KiCad stages AF-152 through AF-170. AF-188 remains execution-only and is not instantiated.
+
+| Historical ID(s) | Decision | Survivor | Depends on | Retained project-level outcome |
+|---|---|---|---|---|
+| AF-152, AF-153 | MERGE | AF-152 | AF-104, AF-095, AF-052 | Measured ESP32 footprint/no-go areas and evidence-backed GPIO, firmware, and row-interface freeze. |
+| AF-154, AF-155, AF-156, AF-157, AF-158, AF-159 | MERGE | AF-154 | AF-152 | Electrically reviewed HCT schematic, component/power/connector review, and ERC pass/waivers. |
+| AF-160, AF-161, AF-162 | MERGE | AF-160 | AF-154 | Serviceable fabrication-ready layout with physical review and DRC pass/waivers. |
+| AF-163, AF-164, AF-165, AF-166 | MERGE | AF-163 | AF-160 | Reviewed Gerber, drill, BOM, and applicable CPL/placement release package. |
+| AF-167 | KEEP | AF-167 | AF-163 | Order, receipt, visual inspection, and every-net continuity/isolation acceptance. |
+| AF-168 | KEEP | AF-168 | AF-167 | One populated, inspected, unpowered-electrically-checked PCB prototype. |
+| AF-169, AF-170 | MERGE | AF-169 | AF-168, AF-067, AF-087 | >=1-hour proven-row validation, perfboard comparison, de-energized replacement, and v1.0 PCB documentation. |
+
+| Superseded ID | Replaced by |
+|---|---|
+| AF-153 | AF-152 |
+| AF-155 | AF-154 |
+| AF-156 | AF-154 |
+| AF-157 | AF-154 |
+| AF-158 | AF-154 |
+| AF-159 | AF-154 |
+| AF-161 | AF-160 |
+| AF-162 | AF-160 |
+| AF-164 | AF-163 |
+| AF-165 | AF-163 |
+| AF-166 | AF-163 |
+| AF-170 | AF-169 |
+
+The seven active survivors use AF-096's existing two-class semantics. Before resolution they carry `conditional blocked blocked:adr-016 pcb` and `Applies if: ADR-016 selects multi-ESP32`. The multi-ESP32 winner removes the three conditional/blocked labels and `Applies if`, adds `critical-path`, and retains `controller-esp32 pcb`. The WF4 loser retains or adds the three labels, removes `critical-path`, and uses exactly `Skip — ADR-016 selected WF4`. AF-152 retains mandatory AF-104, AF-095, and AF-052 prerequisites; no third conditional state exists.
+
+If AF-111 later records the third controller as `MISSING`, execution allocates AF-188 for procurement, receipt, and verification and externally blocks AF-111 until it passes. If AF-111 records `READY`, AF-188 is never created. No Cond-X card depends on or creates AF-188 during this migration.
+
+---
+
+## PART X — MF applied compression and lineage
+
+**Scope:** `docs/pm/backlog/14-mounted-frame.md`. The applied MF registry has exactly eight live cards in this execution order: AF-134, AF-137, AF-147, AF-139, AF-144, AF-146, AF-149, AF-151.
+
+| Historical ID(s) | Decision | Survivor | Depends on | Retained project-level outcome |
+|---|---|---|---|---|
+| AF-134, AF-135, AF-136 | MERGE | AF-134 | AF-121, AF-133; AF-169 when Cond-X active | Measured enclosure constraints and dimensioned internal layout. |
+| AF-137, AF-138, AF-143 | MERGE | AF-137 | AF-134, AF-120 | PSU/controller placement, measured airflow, ventilation, and fan contingency. |
+| AF-147, AF-148 | MERGE | AF-147 | AF-134, AF-137 | Backplate, six-panel mounting, flatness, seam alignment, and service access. |
+| AF-139, AF-140, AF-141, AF-142 | MERGE | AF-139 | AF-147, AF-137 | Mains/DC separation, cable routing, strain relief, service loops, and PE/FG/chassis bonding. |
+| AF-144, AF-145 | MERGE | AF-144 | AF-139, AF-147, AF-120, AF-133 | >=60-minute closed-enclosure thermal/brightness validation. |
+| AF-146 | KEEP | AF-146 | AF-144, AF-133 | Closed-frame Wi-Fi evidence and retested mitigation. |
+| AF-149, AF-150 | MERGE | AF-149 | AF-144, AF-146, AF-147, AF-133 | Rated wall installation and >=72-hour dashboard validation. |
+| AF-151 | KEEP | AF-151 | AF-149 | Explicit final safety/product PASS/FAIL gate. |
+
+| Superseded ID | Replaced by |
+|---|---|
+| AF-135 | AF-134 |
+| AF-136 | AF-134 |
+| AF-138 | AF-137 |
+| AF-140 | AF-139 |
+| AF-141 | AF-139 |
+| AF-142 | AF-139 |
+| AF-143 | AF-137 |
+| AF-145 | AF-144 |
+| AF-148 | AF-147 |
+| AF-150 | AF-149 |
+
+AF-139 is the MAINS-profile card and keeps stop conditions for disconnected-wall work, terminal-marking L/N/PE identification, PE-to-FG/chassis continuity, AC/DC separation, strain relief, insulation, and runbook checks. L/N/PE and cable categories remain checklist items, not cards.
+
+**Whole-registry dependency result:** `AF-119 -> AF-122 -> AF-125 -> AF-127 -> AF-129 -> AF-130 -> AF-132 -> AF-133`; `AF-115 -> AF-120 -> AF-121` with AF-133 and AF-169 only when Cond-X is active; `AF-134 -> AF-137 -> AF-147 -> AF-139 -> AF-144 -> AF-146 -> AF-149 -> AF-151`, with AF-134 additionally requiring AF-121, AF-133, and AF-169 only when Cond-X is active. No active dependency points to a superseded MR/MA/Cond-X/MF ID.
