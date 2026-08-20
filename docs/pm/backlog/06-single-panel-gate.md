@@ -4,12 +4,12 @@ Tasks are maintained as a compact, dependency-driven M1 phase catalog. Hardware 
 
 ---
 
-### AF-080 — Audit Milestone 1 Single-Panel Exit Gate
+### AF-080 — Audit Milestone 1 single-panel exit gate
 
 **Milestone:** M1
 **Depends on:** AF-046 OR AF-069
 **Labels:** validation decision critical-path
-**Context:** The gate accepts either candidate, not both: AF-046 (WF4) OR AF-069 (ESP32) must pass; audit the selected candidate against all seven M1 exit conditions and record the other candidate as not required or separately assessed.
+**Context:** Formal sign-off that one candidate controller path, not both, has met every M1 exit condition: AF-046 (WF4) OR AF-069 (ESP32) must pass, while the unused candidate is explicitly recorded as not required or separately assessed.
 
 #### Do
 1. Review AF-046 and AF-069 evidence and select the candidate that supplies the gate pass; record the selection and the unused alternative’s status.

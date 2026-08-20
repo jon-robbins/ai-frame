@@ -573,3 +573,66 @@ The stale requirements matrix is not used to justify its obsolete P1.53, RD-65A,
 | AF-020 | AF-021 |
 | AF-022 | AF-021 |
 | AF-023 | AF-021 |
+
+---
+
+## M1 Merge Lineage (Task 4 Apply)
+
+This applied-state table is authoritative for M1 compression. It supersedes the earlier M1 decomposition proposals in this map wherever they describe now-absorbed cards as active. Each absorbed ID remains in its phase file as a `SUPERSEDED` stub with the listed replacement; active dependency edges across the backlog registry use the surviving ID only.
+
+| Absorbed ID | Surviving ID |
+|---|---|
+| AF-181 | AF-026 |
+| AF-182 | AF-026 |
+| AF-028 | AF-027 |
+| AF-031 | AF-029 |
+| AF-033 | AF-032 |
+| AF-034 | AF-032 |
+| AF-036 | AF-032 |
+| AF-037 | AF-035 |
+| AF-039 | AF-040 |
+| AF-041 | AF-042 |
+| AF-043 | AF-183 |
+| AF-044 | AF-183 |
+| AF-184 | AF-183 |
+| AF-185 | AF-045 |
+| AF-186 | AF-045 |
+| AF-047 | AF-045 |
+| AF-049 | AF-048 |
+| AF-051 | AF-050 |
+| AF-053 | AF-052 |
+| AF-055 | AF-054 |
+| AF-059 | AF-054 |
+| AF-061 | AF-054 |
+| AF-065 | AF-054 |
+| AF-074 | AF-067 |
+| AF-070 | AF-068 |
+| AF-071 | AF-069 |
+| AF-072 | AF-069 |
+| AF-073 | AF-069 |
+| AF-075 | AF-069 |
+| AF-172 | AF-077 |
+| AF-079 | AF-078 |
+
+### Applied M1 Survivor Scope
+
+| Survivor | Absorbed project-level coverage retained in the live card |
+|---|---|
+| AF-026 | Nano serial first boot, raw kernel/boot evidence, and measured OS/resource audit under the CH340 3-pin rule. |
+| AF-027 | Nano Wi-Fi, SSH, virtual environment, and reproducible base dependency state. |
+| AF-029 | Pillow smoke test and all six standard pattern generators. |
+| AF-032 | Framebuffer API, transport ABC/stub boundary, and four-resolution scaling/row-crop validation. |
+| AF-035 | End-to-end Nano software smoke test, clean-shell verification, and bootstrap evidence commit. |
+| AF-040 | WF4 input identification/mating and power-off 5 V wiring validation. |
+| AF-042 | Unpowered HUB75 connection plus stock-WF4 single-panel EXP-004 validation. |
+| AF-183 | Vendor workflow characterization, evidence-backed protocol investigation, host sender, and Nano sender. |
+| AF-045 | WF4 latency/throughput measurement, one-hour update loop, and cited candidate evidence index. |
+| AF-048 | ESP32 board identification and conditionally required header installation. |
+| AF-050 | Measured ESP32 flash/PSRAM confirmation and GPIO inventory. |
+| AF-052 | Validated 14-signal GPIO map and adapter-material staging. |
+| AF-054 | One ESP32 HUB75 adapter with the documented eight-step build, 14-signal continuity, and pre-power isolation audit. |
+| AF-067 | ESP32 physical single-panel validation, one-hour observation, and full-white thermal log. |
+| AF-068 | Nano-to-ESP32 UART transport plus conditional USB-CDC fallback comparison. |
+| AF-069 | ESP32 arbitrary-text E2E proof, conditional firmware comparison, cited scoring, and candidate evidence commit. |
+| AF-077 | WF2 stock-firmware characterization on both outputs. |
+| AF-078 | WF2 alternative-firmware evaluation and cited reference-subtrack summary. |

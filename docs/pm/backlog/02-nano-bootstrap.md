@@ -1,307 +1,224 @@
-# Phase 02 — LicheeRV Nano Software Bootstrap (M0 / M1)
+# Phase 02 - LicheeRV Nano Software Bootstrap (M0 / M1)
 
 Covers the Nano software bootstrap and resolution-agnostic rendering foundation. Tasks are independent of display hardware after the Nano and microSD are available.
 
 ---
 
-### AF-025 — Flash LicheeRV Nano-W microSD card
+### AF-025 - Flash LicheeRV Nano-W microSD card
 
 **Milestone:** M1
-**Depends on:** —
+**Depends on:** -
 **Labels:** software nano docs
-**Context:** Download official Sipeed SG2002 Linux image (Debian/Buildroot lightweight headless), verify SHA256, write to Lenovo 64GB microSD via Etcher/dd, and verify dual partitions.
+**Context:** Download the official Sipeed SG2002 lightweight headless image, verify its SHA256, write it to the Lenovo 64 GB microSD, and verify the resulting partitions.
 
 #### Do
-1. Download the selected official Sipeed SG2002 lightweight headless image and its published checksum; record both filenames and the checksum result.
-2. Verify the downloaded file before writing it to the Lenovo 64GB microSD, write the image with Etcher or `dd`, and safely eject the card.
-3. Inspect the written card with the host tools and record the partitions/filesystem types that are actually present.
+1. Download the selected official image and published checksum; record both filenames and the checksum result.
+2. Verify the download, write the image with Etcher or `dd`, and safely eject the card.
+3. Inspect the written card with host tools and record the partitions/filesystem types actually present.
 
 #### Done when
 - The checksum verification passes for the exact image written.
 - The write completes without an I/O error and the card is safely ejected.
-- The resulting partition layout is recorded; any difference from the image documentation is explicitly marked for follow-up.
+- The resulting partition layout is recorded; any difference from image documentation is marked for follow-up.
 
 #### If it fails
-Do not boot from a card with a failed checksum or write. Re-download the image if verification fails; if writing fails, inspect the card/device path, repeat only after the media is re-identified, and preserve the command error.
+Do not boot from a card with a failed checksum or write. Re-download a failed image; if writing fails, re-identify the media/device path, preserve the command error, and repeat only after that check.
 
-### AF-026 — Verify Nano first boot and serial console connection
+---
+
+### AF-026 - Verify Nano first boot, serial console, kernel log, and OS resources
 
 **Milestone:** M1
 **Depends on:** AF-025
-**Labels:** software nano safety-review
+**Labels:** software nano safety-review docs validation
 **Safety:** CH340
 **Stop condition:** Do not connect CH340 VCC or 3.3 V; disconnect the adapter before changing target power.
-**Context:** Connect CH340 to Nano following the strict 3-pin rule (TX, RX, GND only; zero VCC connection); power Nano via dedicated 5V USB-C; verify kernel boot output and reach login prompt over 115200 8N1 serial.
+**Context:** Establish a trustworthy Nano baseline through the strict CH340 3-pin serial connection, then capture the boot/kernel evidence and the actual OS, CPU, memory, storage, and Python environment.
 
 #### Do
-1. Power the Nano through its dedicated 5V USB-C source and connect only CH340 TX, RX, and GND; photograph or record that VCC/3.3V is unused.
-2. Open the serial device at 115200 8N1, reset or boot the Nano, and capture the complete visible boot sequence.
-3. Confirm a login prompt, then disconnect the CH340 before changing the Nano power source.
+1. Power the Nano only from its dedicated 5 V USB-C source; connect CH340 TX, RX, and GND only, record or photograph the unused VCC/3.3 V lead, and open serial at 115200 8N1.
+2. Capture the complete visible boot sequence through a login prompt, save the raw serial capture and `dmesg`, and identify successful, absent, or failed initialization messages without treating absence as hardware failure.
+3. Run and save unedited output from `cat /etc/os-release`, `free -m`, `cat /proc/cpuinfo`, storage inspection, and `python3 --version`; compare observations with the Nano-W/SG2002 authority and record discrepancies.
+4. Disconnect CH340 before any Nano power-source change and store the board/image identifiers with the environment-audit record.
 
 #### Done when
-- The serial log contains boot output and a usable login prompt at 115200 8N1.
-- The connection record shows exactly TX, RX, and GND; CH340 power output is not connected.
-- The adapter is disconnected before any power-source change.
+- The serial log shows boot output and a usable login prompt at 115200 8N1, with the CH340 3-pin rule evidenced.
+- Raw serial and kernel logs identify the image and distinguish observed initialization from unavailable or unknown devices.
+- The OS, CPU, memory, storage, and Python baseline is recorded from measured command output, including any mismatch with expectations.
 
 #### If it fails
-Remove the CH340 from the Nano and power down before inspecting wiring. Correct TX/RX or serial settings one variable at a time; if no output remains, preserve the log and escalate to AF-025 media/boot verification.
+Remove CH340 and power down before inspecting wiring. Correct TX/RX or serial settings one variable at a time; preserve partial logs and command output. Return to AF-025 if the boot media or console cannot be trusted.
 
-### AF-181 — Capture and document first boot kernel log
+---
+
+### AF-181 - SUPERSEDED
+
+Replaced by: AF-026
+
+(Do not export to Jira)
+
+---
+
+### AF-182 - SUPERSEDED
+
+Replaced by: AF-026
+
+(Do not export to Jira)
+
+---
+
+### AF-027 - Configure Nano Wi-Fi, SSH, and Python virtual environment
 
 **Milestone:** M1
 **Depends on:** AF-026
-**Labels:** software nano docs
-**Context:** Capture full dmesg kernel ring buffer and serial console boot log; document hardware initialization status and peripheral device enumeration.
-
-#### Do
-1. From the working console, save the complete `dmesg` output and the serial boot capture without filtering out initialization messages.
-2. Mark the timestamps or boot boundary, then list successful, failed, and absent device/peripheral initialization messages.
-3. Store the raw logs with the observed board/image identifiers and a short interpretation.
-
-#### Done when
-- Raw `dmesg` and serial boot logs are both present and readable.
-- The report distinguishes observed initialization from unavailable or unrecognized devices.
-- The report identifies the image and board used for the capture.
-
-#### If it fails
-Keep the original partial capture, reboot once to determine whether the omission is repeatable, and check console permissions or log-storage space. Do not infer hardware failure from a missing message; record it as unresolved for follow-up.
-
-### AF-182 — Verify OS environment and hardware resources
-
-**Milestone:** M1
-**Depends on:** AF-026
-**Labels:** software nano validation
-**Context:** Execute system resource audit (cat /etc/os-release, free -m confirming 256 MB DDR3 RAM baseline, /proc/cpuinfo confirming SG2002 RISC-V/ARM core).
-
-#### Do
-1. Run `cat /etc/os-release`, `free -m`, and `cat /proc/cpuinfo` from the Nano console and save their unedited output.
-2. Compare reported board, kernel, CPU, and memory information with the SG2002/Nano-W project authority; record discrepancies rather than correcting them in prose.
-3. Record available storage and the Python executable/version needed by later tasks.
-
-#### Done when
-- All three command outputs are saved and identify the running image.
-- The observed memory, CPU architecture, and OS values are explicitly recorded, including any mismatch with expected hardware evidence.
-- The result identifies whether the Nano can proceed to network/bootstrap work.
-
-#### If it fails
-Preserve the command output. If a command is absent or fails, check the running image and permissions; do not substitute the BOM baseline for measured output, and return to AF-026 if the console or boot image is not trustworthy.
-
-### AF-027 — Configure Nano Wi-Fi and passwordless SSH access
-
-**Milestone:** M1
-**Depends on:** AF-182
 **Labels:** software nano
-**Context:** After AF-182 identifies the delivered OS and available network services, configure the supported Wi-Fi/network tooling, establish name resolution if the environment provides mDNS, and configure passwordless SSH public key authentication.
+**Context:** Make the Nano reachable and capable of running reproducible Python software using the OS/network tooling discovered by AF-026.
 
 #### Do
-1. Use the network manager and commands available in the AF-182 environment audit to configure Wi-Fi with the project network credentials, then record the interface state and address actually assigned.
-2. Apply the agreed DHCP reservation or static configuration using the discovered environment's supported mechanism; if mDNS is available, verify that `ai-frame.local` resolves from the development host, otherwise record the supported name/address-discovery result.
-3. Install the host public key, test a non-interactive SSH login, and record the exact hostname/address used.
+1. Use the discovered network manager/tooling to configure Wi-Fi with project credentials, record the active interface and assigned address, and apply the agreed DHCP reservation or supported static setup.
+2. Verify `ai-frame.local` when mDNS is available; otherwise record the supported name/address-discovery result. Install the host public key and prove a non-interactive SSH login using the recorded hostname/address.
+3. Create `~/ai-frame-venv` with the available `python3 -m venv`, upgrade available packaging tools, install only OS-supported build dependencies, and freeze the resulting baseline to `requirements-base.txt` with Python/package versions.
 
 #### Done when
-- The discovered network tooling reports the intended Wi-Fi connection as active and the observed address is recorded.
-- Name resolution reaches the Nano using the environment-supported method, with mDNS verified when available or its absence recorded.
-- Key-based SSH succeeds without a password prompt and the key remains restricted to the intended account.
+- Wi-Fi is active with an observed address; name resolution or its documented alternative reaches the Nano.
+- Key-based SSH succeeds without a password prompt and is restricted to the intended account.
+- The venv activates, `python --version` and `pip --version` run from it, and `requirements-base.txt` records reproducible available packages or explicit blockers.
 
 #### If it fails
-Revert only the changed network profile if the Nano becomes unreachable, then use the serial console to inspect the environment-specific network state. If name resolution alone fails, test the recorded IP before changing Wi-Fi settings; if key login fails, retain password access and repair authorized-key permissions.
+Revert only the changed network profile if the Nano becomes unreachable, then diagnose through serial. Test the recorded IP before changing Wi-Fi for a name-resolution failure. Keep password access while repairing SSH permissions; do not substitute an untracked Python environment for a missing dependency.
 
-### AF-028 — Create minimal Python 3 virtual environment
+---
+
+### AF-028 - SUPERSEDED
+
+Replaced by: AF-027
+
+(Do not export to Jira)
+
+---
+
+### AF-029 - Install Pillow and implement standard test pattern generator library
 
 **Milestone:** M1
 **Depends on:** AF-027
 **Labels:** software nano
-**Context:** Provision a Python 3 environment using the venv/package/build tooling discovered by AF-182, install only dependencies supported by that OS, and generate requirements-base.txt.
+**Context:** Confirm the Nano can generate reusable 128x64 RGB image content for controller validation.
 
 #### Do
-1. Create `~/ai-frame-venv` in the application user's home directory with the Nano's available `python3 -m venv` implementation.
-2. Upgrade the available packaging tools inside the venv and install image-library build headers only if the discovered OS/package manager provides them.
-3. Freeze the resulting baseline to `requirements-base.txt`, recording Python and package versions.
+1. Activate the Nano venv, install an environment-compatible Pillow version, and record the installed version and selection basis.
+2. Generate a 128x64 RGB `#FF0000` PNG; assert dimensions, mode, and sampled pixels programmatically, retaining the artifact and assertion output.
+3. Implement six named generators: solid fills, 8x8 checkerboard, diagonal lines, horizontal gradient, vertical gradient, and coordinate grid. Generate all six at 128x64 and assert dimensions, RGB mode, and a pattern-specific sentinel for each.
 
 #### Done when
-- The venv activates and `python --version` and `pip --version` run from it.
-- The dependency installation exits successfully, or each unavailable package is recorded with its blocker.
-- `requirements-base.txt` is reproducible from the recorded package list and versions.
+- Pillow imports from the venv and the solid-red smoke image is exactly 128x64 RGB with the expected pixels.
+- All six generators return 128x64 RGB images and pass their documented sentinel assertions; one artifact per pattern is retained.
+- Font availability and any coordinate-label limitation are recorded for later rendering work.
 
 #### If it fails
-Leave the system package state unchanged beyond the recorded command. Check Python venv support and package-manager errors separately; if a native header is unavailable, record it and stop before attempting an untracked substitute.
+Check venv activation and import paths first. Keep the failing pattern isolated, compare its expected sentinel to generated pixels, fix that generator, then rerun the complete six-pattern suite.
 
-### AF-029 — Install Pillow and execute solid color smoke test
+---
 
-**Milestone:** M1
-**Depends on:** AF-028
-**Labels:** software nano
-**Context:** Install a Pillow version supported by the AF-182 OS/Python environment inside the venv and generate a 128×64 pure red (#FF0000) test image; verify dimensions and pixel values programmatically.
+### AF-031 - SUPERSEDED
 
-#### Do
-1. Activate the Nano venv and install the selected environment-compatible Pillow version; record the installed version and selection basis.
-2. Generate a 128×64 RGB PNG filled with `#FF0000` and inspect it with a short Python assertion script.
-3. Save the image and assertion output with the software test record.
+Replaced by: AF-029
 
-#### Done when
-- Pillow imports from the venv and reports the installed version.
-- The PNG dimensions are exactly 128×64, mode RGB, and every sampled pixel is `(255, 0, 0)`.
-- The assertion command exits 0 and the artifact is retained.
+(Do not export to Jira)
 
-#### If it fails
-Check venv activation and Pillow import paths first. If dimensions or channels differ, delete only the failed test artifact, inspect the image-construction code, and rerun the assertions before proceeding to AF-030.
+---
 
-### AF-030 — Render dynamic text onto 128×64 RGB canvas
+### AF-030 - Render dynamic text onto 128x64 RGB canvas
 
 **Milestone:** M1
 **Depends on:** AF-029
 **Labels:** software nano
-**Context:** Render arbitrary runtime text string onto a 128×64 RGB canvas using Pillow; export PNG and verify character rendering without clipping.
+**Context:** Prove arbitrary runtime text can be rendered onto the target canvas with an explicit clipping/wrapping policy.
 
 #### Do
-1. Implement a renderer accepting a runtime string and producing a 128×64 RGB image using the available Pillow font.
-2. Run it with at least one short string and one string long enough to exercise the chosen clipping/wrapping behavior; save both outputs.
-3. Inspect the rendered bounds programmatically and record the font and placement inputs.
+1. Implement a renderer accepting a runtime string and producing a 128x64 RGB image using an available Pillow font.
+2. Run short and long inputs that exercise the documented clipping/wrapping policy; save both outputs.
+3. Inspect rendered bounds programmatically and record font, placement, input, and bounding-box results.
 
 #### Done when
-- The renderer accepts runtime input and emits a 128×64 RGB image without an exception.
-- The saved output shows each requested character that fits the documented policy and no pixel is written outside the canvas.
-- The test command records the selected font and bounding-box result.
+- The renderer accepts runtime input and emits a 128x64 RGB image without exception.
+- Every requested character that fits the documented policy appears, and no pixel is written outside the canvas.
+- The test record identifies the font and measured bounds.
 
 #### If it fails
-Preserve the failing input and output. Check font availability, image mode, and measured text bounds independently; adjust placement or clipping policy in code, then rerun both short and long-string cases.
+Preserve the failing input/output. Check font availability, image mode, and text bounds independently; correct placement or the policy, then rerun both short and long cases.
 
-### AF-031 — Implement 6 standard test pattern generator functions
+---
+
+### AF-032 - Implement canonical framebuffer, pluggable transport interface, and resolution-agnostic scaling validation
 
 **Milestone:** M1
 **Depends on:** AF-030
-**Labels:** software nano
-**Context:** Implement Python test pattern library generating 6 standard patterns (solid fills, 8×8 checkerboard, diagonal lines, horizontal/vertical gradients, coordinate grid) for 128×64.
+**Labels:** software nano validation
+**Context:** Provide the controller-neutral RGB24 framebuffer and transport boundary used by every candidate controller path.
 
 #### Do
-1. Implement the six named generators: solid fills, 8×8 checkerboard, diagonal lines, horizontal gradient, vertical gradient, and coordinate grid.
-2. Generate each at 128×64 and verify mode, dimensions, and a pattern-specific sentinel (for example, corner colors or grid labels).
-3. Save the six outputs and the test results under the Nano software test record.
+1. Implement `Framebuffer` with `new`, `set_pixel`, `get_region`, `export_raw_bytes`, and `size`, using RGB24 row-major bytes; test construction, mutation/readback, region extraction, byte order, and bounds with deterministic fixtures.
+2. Define abstract `DisplayTransport.send_frame(buffer, width, height)`, the `TransportError` hierarchy, and a `StubTransport` that logs width, height, and payload length. Test the exact signature, abstractness, error behavior, and known-frame stub record; placeholder candidate transports must raise rather than pretend to send hardware frames.
+3. Generate the same patterns through the unchanged API at 128x64, 256x64, 256x128, and 256x192; assert `width x height x 3` byte lengths and verify a row-crop region for each applicable fixture.
 
 #### Done when
-- All six generator functions exist, return 128×64 RGB images, and pass their sentinel assertions.
-- The output set contains one artifact per named pattern and records any coordinate-label limitation.
-- Re-running the generator test produces the same dimensions and sentinel values.
+- All framebuffer, interface, and stub tests pass; exported RGB24 length and first-pixel byte order are correct.
+- A concrete test transport receives the exact documented method arguments, while unimplemented candidates cannot be mistaken for live transports.
+- The four-resolution assertion table and row-crop results show no resolution-specific renderer branch.
 
 #### If it fails
-Keep the failing pattern isolated and compare its expected sentinel with the generated pixels. Fix only that generator, rerun the complete six-pattern test, and retain the failed output if the defect persists.
+Use the smallest failing fixture to separate coordinate, bounds, channel-order, and interface errors. Do not change transport code to hide a framebuffer defect; correct the owning component and rerun the full test set.
 
-### AF-032 — Implement canonical Framebuffer abstraction class
+---
 
-**Milestone:** M1
-**Depends on:** AF-031
-**Labels:** software nano
-**Context:** Implement canonical Framebuffer class with exact API (new, set_pixel, get_region, export_raw_bytes exporting RGB24 row-major byte arrays, size); verify unit test suite.
+### AF-033 - SUPERSEDED
 
-#### Do
-1. Implement `Framebuffer` with `new`, `set_pixel`, `get_region`, `export_raw_bytes`, and `size` using RGB24 row-major ordering.
-2. Test construction, pixel mutation/readback, region extraction, byte ordering, and reported size with small deterministic fixtures.
-3. Run the framebuffer unit tests and save the result.
+Replaced by: AF-032
 
-#### Done when
-- Every named API is callable with the documented arguments and the unit test command exits 0.
-- Exported length equals `width × height × 3` for each fixture and the first pixel's bytes match RGB order.
-- `get_region` returns the requested bounds without mutating the source framebuffer.
+(Do not export to Jira)
 
-#### If it fails
-Use the smallest failing fixture to distinguish coordinate, bounds, and channel-order errors. Do not alter transport code to mask a framebuffer failure; correct the class and rerun all unit tests.
+---
 
-### AF-033 — Define pluggable display transport abstract base interface
+### AF-034 - SUPERSEDED
+
+Replaced by: AF-032
+
+(Do not export to Jira)
+
+---
+
+### AF-036 - SUPERSEDED
+
+Replaced by: AF-032
+
+(Do not export to Jira)
+
+---
+
+### AF-035 - Execute end-to-end software pipeline smoke test and commit Nano bootstrap codebase
 
 **Milestone:** M1
 **Depends on:** AF-032
-**Labels:** software nano
-**Context:** Implement abstract base class DisplayTransport.send_frame(buffer, width, height) and custom TransportError exception hierarchy.
+**Labels:** software nano validation docs
+**Context:** Prove the Nano application -> renderer -> framebuffer -> stub transport path works end-to-end and leave a reproducible code/evidence baseline for controller integrations.
 
 #### Do
-1. Define the abstract `DisplayTransport.send_frame(buffer, width, height)` contract and the `TransportError` hierarchy.
-2. Add tests for the required signature, abstractness, and error subclass behavior without binding the interface to a controller protocol.
-3. Run the interface tests and record the public API surface.
+1. Invoke the CLI with arbitrary text, then with empty or short input; render through Pillow, load the `Framebuffer`, dispatch to `StubTransport`, and retain both exit statuses, rendered artifacts, and stub records.
+2. Verify each stub record's dimensions and payload length against the RGB24 framebuffer output. Review source, tests, setup notes, and artifacts for consistent paths, commands, and API names.
+3. Run the complete software suite from a clean shell, inspect the staged-file list, commit only the Nano bootstrap source/tests/docs, and record the commit hash in the evidence index.
 
 #### Done when
-- The interface cannot be instantiated without an implementation of `send_frame`.
-- A concrete test implementation can receive the buffer and dimensions through the exact method signature.
-- The exception tests pass and no controller pin/protocol assumption is embedded.
+- Both CLI runs exit 0 and reach the stub without vendor UI or hardware-controller involvement.
+- Stub dimensions/payload length match the requested framebuffer, and a clean-shell complete suite result is recorded.
+- The bootstrap files and evidence index are committed with their hash and no required artifact is left untracked.
 
 #### If it fails
-Read the failing test traceback and correct the interface or exception hierarchy only. Keep candidate-specific behavior out of the ABC; rerun interface tests before adding the stub.
+Run renderer, framebuffer, and stub separately with the same input; fix the first failing stage and preserve its output. Do not commit a red suite; correct the first missing path, dependency, or documentation mismatch and inspect staging before retrying.
 
-### AF-034 — Implement candidate transport skeleton and stub
+---
 
-**Milestone:** M1
-**Depends on:** AF-033
-**Labels:** software nano
-**Context:** Implement StubTransport class logging frame payload length and dimensions, plus stubbed candidate transport subclasses.
+### AF-037 - SUPERSEDED
 
-#### Do
-1. Implement `StubTransport` to log frame dimensions and payload length, plus placeholder candidate classes that satisfy the transport interface.
-2. Send a known framebuffer through the stub and inspect the structured log for dimensions and RGB24 byte count.
-3. Run the transport skeleton tests and record which candidate classes remain intentionally unimplemented.
+Replaced by: AF-035
 
-#### Done when
-- Stub output records the supplied width, height, and exact payload length.
-- Placeholder classes import and expose the interface without pretending to transmit hardware frames.
-- The skeleton test command exits 0.
-
-#### If it fails
-Compare the logged length with the framebuffer export before changing the stub. If a placeholder is accidentally used as a live transport, make it raise the documented error and record that boundary.
-
-### AF-035 — Execute end-to-end software pipeline smoke test
-
-**Milestone:** M1
-**Depends on:** AF-034
-**Labels:** software nano validation
-**Context:** Execute CLI smoke test passing arbitrary command-line text into Pillow renderer, loading into Framebuffer, and dispatching to StubTransport.
-
-#### Do
-1. Invoke the CLI with arbitrary text, render it through Pillow, load the result into `Framebuffer`, and dispatch it to `StubTransport`.
-2. Capture the CLI exit status and stub record for the supplied text, dimensions, and payload length.
-3. Repeat with an empty or short input to verify the command path handles runtime input deterministically.
-
-#### Done when
-- Both CLI runs exit 0 and reach the stub without a vendor UI or hardware controller.
-- The stub record identifies the requested dimensions and payload length equal to the RGB24 framebuffer output.
-- The rendered artifact and command output are retained.
-
-#### If it fails
-Run the renderer, framebuffer, and stub stages separately using the same input. Fix the first failing stage, preserve its traceback/output, and rerun the full CLI smoke test only after that stage passes.
-
-### AF-036 — Validate framebuffer scaling across 4 resolutions
-
-**Milestone:** M1
-**Depends on:** AF-035
-**Labels:** software nano validation
-**Context:** Generate test patterns and verify byte lengths across 128×64, 256×64, 256×128, and 256×192 without renderer code modifications; verify sub-region row cropping.
-
-#### Do
-1. Generate the same test pattern at 128×64, 256×64, 256×128, and 256×192 through the unchanged renderer/framebuffer API.
-2. Assert each exported byte length and extract a sub-region representing a row; record its dimensions and bytes.
-3. Compare outputs for deterministic dimensions and document any implementation limitation instead of changing the renderer per resolution.
-
-#### Done when
-- All four resolutions pass byte-length checks of `width × height × 3`.
-- Sub-region extraction returns the requested row bounds and expected byte length.
-- No resolution-specific renderer branch was added for the test.
-
-#### If it fails
-Use the failing resolution to isolate dimension arithmetic versus region coordinates. Correct the framebuffer API or test fixture, rerun all four sizes, and preserve any unsupported-size result as an explicit limitation.
-
-### AF-037 — Collate and commit Nano software bootstrap codebase
-
-**Milestone:** M1
-**Depends on:** AF-036
-**Labels:** software nano docs
-**Context:** Commit complete Nano application software framework, venv setup documentation, and test scripts to repository under software/nano/.
-
-#### Do
-1. Review the Nano source, venv setup notes, tests, and generated artifacts for consistent paths, commands, and API names.
-2. Run the complete software test suite from a clean shell and record the commit candidate, test command, and exit status.
-3. Commit only the Nano bootstrap files and link the evidence record to the resulting commit.
-
-#### Done when
-- The expected Nano software files, setup documentation, and tests are present under `software/nano/` or the documented project locations.
-- The clean-shell test run exits 0 and its command is recorded.
-- The commit contains no untracked required bootstrap artifact and its hash is recorded in the subtrack evidence.
-
-#### If it fails
-Do not commit a red test run. Preserve the failure output, fix the first missing path/dependency or documentation mismatch, rerun from a clean shell, and inspect the staged file list before retrying the commit.
+(Do not export to Jira)

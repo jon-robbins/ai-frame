@@ -1,430 +1,299 @@
-# Phase 04 — ESP32 Single-Panel Bringup & Level Shifter (M1)
+# Phase 04 - ESP32 Single-Panel Bringup & Level Shifter (M1)
 
 Tasks are maintained as a compact, dependency-driven M1 phase catalog. Hardware facts must be verified against received evidence and the referenced wiring appendix.
 
 ---
 
-### AF-048 — Identify ESP32-S3 DevKitC-1 N16R8 board geometry and markings (EXP-010)
+### AF-048 - Identify ESP32-S3 DevKitC-1 board geometry and prepare headers (EXP-010)
 
 **Milestone:** M1
 **Depends on:** AF-024
 **Labels:** hardware controller-esp32 docs validation
 **Procedure:** EXP-010
-**Context:** Measure board dimensions; count physical header pins (**2× 22-pin / 44 pins total** or 2× 20/24-pin); confirm N16R8 module markings; photograph directly into hardware/photos/.
+**Context:** Confirm the exact delivered ESP32 variant and ensure headers are installed only when needed.
 
 #### Do
-1. Photograph the delivered board, measure its dimensions, count each physical header position, and record module/PCB markings for EXP-010.
-2. Compare the observations with project and manufacturer evidence; list discrepancies as unknowns.
-3. Save the board photos and an identification table.
+1. Photograph and measure the delivered board; count physical header positions and record PCB/module markings, including the observed N16R8 evidence.
+2. Compare observations with project/manufacturer authority and list discrepancies as unknowns rather than selecting an assumed variant.
+3. If AF-048 shows unsoldered headers or the adapter requires installation, solder the delivered header strips, inspect all joints, continuity-check installed pads, and photograph the result. Otherwise record the header task as not applicable.
 
 #### Done when
-- Front/rear photos and the observed PCB revision are saved.
-- The actual header count and module markings are recorded without selecting an unobserved board variant.
-- Any mismatch with the expected map is marked for wiring review.
+- Front/rear photos, dimensions, header count, and module markings are saved without asserting an unobserved variant.
+- Header applicability is recorded; every installed header pin passes visual and continuity inspection.
+- Any mismatch is marked for GPIO-map review.
 
 #### If it fails
-Do not design from an assumed board variant. Preserve the photos and measurements, identify the exact received variant, and defer the pin map until discrepancies are resolved.
+Do not design or solder from an assumed board variant. Unpower USB before rework, repair bridges/loose joints, and resolve board discrepancies before GPIO mapping.
 
-### AF-049 — Solder male pin headers to ESP32-S3 dev board if unsoldered
+---
+
+### AF-049 - SUPERSEDED
+
+Replaced by: AF-048
+
+(Do not export to Jira)
+
+---
+
+### AF-050 - Confirm ESP32-S3 flash/PSRAM and identify usable GPIOs
 
 **Milestone:** M1
 **Depends on:** AF-048
-**Labels:** hardware controller-esp32 conditional
-**Applies if:** AF-048 inspection shows the delivered ESP32 headers are unsoldered or the adapter build requires header installation.
-**Context:** (Conditional) Solder 2.54mm male header strips onto ESP32-S3 board; perform visual inspection and continuity check across all pins.
+**Labels:** firmware controller-esp32 validation docs
+**Context:** Establish measured memory resources and the board-specific usable GPIO inventory before assigning HUB75 signals.
 
 #### Do
-1. Verify AF-048 shows unsoldered headers; otherwise record this task not applicable.
-2. If required, solder the delivered header strips and continuity-check installed pads.
-3. Photograph the result.
+1. Run `esptool.py flash_id` over USB and a chip-info sketch; save raw flash/PSRAM reports and compare them with received module markings.
+2. Inventory GPIO labels from board silkscreen, received evidence, manufacturer documentation, and the appendix; mark occupied/reserved pins with a source for each.
+3. Publish usable and unknown GPIO sets without asserting fixed ranges or a total pin count not evidenced by the delivered board.
 
 #### Done when
-- Applicability and header condition are recorded.
-- Every installed pin passes visual and continuity inspection.
+- Raw reports and board identity record flash/PSRAM as confirmed, conflicting, or unknown.
+- The GPIO inventory identifies authoritative sources and each actual reservation.
+- The usable/unknown set provides a factual basis for AF-052.
 
 #### If it fails
-Unpower USB before rework; repair bridges or loose joints and repeat checks.
+Preserve contradictory reports; check cable and boot mode before repeating. Do not solder from an incomplete inventory or replace measured results with a BOM expectation.
 
-### AF-050 — Confirm ESP32-S3 N16R8 16 MB flash and 8 MB octal PSRAM in software
+---
 
-**Milestone:** M1
-**Depends on:** AF-048, AF-049
-**Labels:** firmware controller-esp32 validation
-**Context:** Connect ESP32 via USB; run esptool.py flash_id and execute Arduino/ESP-IDF chip info sketch confirming 16 MB flash and 8 MB octal PSRAM.
+### AF-051 - SUPERSEDED
 
-#### Do
-1. Run `esptool.py flash_id` over USB.
-2. Run the chip-info sketch and save flash/PSRAM reports.
-3. Compare reports with the received module marking.
+Replaced by: AF-050
 
-#### Done when
-- Raw reports and board identity are saved.
-- Flash/PSRAM result is confirmed, conflicting, or unknown.
+(Do not export to Jira)
 
-#### If it fails
-Preserve contradictory reports; check cable/boot mode before repeating.
+---
 
-### AF-051 — Identify unavailable ESP32-S3 GPIOs
+### AF-052 - Validate provisional GPIO mapping against physical board silkscreen and stage adapter materials
 
 **Milestone:** M1
-**Depends on:** AF-050
-**Labels:** firmware controller-esp32 docs
-**Context:** Determine the delivered board’s actual GPIO inventory and occupied/reserved pins from its silkscreen, received evidence, manufacturer documentation, and the appendix; record the usable set without assuming a total count or fixed ranges.
-
-#### Do
-1. Inventory GPIO labels from the delivered board and authoritative sources.
-2. Mark actually reserved/occupied pins with a source for each.
-3. Publish the board-specific usable/unknown set.
-
-#### Done when
-- Actual inventory and reservations are recorded.
-- No total count or fixed range is asserted without evidence.
-
-#### If it fails
-Do not solder from an incomplete map; resolve unknowns through the cited authority.
-
-### AF-052 — Validate provisional GPIO mapping against physical board silkscreen
-
-**Milestone:** M1
-**Depends on:** AF-048, AF-051
+**Depends on:** AF-050, AF-011
 **Labels:** hardware controller-esp32 docs validation
-**Context:** Cross-verify 14 target GPIOs against physical board silkscreen and PIN_LEVEL_APPENDIX.md §3/§4; generate final validated pin allocation table.
+**Context:** Produce the evidenced 14-signal allocation and ensure every adapter component is physically ready before assembly.
 
 #### Do
-1. Compare each proposed signal with silkscreen and appendix §§3–4.
-2. Verify delivered panel labels/keying.
-3. Mark all 14 assignments confirmed, conflicting, or unknown.
+1. Cross-check each target signal against the delivered board silkscreen and `hardware/schematics/PIN_LEVEL_APPENDIX.md` sections 3-4. Record a 14-row table with signal, ESP32 GPIO, HCT input/output channel, HUB75 destination, source, and status (confirmed/conflicting/unknown).
+2. Verify delivered panel labels/keying and stage two SN74HCT245N ICs, perfboard, keyed 2x8 HUB75 header, two 100 nF ceramics, optional 1000 uF bulk capacitor, and suitable received low-current hookup wire.
+3. Record quantities, markings, pitch, substitutions, shortages, and a photograph of staged parts. A conflict or missing suitable wire blocks assembly.
 
 #### Done when
-- Every assignment has evidence.
-- Conflicts block assembly.
+- Every assignment has evidence and conflicts/unknowns are explicit.
+- Required parts and optional/substitute status are recorded and photographed.
+- No adapter assembly begins with a mapping conflict or undocumented material shortage.
 
 #### If it fails
-Stop on conflicts; correct the map before AF-053.
+Stop on mapping conflicts, quarantine mismatched materials, and obtain an authority-backed correction before AF-054.
 
-### AF-053 — Gather and inspect ESP32 adapter build materials
+---
+
+### AF-053 - SUPERSEDED
+
+Replaced by: AF-052
+
+(Do not export to Jira)
+
+---
+
+### AF-054 - Build and electrically validate one ESP32 HUB75 adapter
 
 **Milestone:** M1
-**Depends on:** AF-011, AF-052
-**Labels:** hardware controller-esp32 docs
-**Context:** Stage 2× SN74HCT245N ICs, perfboard, 2×8 keyed HUB75 header, 2× 100nF ceramic caps, optional 1000µF bulk cap, and inspect received stock for suitable low-current hookup wire. No wire type or gauge is a predeclared requirement.
+**Depends on:** AF-052
+**Labels:** hardware controller-esp32 power validation safety-review
+**Safety:** HUB75, 5V-HIGH-CURRENT
+**Stop condition:** Keep panel/controller power disconnected throughout this card. Stop for any uncertain map, bridge, damaged conductor, or failed continuity/isolation result; do not energize to diagnose it.
+**Context:** Build one perfboard adapter that drives one HUB75 panel row through two SN74HCT245N 3.3 V-to-5 V buffers, using the validated AF-052 map and ADR-014 rationale.
 
 #### Do
-1. Stage the listed ICs, perfboard, header, capacitors, and received hookup wire; inspect the stock for suitable low-current wire.
-2. Record quantities, markings, pitch, and shortages.
-3. Photograph the staged parts.
+1. Copy the validated AF-052 14-signal table onto the build record, lay out U1, U2, ESP32 header, and keyed HUB75 header on perfboard, then mount the ICs directly or use separately obtained/recorded sockets. Record pin-1 and header-notch orientation in a clear top-side photo/diagram.
+2. Wire U1/U2 pin 20 to +5 V and pin 10 to GND; tie pin 1 `DIR` to +5 V for A-to-B direction and pin 19 `/OE` to GND. Place one 100 nF ceramic directly near each IC's VCC/GND pair, wire the observed HUB75 ground positions to the ground rail, and record optional bulk-electrolytic polarity/presence separately.
+3. Wire and label the U1 RGB/A/B paths exactly as validated: IO5 -> U1 A2/B18 -> R1; IO4 -> A3/B17 -> G1; IO6 -> A4/B16 -> B1; IO15 -> A5/B15 -> R2; IO7 -> A6/B14 -> G2; IO17 -> A7/B13 -> B2; IO8 -> A8/B12 -> A; IO18 -> A9/B11 -> B.
+4. Wire and label the U2 paths exactly as validated: IO10 -> U2 A2/B18 -> C; IO9 -> A3/B17 -> D; IO16 -> A4/B16 -> E; IO12 -> A5/B15 -> CLK; IO11 -> A6/B14 -> LAT; IO13 -> A7/B13 -> OE. Leave unused U2 channels 8, 9, 11, and 12 unconnected and record that state.
+5. Inspect every solder joint, IC/header orientation, wire routing, adjacent pads, decoupling placement, and exposed conductor under good light; correct bridges/cold joints while unpowered and update the photo/diagram if the route changes.
+6. Complete the 14-signal continuity checklist end-to-end from each ESP32 header GPIO through the named HCT A/B channel to the named HUB75 destination; separately verify both IC VCC/GND paths, DIR/OE ties, and HUB75 grounds.
+7. Complete the isolation checklist: no VCC-to-GND short, no unintended adjacent-pad/net bridge, and no relevant signal-to-ground short. Record every measurement/observation against the map rather than relying on a single audible beep.
+8. Photograph top and bottom sides plus the labeled map, sign the unpowered pre-power checklist, and retain the continuity/isolation record before any firmware flashing or panel connection.
 
 #### Done when
-- Required quantities and markings are recorded.
-- Substitutes and optional parts are explicit; if suitable low-current hookup wire is unavailable, a purchase requirement is recorded before assembly.
+- The board has a clear photo/diagram, all 14 named signal routes match AF-052, and unused U2 channels remain unconnected.
+- Every intended signal/power/control path passes the recorded continuity checklist.
+- VCC/GND, adjacent-net, and relevant signal-to-ground isolation checks pass while unpowered; the signed pre-power record authorizes AF-066, not an ad hoc energization.
 
 #### If it fails
-Quarantine mismatches and obtain an authority-backed replacement.
+Do not energize. Label the failed net, repair one defect at a time, and repeat the complete relevant continuity/isolation audit; return to AF-052 for any mapping contradiction.
 
-### AF-054 — Stage 1: Perfboard Layout & IC/Header Mounting
+---
 
-**Milestone:** M1
-**Depends on:** AF-053
-**Labels:** hardware controller-esp32
-**Context:** Layout component positions on perfboard; direct-soldering the 2× SN74HCT245N ICs is the default available path. DIP-20 sockets are optional only if separately obtained and recorded, never a required part; mount the 2×8 keyed HUB75 header (notch facing outward); check pad isolation.
+### AF-055 - SUPERSEDED
 
-#### Do
-1. Mark the appendix layout on perfboard.
-2. Solder the ICs directly, or install sockets only when separately obtained and recorded; mount the keyed header with orientation recorded.
-3. Inspect alignment and pad isolation unpowered.
+Replaced by: AF-054
 
-#### Done when
-- Layout, orientation, and isolation pass inspection.
-- Stage photo is saved.
+(Do not export to Jira)
 
-#### If it fails
-Keep unpowered; rework misalignment or bridges before continuing.
+---
 
-### AF-055 — Stage 2: Power, Ground, Decoupling & DIR/OE Control Wiring
+### AF-059 - SUPERSEDED
 
-**Milestone:** M1
-**Depends on:** AF-054
-**Labels:** hardware controller-esp32 power safety-review polarity-verify
-**Safety:** 5V-HIGH-CURRENT
-**Stop condition:** Stop and disconnect power immediately if polarity, wiring, or an abnormal smell, heat, or sound is detected.
-**Context:** Wire and solder U1/U2 VCC (pin 20) → +5V, GND (pin 10) → GND, DIR (pin 1) → +5V (A→B), /OE (pin 19) → GND; solder 2× 100nF decoupling caps directly across pin 20↔10; wire both HUB75 GND positions to GND rail; solder optional 1000µF bulk cap; verify 8 continuity paths and VCC↔GND isolation. *(Absorbs legacy AF-056, AF-057, AF-058, AF-063, AF-064).*
+Replaced by: AF-054
 
-#### Do
-1. Wire U1/U2 power, DIR/OE, decoupling, and HUB75 grounds per appendix.
-2. Record optional bulk-capacitor presence separately.
-3. Verify eight paths and rail isolation unpowered.
+(Do not export to Jira)
 
-#### Done when
-- Eight paths and VCC/GND isolation pass.
-- Optional hardware status is recorded.
+---
 
-#### If it fails
-Do not energize; repair one failed connection and repeat isolation.
+### AF-061 - SUPERSEDED
 
-### AF-059 — Stage 3: RGB Data & Row Address A/B Signal Wiring
+Replaced by: AF-054
+
+(Do not export to Jira)
+
+---
+
+### AF-065 - SUPERSEDED
+
+Replaced by: AF-054
+
+(Do not export to Jira)
+
+---
+
+### AF-066 - Flash known ESP32 HUB75 driver firmware
 
 **Milestone:** M1
-**Depends on:** AF-055, AF-052
-**Labels:** hardware controller-esp32
-**Safety:** HUB75
-**Stop condition:** Disconnect panel and controller power before changing HUB75 wiring or ribbon cables.
-**Context:** Wire and solder the 8 high-speed RGB and lower address lines: ESP32 GPIOs (IO5, IO4, IO6, IO15, IO7, IO17, IO8, IO18) → U1 A-inputs (pins 2–9) → U1 B-outputs (pins 18–11) → HUB75 header (R1, G1, B1, R2, G2, B2, A, B); perform 16 individual continuity tests. *(Absorbs legacy AF-060).*
-
-#### Do
-1. Wire the eight confirmed RGB/A/B paths from AF-052.
-2. Perform 16 continuity checks unpowered.
-3. Record the final map and photo.
-
-#### Done when
-- All 16 paths match AF-052.
-- No unverified connector pin is used.
-
-#### If it fails
-Disconnect power, isolate the failed net, and repeat all checks.
-
-### AF-061 — Stage 4: Row Address C/D/E & Control Timing Signal Wiring
-
-**Milestone:** M1
-**Depends on:** AF-059
-**Labels:** hardware controller-esp32
-**Safety:** HUB75
-**Stop condition:** Disconnect panel and controller power before changing HUB75 wiring or ribbon cables.
-**Context:** Wire and solder the 6 row address and control timing lines: ESP32 GPIOs (IO10, IO9, IO16, IO12, IO11, IO13) → U2 A-inputs (pins 2–7) → U2 B-outputs (pins 18–13) → HUB75 header (C, D, E, CLK, LAT, OE); confirm unused pins 8, 9, 11, 12 remain unconnected; perform 12 continuity tests. *(Absorbs legacy AF-062).*
-
-#### Do
-1. Wire the six confirmed C/D/E/timing paths through U2.
-2. Leave unused channels unconnected.
-3. Perform 12 continuity checks unpowered.
-
-#### Done when
-- Twelve paths pass.
-- Unused channels and bridge inspection are recorded.
-
-#### If it fails
-Keep unpowered; repair the first failed conductor and retest.
-
-### AF-065 — Stage 5: Full Adapter Unpowered Continuity & Isolation Audit
-
-**Milestone:** M1
-**Depends on:** AF-061
-**Labels:** hardware controller-esp32 validation safety-review
-**Safety:** HUB75
-**Stop condition:** Disconnect panel and controller power before changing HUB75 wiring or ribbon cables.
-**Context:** Perform a complete unpowered electrical audit against the validated appendix/mapping: verify continuity for every intended signal and power path; inspect/test all unintended adjacent-pad/net connections for isolation; verify VCC↔GND isolation and relevant signal-to-ground isolation; complete the audit before energizing.
-
-#### Do
-1. Verify continuity for every intended signal and power path defined by the validated appendix/mapping, unpowered.
-2. Inspect/test all unintended adjacent-pad/net connections for isolation, including VCC↔GND and relevant signal-to-ground isolation.
-3. Complete and sign the pre-power checklist before energizing.
-
-#### Done when
-- Every intended signal and power path defined by the validated appendix/mapping passes continuity.
-- All unintended adjacent-pad/net connections, VCC↔GND, and relevant signal-to-ground isolation checks pass before power.
-- The complete audit and signed pre-power checklist are recorded before energizing.
-
-#### If it fails
-Do not energize; label, repair, and repeat the complete audit.
-
-### AF-066 — Flash known ESP32 HUB75 driver firmware
-
-**Milestone:** M1
-**Depends on:** AF-050, AF-065
+**Depends on:** AF-050, AF-054
 **Labels:** firmware controller-esp32
-**Context:** Flash ESP32 with ESP32-HUB75-MatrixPanel-DMA library using validated 14-GPIO mapping, 128×64 panel config, 1/32 scan, and octal PSRAM DMA framebuffer allocation; verify serial initialization output.
+**Context:** Load a known driver configuration using the validated map and observed panel settings.
 
 #### Do
-1. Build with the AF-052 validated map and observed panel settings.
-2. Flash and capture serial initialization.
-3. Record library/version and binary hash.
+1. Build the selected ESP32 HUB75 driver using the AF-052 map, observed 128x64/scan settings, and documented PSRAM DMA configuration.
+2. Flash the ESP32 and capture serial initialization output.
+3. Record build/flash command, library/version, binary hash, serial result, and map revision.
 
 #### Done when
-- Flash boots the recorded binary.
-- Serial result and map are saved.
+- The recorded binary boots and serial initialization is retained.
+- Firmware, map, panel configuration, and command evidence can be reproduced for AF-067.
 
 #### If it fails
-Preserve logs and correct one build/configuration issue before reflashing.
+Preserve logs and correct one build, map, or configuration issue before reflashing; do not bypass AF-054's pre-power result.
 
-### AF-067 — Single panel physical display test via ESP32+HCT245 (EXP-011)
+---
+
+### AF-067 - Single-panel physical display test via ESP32+HCT245 and full-white thermal stress observation (EXP-011)
 
 **Milestone:** M1
-**Depends on:** AF-066, AF-065, AF-021
-**Labels:** hardware controller-esp32 power validation
-**Safety:** 5V-HIGH-CURRENT
-**Stop condition:** Stop and disconnect power immediately if polarity, wiring, or an abnormal smell, heat, or sound is detected.
-**Procedure:** EXP-011; [`docs/pm/runbooks/safety.md`](../runbooks/safety.md) §3 (`HUB75`)
-**Context:** Make all panel, HUB75, and controller connections while de-energized; prohibit hot-plugging; energize only using the applicable documented EXP-011 procedure and [`docs/pm/runbooks/safety.md`](../runbooks/safety.md) §3 (`HUB75`); execute Standard Test Pattern Suite; evaluate 10-point defect checklist; record refresh rate and PSRAM metrics; run ≥1 hour.
+**Depends on:** AF-066, AF-054, AF-021
+**Labels:** hardware controller-esp32 power validation thermal-review
+**Safety:** HUB75, 5V-HIGH-CURRENT
+**Stop condition:** De-energize panel and controller before changing HUB75 wiring. Stop and disconnect immediately for polarity/wiring errors, smoke, abnormal smell, heat, or sound.
+**Procedure:** EXP-011
+**Context:** Prove the completed adapter and firmware drive one panel safely, then collect physical and thermal evidence for the ESP32 candidate.
 
 #### Do
-1. With the panel, HUB75, and controller de-energized, make and verify all panel/HUB75/controller connections; do not hot-plug.
-2. Energize only using the applicable documented EXP-011 procedure and the HUB75 safety controls in [`docs/pm/runbooks/safety.md`](../runbooks/safety.md) §3.
-3. Run the six patterns and defect checklist.
-4. Hold at least one hour and save metrics/logs.
+1. With panel, HUB75, and controller de-energized, make and verify every connection; follow the HUB75 safety runbook and do not hot-plug.
+2. Energize only under EXP-011/runbook controls. Run the six standard patterns and standard defect checklist; record refresh and PSRAM metrics with method/units.
+3. Hold the display for at least one hour, retaining start/end, pattern, resets, visible defects, and available power/temperature observations.
+4. Run a 15-minute full-white stress observation using a named temperature instrument; record U1, U2, and ESP32 temperatures at 0, 5, 10, and 15 minutes, plus any instrument limitation or stop event.
 
 #### Done when
-- Pattern, defect, refresh, and PSRAM observations are recorded.
-- One-hour outcome has evidence.
+- Pattern, defect, refresh, PSRAM, and one-hour evidence are retained.
+- The thermal log contains the four scheduled readings or an explicit instrument limitation, and all anomalies/stop events are recorded.
 
 #### If it fails
-Remove power before rewiring; isolate power, cable, adapter, then firmware.
+Remove power before rewiring. Preserve the first artifact/log, then isolate power, cable, adapter, and firmware in that order; inspect unpowered before any repeat.
 
-### AF-068 — Nano-to-ESP32 wired frame transport bringup (EXP-013)
+---
+
+### AF-068 - Nano-to-ESP32 wired frame transport bringup with USB-CDC fallback exploration (EXP-013)
 
 **Milestone:** M1
-**Depends on:** AF-067, AF-037
-**Labels:** firmware controller-esp32 nano spike validation
-**Safety:** HUB75
-**Stop condition:** Disconnect panel and controller power before changing HUB75 wiring or ribbon cables.
+**Depends on:** AF-067, AF-035
+**Labels:** firmware controller-esp32 nano validation
+**Safety:** CH340, HUB75
+**Stop condition:** Use only TX/RX/GND for UART/CH340; disconnect panel and controller power before changing HUB75 wiring.
 **Procedure:** EXP-013
-**Context:** Establish 3-wire UART link (TX, RX, GND strictly following CH340 safety rule); implement packet framing (magic, length, frame#, CRC32); measure transfer time, latency, and drop rate over ≥1 hour.
+**Context:** Establish reliable Nano-to-ESP32 frame transport and test native USB CDC only when measured UART capacity is insufficient for the target workload.
 
 #### Do
-1. Connect only TX/RX/GND and record endpoints.
-2. Test magic/length/frame/CRC32 on known frames.
-3. Run at least one hour and measure transfer, latency, and drops.
+1. Connect the three-wire UART with documented endpoints and no CH340 VCC/3.3 V; implement/test magic, length, frame-number, and CRC32 framing using known frames.
+2. Run the wired transport for at least one hour, recording transfer time, dispatch-to-visible latency, frame counts/drop rate, units, method, and conditions.
+3. If AF-068 measurements show UART is insufficient for the target dashboard refresh workload, test the same known frame over documented native USB CDC and compare transfer/visible latency in a reproducible table; otherwise record that the fallback trigger was not met.
 
 #### Done when
-- Valid frames and counts are recorded.
-- Measurements include units and method.
+- Valid frame records and one-hour measurements identify endpoints, units, method, and drop/reset observations.
+- USB CDC is either compared under its explicit trigger or documented as not triggered; no bandwidth conclusion is inferred without measurements.
 
 #### If it fails
-Power down before rewiring; preserve first bad packet and isolate cause.
+Power down before rewiring and preserve the first bad packet/log. Isolate framing, endpoint, transport, and display behavior separately; do not backfeed a target from a USB-UART adapter.
 
-### AF-069 — End-to-end arbitrary user text rendering via ESP32 pipeline
+---
+
+### AF-070 - SUPERSEDED
+
+Replaced by: AF-068
+
+(Do not export to Jira)
+
+---
+
+### AF-069 - End-to-end arbitrary user text rendering via ESP32 pipeline and candidate evaluation synthesis
 
 **Milestone:** M1
 **Depends on:** AF-068, AF-030, AF-035
-**Labels:** validation controller-esp32 nano critical-path
+**Labels:** validation controller-esp32 nano critical-path docs
 **Safety:** HUB75
 **Stop condition:** Disconnect panel and controller power before changing HUB75 wiring or ribbon cables.
-**Procedure:** EXP-013
-**Context:** Execute full E2E test with arbitrary runtime user string typed on Nano terminal; verify exact character rendering on panel #1 via ESP32 transport; perform 10-min stable hold.
+**Procedure:** EXP-011, EXP-013
+**Context:** Prove arbitrary Nano text reaches panel #1 via ESP32 and produce the cited candidate record used by ADR-016.
 
 #### Do
-1. Type arbitrary Nano text and save input/frame/UART/panel evidence.
-2. Verify characters and hold 10 minutes.
-3. Confirm no vendor-software click.
+1. Type arbitrary Nano text and retain exact input, rendered frame, UART/transport record, and panel evidence; verify accepted characters/layout and hold for 10 minutes.
+2. Index EXP-011/013 patterns, defects, thermal/refresh/PSRAM data, firmware hashes, packet logs, and photos. Check every candidate claim against source evidence and mark missing evidence explicitly.
+3. If primary firmware recorded a defect requiring comparison, reproduce it and test WLED-MM or another documented alternative with identical inputs; retain the trigger, restoration path for boot/display failure, and a five-dimension comparison. Otherwise record that alternative-firmware evaluation was not triggered.
+4. Fill the preliminary 13-criterion EXP-014/ADR-016 matrix with pass/fail/unknown and citations, distinguish measurement from judgment, commit the reviewed evidence/candidate log, and record its hash.
 
 #### Done when
-- Exact accepted text is visible.
-- Ten-minute evidence proves the full path.
+- Exact accepted text is visible and 10-minute evidence proves Nano -> renderer -> ESP32 transport -> panel.
+- Every ESP32 candidate claim and matrix value has a citation or is explicitly unknown; any alternative-firmware conclusion preserves its trigger and comparison evidence.
+- The evidence index and candidate pass log are committed with their hash.
 
 #### If it fails
-Stop and preserve artifacts; replay AF-035 then isolate the first divergent stage.
+Stop and preserve artifacts; replay AF-035 and isolate the first divergent stage. Restore known-good firmware after boot/output failure, and never rewrite missing evidence or an unsupported score as a pass.
 
-### AF-070 — Native USB CDC transport fallback exploration for ESP32
+---
 
-**Milestone:** M1
-**Depends on:** AF-068
-**Labels:** firmware controller-esp32 spike conditional
-**Applies if:** AF-068 shows UART bandwidth is insufficient for the target dashboard refresh workload.
-**Context:** (Conditional / Spike) Evaluate ESP32-S3 native USB CDC transport if UART bandwidth is insufficient; measure frame transfer time and latency over USB.
+### AF-071 - SUPERSEDED
 
-#### Do
-1. Run only if AF-068 measured UART insufficiency for the target workload.
-2. Test an equivalent known frame over documented USB.
-3. Compare transfer and visible latency with AF-068.
+Replaced by: AF-069
 
-#### Done when
-- AF-068 contains the trigger.
-- USB comparison is reproducible and conclusion is explicit.
+(Do not export to Jira)
 
-#### If it fails
-Disconnect USB on failure and return to AF-068; do not infer a bandwidth result.
+---
 
-### AF-071 — Collate and commit measurement tables for EXP-011 and EXP-013
+### AF-072 - SUPERSEDED
 
-**Milestone:** M1
-**Depends on:** AF-069
-**Labels:** docs controller-esp32 validation
-**Context:** Consolidate EXP-011 and EXP-013 markdown tables, metrics, photos, and serial logs; commit evidence under docs/pm/evidence/.
+Replaced by: AF-069
 
-#### Do
-1. Index EXP-011/013 tables, photos, firmware, and packet logs.
-2. Check each result against source evidence.
-3. Commit the reviewed measurement record.
+(Do not export to Jira)
 
-#### Done when
-- Every claim has provenance.
-- Missing evidence is marked and commit hash recorded.
+---
 
-#### If it fails
-Return gaps to AF-067/068; never rewrite them as passes.
+### AF-073 - SUPERSEDED
 
-### AF-072 — Collate and commit ESP32 M1 subtrack evidence and candidate pass log
+Replaced by: AF-069
 
-**Milestone:** M1
-**Depends on:** AF-071
-**Labels:** docs controller-esp32 validation
-**Context:** Collate complete ESP32 candidate evidence; commit subtrack pass log; prepare preliminary scoring inputs for ADR-016.
+(Do not export to Jira)
 
-#### Do
-1. Build the ESP32 evidence index.
-2. Record pass/fail/unknown and ADR-016 inputs.
-3. Commit the candidate pass log.
+---
 
-#### Done when
-- Every candidate result is cited.
-- Scores distinguish measurement from judgment.
+### AF-074 - SUPERSEDED
 
-#### If it fails
-Mark unsupported scores unknown and return the specific gap.
+Replaced by: AF-067
 
-### AF-073 — Evaluate alternative ESP32 firmware (WLED-MM vs custom sketch)
+(Do not export to Jira)
 
-**Milestone:** M1
-**Depends on:** AF-067
-**Labels:** firmware controller-esp32 spike conditional
-**Applies if:** AF-066’s primary ESP32 firmware path exhibits defects that require comparison with an alternative firmware.
-**Context:** (Conditional / Spike) Compare WLED-MM against custom DMA driver if MatrixPanel-DMA exhibits defects; document 5-dimension comparison.
+---
 
-#### Do
-1. Run only if AF-066 records a primary-firmware defect requiring comparison.
-2. Reproduce it, then test the alternative with identical inputs.
-3. Record a five-dimension comparison.
+### AF-075 - SUPERSEDED
 
-#### Done when
-- Trigger and both test results are recorded.
-- Observations are separated from recommendation.
+Replaced by: AF-069
 
-#### If it fails
-Restore known-good firmware on boot/output fault and preserve binaries/logs.
-
-### AF-074 — Execute ESP32 full-white thermal stress test
-
-**Milestone:** M1
-**Depends on:** AF-067
-**Labels:** hardware controller-esp32 thermal thermal-review validation
-**Safety:** 5V-HIGH-CURRENT
-**Stop condition:** Stop and disconnect power immediately if polarity, wiring, or an abnormal smell, heat, or sound is detected.
-**Context:** Run full-white 100% brightness stress test on ESP32 + HCT adapter for 15 minutes; log temperatures of U1, U2, and ESP32 module at 0, 5, 10, 15 min.
-
-#### Do
-1. Record starting state and instrument.
-2. Run full-white for 15 minutes with readings at 0/5/10/15 minutes.
-3. Stop and log any anomaly.
-
-#### Done when
-- Four readings or instrument limitation are recorded.
-- Test outcome and stop events are explicit.
-
-#### If it fails
-Disconnect on anomaly; inspect unpowered before any repeat.
-
-### AF-075 — Synthesize ESP32 controller M1 candidate evaluation for ADR-016
-
-**Milestone:** M1
-**Depends on:** AF-072, AF-074
-**Labels:** docs controller-esp32 decision validation
-**Context:** Aggregate all ESP32 subtask data; fill preliminary 13-criterion scoring matrix for EXP-014 / ADR-016; record candidate pass/fail determination.
-
-#### Do
-1. Fill the 13-criterion matrix from reviewed evidence.
-2. Mark each criterion pass/fail/unknown with citation.
-3. Record preliminary determination only.
-
-#### Done when
-- All 13 criteria have cited values or unknowns.
-- No unsupported threshold is presented as measured.
-
-#### If it fails
-Return uncited criteria to their owning task and preserve the incomplete matrix.
+(Do not export to Jira)
